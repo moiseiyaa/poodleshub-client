@@ -117,6 +117,7 @@ interface ApplicationFormContextType {
   goToPreviousStep: () => void;
   goToStep: (step: number) => void;
   isStepValid: (step: number) => boolean;
+  getStepValidationErrors: (step: number) => string[];
   resetForm: () => void;
   submitForm: () => Promise<boolean>;
   isSubmitting: boolean;
@@ -190,22 +191,63 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
     }
   };
   
+  const getStepValidationErrors = (step: number): string[] => {
+    const errors: string[] = [];
+    
+    switch (step) {
+      case 1:
+        if (!formData.firstName || formData.firstName.trim() === '') errors.push('First name');
+        if (!formData.lastName || formData.lastName.trim() === '') errors.push('Last name');
+        if (!formData.address || formData.address.trim() === '') errors.push('Street address');
+        if (!formData.city || formData.city.trim() === '') errors.push('City');
+        if (!formData.state || formData.state.trim() === '') errors.push('State');
+        if (!formData.zipCode || formData.zipCode.trim().length < 5) errors.push('Zip code (must be at least 5 digits)');
+        if (!formData.mobileNumber || formData.mobileNumber.replace(/\D/g, '').length < 10) errors.push('Mobile number (must be at least 10 digits)');
+        if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.push('Valid email address');
+        if (!formData.confirmEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.confirmEmail)) errors.push('Valid confirmation email');
+        if (formData.email !== formData.confirmEmail) errors.push('Email addresses must match');
+        break;
+      case 2:
+        if (!formData.breedChoices || formData.breedChoices.length === 0) errors.push('At least one breed choice');
+        if (formData.breedChoices?.some(choice => !choice.breed || choice.breed.trim() === '')) errors.push('All breed choices must be selected');
+        if (!formData.preferredSizes || formData.preferredSizes.length === 0) errors.push('At least one preferred size');
+        if (!formData.preferredGender || formData.preferredGender.trim() === '') errors.push('Gender preference');
+        if (!formData.preferredColors || formData.preferredColors.length === 0) errors.push('At least one preferred color');
+        if (!formData.preferredCoatTypes || formData.preferredCoatTypes.length === 0) errors.push('At least one preferred coat type');
+        if (!formData.activityLevel || formData.activityLevel.trim() === '') errors.push('Activity level');
+        if (!formData.pickupLocation || formData.pickupLocation.trim() === '') errors.push('Pickup location');
+        if (!formData.deliveryMethod) errors.push('Delivery method');
+        break;
+      case 3:
+        if (!formData.lifestyle || formData.lifestyle.trim() === '') errors.push('Lifestyle description');
+        if (!formData.typicalDay || formData.typicalDay.trim() === '') errors.push('Description of typical day');
+        if (!formData.whyGoodFit || formData.whyGoodFit.trim() === '') errors.push('Why you are a good fit');
+        if (formData.otherPets && (!formData.petTypes || formData.petTypes.trim() === '')) errors.push('Pet types (required if you have other pets)');
+        if (formData.hasChildren && (!formData.childrenAges || formData.childrenAges.trim() === '')) errors.push('Children ages (required if you have children)');
+        if (!formData.hasFence && (!formData.alternativeExercise || formData.alternativeExercise.trim() === '')) errors.push('Alternative exercise plan (required if no fence)');
+        break;
+      case 4:
+        if (!formData.spayNeuterAgreement) errors.push('Spay/neuter agreement');
+        break;
+    }
+    
+    return errors;
+  };
+
   const isStepValid = (step: number): boolean => {
     try {
       switch (step) {
         case 1:
           // Validate Basic Info
-          applicationFormSchema.pick({
-            firstName: true,
-            lastName: true,
-            address: true,
-            city: true,
-            state: true,
-            zipCode: true,
-            mobileNumber: true,
-            email: true,
-            confirmEmail: true
-          }).parse(formData);
+          if (!formData.firstName || formData.firstName.trim() === '') return false;
+          if (!formData.lastName || formData.lastName.trim() === '') return false;
+          if (!formData.address || formData.address.trim() === '') return false;
+          if (!formData.city || formData.city.trim() === '') return false;
+          if (!formData.state || formData.state.trim() === '') return false;
+          if (!formData.zipCode || formData.zipCode.trim().length < 5) return false;
+          if (!formData.mobileNumber || formData.mobileNumber.replace(/\D/g, '').length < 10) return false;
+          if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return false;
+          if (!formData.confirmEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.confirmEmail)) return false;
           
           // Additional validation for email confirmation
           if (formData.email !== formData.confirmEmail) {
@@ -215,54 +257,47 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
           
         case 2:
           // Validate Puppy Preferences
-          applicationFormSchema.pick({
-            breedChoices: true,
-            preferredSizes: true,
-            preferredGender: true,
-            preferredColors: true,
-            preferredCoatTypes: true,
-            activityLevel: true,
-            pickupLocation: true,
-            deliveryMethod: true
-          }).parse(formData);
-          
-          // Additional validation for breed choices
-          if (formData.breedChoices.some(choice => !choice.breed)) {
-            return false;
-          }
+          if (!formData.breedChoices || formData.breedChoices.length === 0) return false;
+          if (formData.breedChoices.some(choice => !choice.breed || choice.breed.trim() === '')) return false;
+          if (!formData.preferredSizes || formData.preferredSizes.length === 0) return false;
+          if (!formData.preferredGender || formData.preferredGender.trim() === '') return false;
+          if (!formData.preferredColors || formData.preferredColors.length === 0) return false;
+          if (!formData.preferredCoatTypes || formData.preferredCoatTypes.length === 0) return false;
+          if (!formData.activityLevel || formData.activityLevel.trim() === '') return false;
+          if (!formData.pickupLocation || formData.pickupLocation.trim() === '') return false;
+          if (!formData.deliveryMethod) return false;
           return true;
           
         case 3:
           // Validate Household Info
-          applicationFormSchema.pick({
-            lifestyle: true,
-            typicalDay: true,
-            whyGoodFit: true
-          }).parse(formData);
+          if (!formData.lifestyle || formData.lifestyle.trim() === '') return false;
+          if (!formData.typicalDay || formData.typicalDay.trim() === '') return false;
+          if (!formData.whyGoodFit || formData.whyGoodFit.trim() === '') return false;
           
           // Additional validation for conditional fields
-          if (formData.otherPets && !formData.petTypes) {
+          if (formData.otherPets && (!formData.petTypes || formData.petTypes.trim() === '')) {
             return false;
           }
-          if (formData.hasChildren && !formData.childrenAges) {
+          if (formData.hasChildren && (!formData.childrenAges || formData.childrenAges.trim() === '')) {
             return false;
           }
-          if (!formData.hasFence && !formData.alternativeExercise) {
+          if (!formData.hasFence && (!formData.alternativeExercise || formData.alternativeExercise.trim() === '')) {
             return false;
           }
           return true;
           
         case 4:
           // Validate Agreements
-          applicationFormSchema.pick({
-            spayNeuterAgreement: true
-          }).parse(formData);
+          if (!formData.spayNeuterAgreement) {
+            return false;
+          }
           return true;
           
         default:
           return false;
       }
     } catch (error) {
+      console.error('Validation error:', error);
       return false;
     }
   };
@@ -306,6 +341,7 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
         goToPreviousStep,
         goToStep,
         isStepValid,
+        getStepValidationErrors,
         resetForm,
         submitForm,
         isSubmitting,

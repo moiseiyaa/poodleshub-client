@@ -241,3 +241,19 @@ a:focus, button:focus, input:focus, select:focus, textarea:focus {
   66%  { background-position: 250% 0, -150% 0; }
   100% { background-position: 250% 0, 250% 0; }
 }
+
+/* Slide up animation for WhatsApp support */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}

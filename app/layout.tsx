@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/organisms/Navbar";
 import Footer from "./components/organisms/Footer";
+import WhatsAppSupport from "./components/organisms/WhatsAppSupport";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
@@ -104,6 +105,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <WhatsAppSupport />
           <ScrollToTop threshold={400} />
         </CartProvider>
       </body>

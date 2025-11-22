@@ -18,6 +18,7 @@ const ApplicationForm = () => {
     goToPreviousStep, 
     goToStep,
     isStepValid,
+    getStepValidationErrors,
     submitForm,
     isSubmitting,
     submitError
@@ -26,9 +27,20 @@ const ApplicationForm = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   
-  const handleNextStep = () => {
-    if (isStepValid(currentStep)) {
+  const handleNextStep = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
+    const isValid = isStepValid(currentStep);
+    
+    if (isValid) {
       goToNextStep();
+    } else {
+      // Show detailed validation errors
+      const errors = getStepValidationErrors(currentStep);
+      const errorMessage = `Please complete the following required fields:\n\n${errors.join('\n')}`;
+      alert(errorMessage);
     }
   };
   
@@ -168,6 +180,18 @@ const ApplicationForm = () => {
         
         {renderStepContent()}
         
+        {/* Validation errors display */}
+        {!isStepValid(currentStep) && (
+          <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+            <p className="text-yellow-800 font-medium mb-2">Please complete all required fields:</p>
+            <ul className="list-disc list-inside text-yellow-700 text-sm space-y-1">
+              {getStepValidationErrors(currentStep).map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
         {submitError && (
           <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-600">{submitError}</p>
@@ -191,10 +215,7 @@ const ApplicationForm = () => {
             <button
               type="button"
               onClick={handleNextStep}
-              disabled={!isStepValid(currentStep)}
-              className={`bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md transition-colors ${
-                !isStepValid(currentStep) ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>
