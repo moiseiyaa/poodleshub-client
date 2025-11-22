@@ -44,7 +44,7 @@ const WhatsAppSupport = () => {
           {/* Chat Card */}
           <div className="fixed bottom-24 left-6 z-50 w-80 bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#25D366] to-[#20BA5A] p-4 flex items-center justify-between">
+            <div className="bg-linear-to-r from-[#25D366] to-[#20BA5A] p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="bg-white/20 p-2 rounded-full">
                   <FaCommentDots className="h-5 w-5 text-white" />
@@ -92,7 +92,7 @@ const WhatsAppSupport = () => {
               {/* Quick Info */}
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="flex items-start space-x-3 text-sm">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     <span className="text-blue-600 font-bold">✓</span>
                   </div>
                   <div>

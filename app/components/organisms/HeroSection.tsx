@@ -13,7 +13,7 @@ const HeroSection = () => {
     <section className="relative py-16 md:py-24 overflow-hidden">
       {/* Background video */}
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        <video autoPlay loop muted playsInline className="object-cover w-full h-full absolute inset-0" poster="/hero-puppy.jpg">
+        <video autoPlay loop muted playsInline className="object-cover w-full h-full absolute inset-0" poster="/images/icons/hero-puppy.jpg">
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
           
         </video>

@@ -25,7 +25,7 @@ export const puppies: Puppy[] = [
     status: 'available',
     gender: 'female',
     birthDate: '2025-09-01',
-    images: ['/images/puppies/luna-1.jpg', '/images/puppies/luna-2.jpg', '/images/puppies/luna-3.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'apricot',
     generation: 'F1b',
     parents: {
@@ -43,7 +43,7 @@ export const puppies: Puppy[] = [
     status: 'available',
     gender: 'male',
     birthDate: '2025-08-15',
-    images: ['/images/puppies/max-1.jpg', '/images/puppies/max-2.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'cream',
     generation: 'F1',
     parents: {
@@ -61,7 +61,7 @@ export const puppies: Puppy[] = [
     status: 'reserved',
     gender: 'female',
     birthDate: '2025-08-20',
-    images: ['/images/puppies/bella-1.jpg', '/images/puppies/bella-2.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'chocolate',
     generation: 'F1b',
     parents: {
@@ -79,7 +79,7 @@ export const puppies: Puppy[] = [
     status: 'available',
     gender: 'male',
     birthDate: '2025-09-05',
-    images: ['/images/puppies/charlie-1.jpg', '/images/puppies/charlie-2.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'tri-color',
     generation: 'F1',
     parents: {
@@ -97,7 +97,7 @@ export const puppies: Puppy[] = [
     status: 'available',
     gender: 'female',
     birthDate: '2025-09-01',
-    images: ['/images/puppies/daisy-1.jpg', '/images/puppies/daisy-2.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'white',
     generation: 'F1b',
     parents: {
@@ -115,7 +115,7 @@ export const puppies: Puppy[] = [
     status: 'available',
     gender: 'male',
     birthDate: '2025-08-15',
-    images: ['/images/puppies/cooper-1.jpg', '/images/puppies/cooper-2.jpg'],
+    images: ['/images/icons/hero-puppy.jpg'],
     color: 'golden',
     generation: 'F1',
     parents: {
