@@ -69,7 +69,7 @@ const Navbar = () => {
           <Link href="/" className="relative z-50">
             <div className="flex items-center">
               <Image
-                src="/images/logo.png"
+                src="/images/icons/logo.png"
                 alt="PuppyHub USA Logo"
                 width={180}
                 height={50}
