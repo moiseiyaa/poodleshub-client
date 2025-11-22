@@ -172,22 +172,55 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
   
   const goToNextStep = () => {
     if (currentStep < 4) {
+      // Store current scroll position relative to form
+      const formElement = document.getElementById('application-form-container');
+      const scrollOffset = formElement ? window.scrollY - formElement.offsetTop : 0;
+      
       setCurrentStep(prev => prev + 1);
-      window.scrollTo(0, 0);
+      
+      // Restore scroll position smoothly after step change
+      setTimeout(() => {
+        if (formElement) {
+          const targetScroll = formElement.offsetTop + scrollOffset;
+          window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        }
+      }, 50);
     }
   };
   
   const goToPreviousStep = () => {
     if (currentStep > 1) {
+      // Store current scroll position relative to form
+      const formElement = document.getElementById('application-form-container');
+      const scrollOffset = formElement ? window.scrollY - formElement.offsetTop : 0;
+      
       setCurrentStep(prev => prev - 1);
-      window.scrollTo(0, 0);
+      
+      // Restore scroll position smoothly after step change
+      setTimeout(() => {
+        if (formElement) {
+          const targetScroll = formElement.offsetTop + scrollOffset;
+          window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        }
+      }, 50);
     }
   };
   
   const goToStep = (step: number) => {
     if (step >= 1 && step <= 4) {
+      // Store current scroll position relative to form
+      const formElement = document.getElementById('application-form-container');
+      const scrollOffset = formElement ? window.scrollY - formElement.offsetTop : 0;
+      
       setCurrentStep(step);
-      window.scrollTo(0, 0);
+      
+      // Restore scroll position smoothly after step change
+      setTimeout(() => {
+        if (formElement) {
+          const targetScroll = formElement.offsetTop + scrollOffset;
+          window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        }
+      }, 50);
     }
   };
   

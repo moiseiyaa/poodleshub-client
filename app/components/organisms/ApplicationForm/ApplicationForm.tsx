@@ -27,10 +27,9 @@ const ApplicationForm = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   
-  const handleNextStep = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
+  const handleNextStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     
     const isValid = isStepValid(currentStep);
     
@@ -44,7 +43,9 @@ const ApplicationForm = () => {
     }
   };
   
-  const handlePreviousStep = () => {
+  const handlePreviousStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     goToPreviousStep();
   };
   
@@ -174,7 +175,7 @@ const ApplicationForm = () => {
   }
 
   return (
-    <div className="bg-white p-6 md:p-8 rounded-lg shadow-md">
+    <div id="application-form-container" className="bg-white p-6 md:p-8 rounded-lg shadow-md">
       <form onSubmit={handleSubmit}>
         {renderStepIndicator()}
         
@@ -222,6 +223,10 @@ const ApplicationForm = () => {
           ) : (
             <button
               type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+              }}
               disabled={!isStepValid(currentStep) || isSubmitting}
               className={`bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-md transition-colors ${
                 !isStepValid(currentStep) || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
