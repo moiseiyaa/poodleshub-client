@@ -26,9 +26,9 @@ const Footer = () => {
                 <Image
                   src="/images/icons/logo.png"
                   alt="PuppyHub USA Logo"
-                  width={140}
-                  height={40}
-                  className="h-8 w-auto"
+                  width={180}
+                  height={50}
+                  className="h-12 w-auto"
                 />
               </Link>
             </div>

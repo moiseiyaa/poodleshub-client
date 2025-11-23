@@ -229,9 +229,18 @@ const Navbar = () => {
           className={
             `fixed top-0 right-0 h-full w-4/5 max-w-[20rem] bg-white shadow-xl z-50 md:hidden transition-transform duration-300 rounded-l-2xl
             ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-            flex flex-col pt-24 px-6 pb-10 overflow-y-auto`
+            flex flex-col pt-16 px-6 pb-10 overflow-y-auto`
           }
         >
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 p-2 text-gray-800 hover:text-primary-500 hover:bg-primary-50 rounded-full transition-colors"
+            aria-label="Close menu"
+          >
+            <FaTimes className="h-6 w-6" />
+          </button>
+          
           <nav className="flex flex-col space-y-6">
             <Link 
               href="/puppies" 
