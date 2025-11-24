@@ -345,16 +345,29 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
       // Validate the entire form
       applicationFormSchema.parse(formData);
       
-      // Simulate API call to submit form
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Submit to backend API
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit application');
+      }
+
       // Clear form data after successful submission
       resetForm();
       setIsSubmitting(false);
       return true;
     } catch (error) {
-      console.error('Form validation error:', error);
-      setSubmitError('There was an error submitting your application. Please check all fields and try again.');
+      console.error('Form submission error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'There was an error submitting your application. Please check all fields and try again.';
+      setSubmitError(errorMessage);
       setIsSubmitting(false);
       return false;
     }
