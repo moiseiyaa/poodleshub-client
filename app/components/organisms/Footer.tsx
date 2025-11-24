@@ -24,7 +24,7 @@ const Footer = () => {
             <div className="flex items-center mb-4">
               <Link href="/" className="flex items-center">
                 <Image
-                  src="/images/icons/logo.png"
+                  src="/images/icons/logo-footer.png"
                   alt="PuppyHub USA Logo"
                   width={180}
                   height={50}
