@@ -26,8 +26,8 @@ export const applicationFormSchema = z.object({
   })).min(1, 'At least one breed choice is required'),
   preferredSizes: z.array(z.string()).min(1, 'At least one size preference is required'),
   preferredGender: z.string().min(1, 'Gender preference is required'),
-  preferredColors: z.array(z.string()).min(1, 'At least one color preference is required'),
-  preferredCoatTypes: z.array(z.string()).min(1, 'At least one coat type is required'),
+  preferredColors: z.array(z.string()).default([]),
+  preferredCoatTypes: z.array(z.string()).default([]),
   activityLevel: z.string().min(1, 'Activity level is required'),
   pickupLocation: z.string().min(1, 'Pickup location is required'),
   secondPickupLocation: z.string().optional(),
@@ -241,12 +241,10 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
         if (formData.email !== formData.confirmEmail) errors.push('Email addresses must match');
         break;
       case 2:
-        if (!formData.breedChoices || formData.breedChoices.length === 0) errors.push('At least one breed choice');
-        if (formData.breedChoices?.some(choice => !choice.breed || choice.breed.trim() === '')) errors.push('All breed choices must be selected');
+        const validBreedChoicesError = formData.breedChoices.filter(choice => choice.breed && choice.breed.trim() !== '');
+        if (!validBreedChoicesError || validBreedChoicesError.length === 0) errors.push('At least one breed choice');
         if (!formData.preferredSizes || formData.preferredSizes.length === 0) errors.push('At least one preferred size');
         if (!formData.preferredGender || formData.preferredGender.trim() === '') errors.push('Gender preference');
-        if (!formData.preferredColors || formData.preferredColors.length === 0) errors.push('At least one preferred color');
-        if (!formData.preferredCoatTypes || formData.preferredCoatTypes.length === 0) errors.push('At least one preferred coat type');
         if (!formData.activityLevel || formData.activityLevel.trim() === '') errors.push('Activity level');
         if (!formData.pickupLocation || formData.pickupLocation.trim() === '') errors.push('Pickup location');
         if (!formData.deliveryMethod) errors.push('Delivery method');
@@ -290,12 +288,10 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
           
         case 2:
           // Validate Puppy Preferences
-          if (!formData.breedChoices || formData.breedChoices.length === 0) return false;
-          if (formData.breedChoices.some(choice => !choice.breed || choice.breed.trim() === '')) return false;
+          const validBreedChoices = formData.breedChoices.filter(choice => choice.breed && choice.breed.trim() !== '');
+          if (!validBreedChoices || validBreedChoices.length === 0) return false;
           if (!formData.preferredSizes || formData.preferredSizes.length === 0) return false;
           if (!formData.preferredGender || formData.preferredGender.trim() === '') return false;
-          if (!formData.preferredColors || formData.preferredColors.length === 0) return false;
-          if (!formData.preferredCoatTypes || formData.preferredCoatTypes.length === 0) return false;
           if (!formData.activityLevel || formData.activityLevel.trim() === '') return false;
           if (!formData.pickupLocation || formData.pickupLocation.trim() === '') return false;
           if (!formData.deliveryMethod) return false;

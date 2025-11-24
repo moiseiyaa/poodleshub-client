@@ -202,46 +202,6 @@ const PuppyPreferencesForm = () => {
               ))}
             </select>
           </div>
-          
-          <div>
-            <label htmlFor="breedChoice-1" className="block text-sm font-medium text-gray-700 mb-1">
-              #2 Choice
-            </label>
-            <select
-              id="breedChoice-1"
-              name="breedChoice-1"
-              value={formData.breedChoices[1]?.breed || ''}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            >
-              <option value="">No 2nd Choice</option>
-              {breeds.map((breed) => (
-                <option key={breed.id} value={breed.id}>
-                  {breed.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div>
-            <label htmlFor="breedChoice-2" className="block text-sm font-medium text-gray-700 mb-1">
-              #3 Choice
-            </label>
-            <select
-              id="breedChoice-2"
-              name="breedChoice-2"
-              value={formData.breedChoices[2]?.breed || ''}
-              onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            >
-              <option value="">No 3rd Choice</option>
-              {breeds.map((breed) => (
-                <option key={breed.id} value={breed.id}>
-                  {breed.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
       </div>
       
@@ -412,28 +372,7 @@ const PuppyPreferencesForm = () => {
         </select>
       </div>
       
-      <div>
-        <label htmlFor="secondPickupLocation" className="block text-lg font-medium text-gray-900 mb-1">
-          Second Choice Pick-up Location
-        </label>
-        <p className="text-sm text-gray-600 mb-2">
-          If your favorite location is not available, what would your second choice be?
-        </p>
-        <select
-          id="secondPickupLocation"
-          name="secondPickupLocation"
-          value={formData.secondPickupLocation}
-          onChange={handleInputChange}
-          className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-        >
-          <option value="">Select One</option>
-          <option value="denver">Denver, CO (Headquarters)</option>
-          <option value="chicago">Chicago, IL</option>
-          <option value="dallas">Dallas, TX</option>
-          <option value="seattle">Seattle, WA</option>
-          <option value="miami">Miami, FL</option>
-        </select>
-      </div>
+      
       
       <div>
         <h3 className="text-lg font-medium text-gray-900 mb-4">
