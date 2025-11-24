@@ -181,16 +181,24 @@ const ApplicationForm = () => {
         
         {renderStepContent()}
         
-        {/* Validation errors display */}
-        {!isStepValid(currentStep) && (
-          <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <p className="text-yellow-800 font-medium mb-2">Please complete all required fields:</p>
-            <ul className="list-disc list-inside text-yellow-700 text-sm space-y-1">
-              {getStepValidationErrors(currentStep).map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </div>
+        {/* Validation errors display - only for preferred colors and coat types */}
+        {!isStepValid(currentStep) && currentStep === 2 && (
+          (() => {
+            const errors = getStepValidationErrors(currentStep);
+            const filteredErrors = errors.filter(
+              error => error.includes('preferred color') || error.includes('preferred coat type')
+            );
+            return filteredErrors.length > 0 ? (
+              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-yellow-800 font-medium mb-2">Please complete all required fields:</p>
+                <ul className="list-disc list-inside text-yellow-700 text-sm space-y-1">
+                  {filteredErrors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null;
+          })()
         )}
         
         {submitError && (

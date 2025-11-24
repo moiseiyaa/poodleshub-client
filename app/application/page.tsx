@@ -176,7 +176,7 @@ const ApplicationPage = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Application Process</h3>
                 <ol className="space-y-4">
                   <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                    <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
                       1
                     </div>
                     <div>
@@ -185,7 +185,7 @@ const ApplicationPage = () => {
                     </div>
                   </li>
                   <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                    <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
                       2
                     </div>
                     <div>
@@ -194,7 +194,7 @@ const ApplicationPage = () => {
                     </div>
                   </li>
                   <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                    <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
                       3
                     </div>
                     <div>
@@ -203,7 +203,7 @@ const ApplicationPage = () => {
                     </div>
                   </li>
                   <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                    <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
                       4
                     </div>
                     <div>
@@ -212,7 +212,7 @@ const ApplicationPage = () => {
                     </div>
                   </li>
                   <li className="flex">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
+                    <div className="shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">
                       5
                     </div>
                     <div>
