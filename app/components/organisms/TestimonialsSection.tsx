@@ -65,7 +65,7 @@ const TestimonialsSection = () => {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Testimonial Initials */}
               <div className="md:w-1/3 flex flex-col items-center">
-                <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                <div className="relative w-32 h-32 rounded-full bg-linear-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4 border-4 border-white shadow-md">
                   <span className="text-3xl font-bold text-white">
                     {testimonials[activeIndex].initials}
                   </span>

@@ -17,7 +17,7 @@ declare global {
 
 export default function CrispProvider({ 
   children, 
-  websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID 
+  websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID || "dffd5542-eb23-4338-8bf7-33df9a51e8f1"
 }: CrispProviderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 

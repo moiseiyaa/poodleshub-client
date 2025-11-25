@@ -6,6 +6,7 @@ import CrispProvider from "./components/providers/CrispProvider";
 import CrispChatButton from "./components/atoms/CrispChatButton";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import { AdminAuthProvider } from "./context/AdminAuthContext";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -87,17 +88,19 @@ export default function RootLayout({
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
           Skip to main content
         </a>
-        <CrispProvider>
-          <CartProvider>
-            <Navbar />
-            <main id="main-content" className="grow pt-16 md:pt-20">
-              {children}
-            </main>
-            <Footer />
-            <CrispChatButton />
-            <ScrollToTop threshold={400} />
-          </CartProvider>
-        </CrispProvider>
+        <AdminAuthProvider>
+          <CrispProvider>
+            <CartProvider>
+              <Navbar />
+              <main id="main-content" className="grow pt-16 md:pt-20">
+                {children}
+              </main>
+              <Footer />
+              <CrispChatButton />
+              <ScrollToTop threshold={400} />
+            </CartProvider>
+          </CrispProvider>
+        </AdminAuthProvider>
       </body>
     </html>
   );

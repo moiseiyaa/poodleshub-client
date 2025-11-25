@@ -10,14 +10,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-linear-to-br from-primary-900 via-primary-800 to-primary-900 text-blue relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
-        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary-400 mix-blend-overlay animate-float"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-secondary-400 mix-blend-overlay animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-40 right-20 w-20 h-20 rounded-full bg-accent-purple mix-blend-overlay animate-float" style={{ animationDelay: '2s' }}></div>
-      </div>
-      <div className="container mx-auto px-4 md:px-6 max-w-[1440px] py-16 relative z-10">
+    <footer className="bg-linear-to-br from-primary-900 via-primary-800 to-primary-900 text-blue">
+      <div className="container mx-auto px-4 md:px-6 max-w-[1440px] py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
