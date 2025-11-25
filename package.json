@@ -16,6 +16,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "clsx": "^2.0.0",
+    "crisp-sdk-web": "^1.0.26",
     "next": "16.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

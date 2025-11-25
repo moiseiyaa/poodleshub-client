@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./components/organisms/Navbar";
 import Footer from "./components/organisms/Footer";
-import WhatsAppSupport from "./components/organisms/WhatsAppSupport";
+import CrispProvider from "./components/providers/CrispProvider";
+import CrispChatButton from "./components/atoms/CrispChatButton";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
@@ -86,15 +87,17 @@ export default function RootLayout({
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
           Skip to main content
         </a>
-        <CartProvider>
-          <Navbar />
-          <main id="main-content" className="grow pt-16 md:pt-20">
-            {children}
-          </main>
-          <Footer />
-          <WhatsAppSupport />
-          <ScrollToTop threshold={400} />
-        </CartProvider>
+        <CrispProvider>
+          <CartProvider>
+            <Navbar />
+            <main id="main-content" className="grow pt-16 md:pt-20">
+              {children}
+            </main>
+            <Footer />
+            <CrispChatButton />
+            <ScrollToTop threshold={400} />
+          </CartProvider>
+        </CrispProvider>
       </body>
     </html>
   );
