@@ -63,15 +63,12 @@ const TestimonialsSection = () => {
               &ldquo;
             </div>
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Testimonial Image */}
+              {/* Testimonial Initials */}
               <div className="md:w-1/3 flex flex-col items-center">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-white shadow-md">
-                  <Image
-                    src={testimonials[activeIndex].image || '/images/testimonials/placeholder.jpg'}
-                    alt={testimonials[activeIndex].name}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4 border-4 border-white shadow-md">
+                  <span className="text-3xl font-bold text-white">
+                    {testimonials[activeIndex].initials}
+                  </span>
                 </div>
                 <h4 className="text-lg font-bold text-gray-900">{testimonials[activeIndex].name}</h4>
                 <p className="text-gray-600 mb-2">{testimonials[activeIndex].location}</p>
