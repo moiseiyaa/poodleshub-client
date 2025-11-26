@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaPinterest } from 'react-icons/fa';
+import { FaFacebook, FaTiktok, FaInstagram, FaYoutube, FaPinterest } from 'react-icons/fa';
 
 /**
  * Footer component for PuppyHub USA website
@@ -30,19 +30,19 @@ const Footer = () => {
               Finding loving homes for puppies across the United States.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
+              <a href="https://www.facebook.com/share/17fhUVni9G/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
                 <FaFacebook className="h-5 w-5 text-white" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
-                <FaTwitter className="h-5 w-5 text-white" />
+              <a href="https://www.tiktok.com/@puppyhub_usa?_r=1&_t=ZT-91iUsA27Lpu" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
+                <FaTiktok className="h-5 w-5 text-white" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
+              <a href="https://www.instagram.com/puppyhub_usa?igsh=Yno2NjJxdGNhMDJ0&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
                 <FaInstagram className="h-5 w-5 text-white" />
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
+              <a href="https://youtube.com/@puppyhubusa?si=xqQZMQGWA3b3-1rU" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
                 <FaYoutube className="h-5 w-5 text-white" />
               </a>
-              <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
+              <a href="https://pin.it/3Drt6uli1" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="bg-primary-700 hover:bg-primary-600 p-2 rounded-full transition-all duration-300 hover:shadow-glow transform hover:scale-110">
                 <FaPinterest className="h-5 w-5 text-white" />
               </a>
             </div>
