@@ -7,6 +7,7 @@ import CrispChatButton from "./components/atoms/CrispChatButton";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
+import { Analytics } from '@vercel/analytics/react';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -98,6 +99,7 @@ export default function RootLayout({
               <Footer />
               <CrispChatButton />
               <ScrollToTop threshold={400} />
+              <Analytics />
             </CartProvider>
           </CrispProvider>
         </AdminAuthProvider>
