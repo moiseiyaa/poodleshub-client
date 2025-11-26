@@ -9,8 +9,7 @@ export interface Puppy {
   color: string;
   generation: string;
   parents: {
-    sire: string;
-    dam: string;
+    mother: string;
   };
   vaccinations: string[];
   price: number;
@@ -29,8 +28,7 @@ export const puppies: Puppy[] = [
     color: 'apricot',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/poodle-sire-1.jpg',
-      dam: '/images/parents/poodle-dam-1.jpg'
+      mother: '/images/parents/poodle-dam-1.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
     price: 875,
@@ -47,8 +45,7 @@ export const puppies: Puppy[] = [
     color: 'black',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/poodle-sire-2.jpg',
-      dam: '/images/parents/poodle-dam-2.jpg'
+      mother: '/images/parents/poodle-dam-2.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies'],
     price: 925,
@@ -65,8 +62,7 @@ export const puppies: Puppy[] = [
     color: 'white',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/poodle-sire-3.jpg',
-      dam: '/images/parents/poodle-dam-3.jpg'
+      mother: '/images/parents/poodle-dam-3.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
     price: 799,
@@ -83,8 +79,7 @@ export const puppies: Puppy[] = [
     color: 'white',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/maltese-sire-1.jpg',
-      dam: '/images/parents/maltese-dam-1.jpg'
+      mother: '/images/parents/maltese-dam-1.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
     price: 899,
@@ -101,8 +96,7 @@ export const puppies: Puppy[] = [
     color: 'white',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/maltese-sire-2.jpg',
-      dam: '/images/parents/maltese-dam-2.jpg'
+      mother: '/images/parents/maltese-dam-2.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies'],
     price: 925,
@@ -119,8 +113,7 @@ export const puppies: Puppy[] = [
     color: 'cream',
     generation: 'Purebred',
     parents: {
-      sire: '/images/parents/maltese-sire-3.jpg',
-      dam: '/images/parents/maltese-dam-3.jpg'
+      mother: '/images/parents/maltese-dam-3.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
     price: 875,
@@ -137,8 +130,7 @@ export const puppies: Puppy[] = [
     color: 'apricot',
     generation: 'F1b',
     parents: {
-      sire: '/images/parents/maltipoo-sire-1.jpg',
-      dam: '/images/parents/maltipoo-dam-1.jpg'
+      mother: '/images/parents/maltipoo-dam-1.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies'],
     price: 825,
@@ -155,8 +147,7 @@ export const puppies: Puppy[] = [
     color: 'cream',
     generation: 'F1',
     parents: {
-      sire: '/images/parents/goldendoodle-sire-1.jpg',
-      dam: '/images/parents/goldendoodle-dam-1.jpg'
+      mother: '/images/parents/goldendoodle-dam-1.jpg'
     },
     vaccinations: ['DHLPP'],
     price: 875,
@@ -173,8 +164,7 @@ export const puppies: Puppy[] = [
     color: 'chocolate',
     generation: 'F1b',
     parents: {
-      sire: '/images/parents/labradoodle-sire-1.jpg',
-      dam: '/images/parents/labradoodle-dam-1.jpg'
+      mother: '/images/parents/labradoodle-dam-1.jpg'
     },
     vaccinations: ['DHLPP', 'Bordetella'],
     price: 699,
@@ -191,8 +181,7 @@ export const puppies: Puppy[] = [
     color: 'tri-color',
     generation: 'F1',
     parents: {
-      sire: '/images/parents/bernedoodle-sire-1.jpg',
-      dam: '/images/parents/bernedoodle-dam-1.jpg'
+      mother: '/images/parents/bernedoodle-dam-1.jpg'
     },
     vaccinations: ['DHLPP'],
     price: 975,
@@ -209,8 +198,7 @@ export const puppies: Puppy[] = [
     color: 'white',
     generation: 'F1b',
     parents: {
-      sire: '/images/parents/maltipoo-sire-2.jpg',
-      dam: '/images/parents/maltipoo-dam-2.jpg'
+      mother: '/images/parents/maltipoo-dam-2.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies'],
     price: 825,
@@ -227,8 +215,7 @@ export const puppies: Puppy[] = [
     color: 'golden',
     generation: 'F1',
     parents: {
-      sire: '/images/parents/goldendoodle-sire-1.jpg',
-      dam: '/images/parents/goldendoodle-dam-1.jpg'
+      mother: '/images/parents/goldendoodle-dam-1.jpg'
     },
     vaccinations: ['DHLPP'],
     price: 875,

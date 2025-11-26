@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { FaBars, FaTimes, FaChevronDown, FaShoppingCart } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown, FaBox } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { getAllBreeds } from '../../data/breeds';
 
@@ -185,7 +185,7 @@ const Navbar = () => {
               className="relative p-2 text-gray-800 hover:text-primary-500 transition-colors group"
             >
               <div className="relative">
-                <FaShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                <FaBox className="h-5 w-5 transition-transform group-hover:scale-110" />
                 {items.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-linear-to-r from-secondary-500 to-accent-pink text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md transform transition-all group-hover:scale-110">
                     {items.length}
@@ -205,7 +205,7 @@ const Navbar = () => {
           {/* Cart icon left of burger in mobile view */}
           <div className="flex items-center space-x-2 md:hidden">
             <Link href="/cart" className="p-2 text-gray-800 hover:text-primary-500 transition-colors" aria-label="Cart">
-              <FaShoppingCart className="h-5 w-5" />
+              <FaBox className="h-5 w-5" />
             </Link>
             {/* Mobile Menu Button */}
             <button
@@ -335,7 +335,7 @@ const Navbar = () => {
             </Link>
             <div className="flex flex-col space-y-4 pt-6 border-t border-gray-200">
               <Link href="/cart" className="flex items-center" onClick={() => setIsOpen(false)}>
-                <FaShoppingCart className="h-5 w-5 mr-2 text-gray-800" />
+                <FaBox className="h-5 w-5 mr-2 text-gray-800" />
                 <span className="text-xl font-medium text-gray-800">
                   Cart {items.length > 0 && `(${items.length})`}
                 </span>

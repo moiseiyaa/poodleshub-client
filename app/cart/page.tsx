@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaTrash, FaShoppingCart, FaArrowLeft, FaCheckCircle, FaShieldAlt } from 'react-icons/fa';
+import { FaTrash, FaBox, FaArrowLeft, FaCheckCircle, FaShieldAlt } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
 import { useCart } from '../context/CartContext';
 
@@ -36,7 +36,7 @@ const CartPage = () => {
       <Container>
         <div className="py-16 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-6">
-            <FaShoppingCart className="h-10 w-10 text-gray-400" />
+            <FaBox className="h-10 w-10 text-gray-400" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Cart is Empty</h1>
           <p className="text-lg text-gray-700 mb-8">

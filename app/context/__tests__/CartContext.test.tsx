@@ -22,8 +22,8 @@ const localStorageMock = (() => {
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 // Mock puppy data for testing
-const mockPuppy = {
-  id: 'puppy-1',
+const mockPuppy: Puppy = {
+  id: 'p-001',
   name: 'Bella',
   breed: 'Goldendoodle',
   gender: 'female',
@@ -34,10 +34,12 @@ const mockPuppy = {
   description: 'Bella is a sweet and playful Goldendoodle puppy.',
   color: 'Cream',
   weight: 5.5,
+  generation: 'F1',
   parents: {
-    father: { name: 'Max', breed: 'Golden Retriever', weight: 75 },
-    mother: { name: 'Luna', breed: 'Poodle', weight: 45 }
-  }
+    mother: '/images/parents/goldendoodle-dam-1.jpg'
+  },
+  vaccinations: ['DHLPP', 'Rabies'],
+  notes: 'Sweet and playful Goldendoodle puppy'
 };
 
 // Test component that uses the cart context
