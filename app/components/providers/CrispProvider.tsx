@@ -38,7 +38,7 @@ export default function CrispProvider({
         // Set company info
         window.$crisp.push(['set', 'company', [
           ['name', 'PuppyHub USA'],
-          ['url', 'https://poodleshubusa.com'],
+          ['url', 'https://puppyhubusa.com'],
           ['description', 'Professional puppy adoption platform']
         ]]);
 
@@ -84,7 +84,7 @@ export default function CrispProvider({
               })();
               window.$crisp.push(['set', 'company', [
                 ['name', 'PuppyHub USA'],
-                ['url', 'https://poodleshubusa.com'],
+                ['url', 'https://puppyhubusa.com'],
                 ['description', 'Professional puppy adoption platform']
               ]]);
               window.$crisp.push(['set', 'color:web', '#7c3aed']);

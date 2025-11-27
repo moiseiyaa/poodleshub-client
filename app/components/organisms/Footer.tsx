@@ -116,13 +116,13 @@ const Footer = () => {
               <p className="mb-2">1234 Puppy Lane</p>
               <p className="mb-2">Denver, CO 80202</p>
               <p className="mb-2">
-                <a href="tel:+18005551234" className="hover:text-white transition-colors">
-                  (800) 555-1234
+                <a href="tel:+19092654575" className="hover:text-white transition-colors">
+                  +1 909 265-4575
                 </a>
               </p>
               <p>
-                <a href="mailto:info@puppyhubusa.com" className="hover:text-white transition-colors">
-                  info@puppyhubusa.com
+                <a href="mailto:puppyhubusa@gmail.com" className="hover:text-white transition-colors">
+                  puppyhubusa@gmail.com
                 </a>
               </p>
             </address>

@@ -4,6 +4,7 @@ import AvailablePuppiesPreview from './components/organisms/AvailablePuppiesPrev
 import HowItWorksSection from './components/organisms/HowItWorksSection';
 import TestimonialsSection from './components/organisms/TestimonialsSection';
 import HealthGuaranteeSection from './components/organisms/HealthGuaranteeSection';
+import BlackFridayInteractiveSection from './components/organisms/BlackFridayInteractiveSection';
 import TrainingSection from './components/organisms/TrainingSection';
 import FAQPreviewSection from './components/organisms/FAQPreviewSection';
 
@@ -20,6 +21,7 @@ export default function Home() {
       <HowItWorksSection />
       <TestimonialsSection />
       <HealthGuaranteeSection />
+      <BlackFridayInteractiveSection />
       <TrainingSection />
       <FAQPreviewSection />
     </>

@@ -80,7 +80,9 @@ const AgreementsForm = () => {
             <option value="">Select Payment Method</option>
             <option value="creditCard">Credit/Debit Card</option>
             <option value="bankTransfer">Bank Transfer</option>
-            <option value="crypto">Cryptocurrency</option>
+            <option value="applePay">Apple Pay</option>
+            <option value="googlePay">Google Pay</option>
+            <option value="binance">Binance</option>
           </select>
         </div>
         

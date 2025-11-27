@@ -123,8 +123,7 @@ const TermsPage = () => {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Payment Terms</h2>
               <p className="text-gray-700 mb-4">
-                <strong>Payment Methods:</strong> We accept credit cards, debit cards, PayPal, bank transfers, and other 
-                payment methods as specified on our website.
+                <strong>Payment Methods:</strong> We accept credit cards, debit cards, Apple Pay, Google Pay, bank transfers, and Binance as specified on our website.
               </p>
               <p className="text-gray-700 mb-4">
                 <strong>Payment Schedule:</strong>
@@ -231,10 +230,10 @@ const TermsPage = () => {
                   Denver, CO 80202
                 </p>
                 <p className="text-gray-700 mb-2">
-                  Email: <a href="mailto:legal@puppyhubusa.com" className="text-primary hover:text-primary/80">legal@puppyhubusa.com</a>
+                  Email: <a href="mailto:puppyhubusa@gmail.com" className="text-primary hover:text-primary/80">puppyhubusa@gmail.com</a>
                 </p>
                 <p className="text-gray-700">
-                  Phone: <a href="tel:+18005551234" className="text-primary hover:text-primary/80">(800) 555-1234</a>
+                  Phone: <a href="tel:+19092654575" className="text-primary hover:text-primary/80">+1 909 265-4575</a>
                 </p>
               </div>
             </section>

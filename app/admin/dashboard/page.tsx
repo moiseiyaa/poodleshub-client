@@ -23,7 +23,7 @@ function PuppiesPanel() {
     setLoading(true);
     setError("");
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const res = await fetch(`${apiUrl}/api/puppies`);
       if (!res.ok) throw new Error("Failed to fetch puppies");
       setPuppies(await res.json());
@@ -41,7 +41,7 @@ function PuppiesPanel() {
     setUpdateStatus((us) => ({ ...us, [id]: true }));
     setError("");
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const res = await fetch(`${apiUrl}/api/puppies/${id}`, {
         method: 'PATCH',
         headers: {

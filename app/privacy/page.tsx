@@ -237,10 +237,10 @@ const PrivacyPage = () => {
                   Denver, CO 80202
                 </p>
                 <p className="text-gray-700 mb-2">
-                  Email: <a href="mailto:privacy@puppyhubusa.com" className="text-primary hover:text-primary/80">privacy@puppyhubusa.com</a>
+                  Email: <a href="mailto:puppyhubusa@gmail.com" className="text-primary hover:text-primary/80">puppyhubusa@gmail.com</a>
                 </p>
                 <p className="text-gray-700">
-                  Phone: <a href="tel:+18005551234" className="text-primary hover:text-primary/80">(800) 555-1234</a>
+                  Phone: <a href="tel:+19092654575" className="text-primary hover:text-primary/80">+1 909 265-4575</a>
                 </p>
               </div>
             </section>

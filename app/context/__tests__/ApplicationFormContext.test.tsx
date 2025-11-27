@@ -207,8 +207,6 @@ describe('ApplicationFormContext', () => {
         breedChoices: [{ priority: 1, breed: 'goldendoodle' }],
         preferredSizes: ['mini'],
         preferredGender: 'male',
-        preferredColors: ['cream'],
-        preferredCoatTypes: ['wavy'],
         activityLevel: 'moderate',
         pickupLocation: 'denver',
         deliveryMethod: 'pickup',

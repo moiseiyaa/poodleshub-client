@@ -7,7 +7,6 @@ import { useApplicationForm } from '../../../context/ApplicationFormContext';
 import { useCart } from '../../../context/CartContext';
 import { getAllBreeds } from '../../../data/breeds';
 import { getAvailablePuppies, Puppy } from '../../../data/puppies';
-import { getFormattedColors } from '../../../data/colors';
 import { FaMars, FaVenus, FaEye } from 'react-icons/fa';
 
 /**
@@ -21,14 +20,13 @@ const PuppyPreferencesForm = () => {
   const [showAvailablePuppies, setShowAvailablePuppies] = useState(false);
   const [selectedPuppyId, setSelectedPuppyId] = useState<string>('');
   const availablePuppyOptions = getAvailablePuppies();
-  const availableColors = getFormattedColors();
 
   // Autofill from cart (only if preferences are empty and cart has a puppy)
   useEffect(() => {
     const puppyInCart = items[0]?.puppy;
     if (!puppyInCart) return;
     // Only do this if form is still empty
-    const preferencesEmpty = !formData.breedChoices?.[0]?.breed && !formData.preferredGender && (!formData.preferredColors || formData.preferredColors.length === 0);
+    const preferencesEmpty = !formData.breedChoices?.[0]?.breed && !formData.preferredGender;
     if (!preferencesEmpty) return;
     // Find breed id for this puppy's breed
     const breedId = breeds.find(b => b.name.toLowerCase() === puppyInCart.breed.toLowerCase())?.id;
@@ -36,7 +34,6 @@ const PuppyPreferencesForm = () => {
     updateFormData({
       breedChoices: [{ priority: 1, breed: breedId }],
       preferredGender: puppyInCart.gender,
-      preferredColors: [puppyInCart.color]
     });
   }, []); // Only run on mount
 
@@ -71,17 +68,8 @@ const PuppyPreferencesForm = () => {
       puppies = puppies.filter(p => p.gender === formData.preferredGender);
     }
     
-    // Filter by color if selected
-    if (formData.preferredColors.length > 0) {
-      puppies = puppies.filter(p => 
-        formData.preferredColors.some(color => 
-          p.color.toLowerCase().includes(color.toLowerCase())
-        )
-      );
-    }
-    
     return puppies;
-  }, [formData.breedChoices, formData.preferredGender, formData.preferredColors, breeds]);
+  }, [formData.breedChoices, formData.preferredGender, breeds]);
   
   const calculateAge = (birthDate: string): string => {
     const birthDateObj = new Date(birthDate);
@@ -113,16 +101,6 @@ const PuppyPreferencesForm = () => {
           ? [...formData.preferredSizes, checkboxValue]
           : formData.preferredSizes.filter(size => size !== checkboxValue);
         updateFormData({ preferredSizes: updatedSizes });
-      } else if (checkboxName === 'preferredColors') {
-        const updatedColors = checked 
-          ? [...formData.preferredColors, checkboxValue]
-          : formData.preferredColors.filter(color => color !== checkboxValue);
-        updateFormData({ preferredColors: updatedColors });
-      } else if (checkboxName === 'preferredCoatTypes') {
-        const updatedCoatTypes = checked 
-          ? [...formData.preferredCoatTypes, checkboxValue]
-          : formData.preferredCoatTypes.filter(coatType => coatType !== checkboxValue);
-        updateFormData({ preferredCoatTypes: updatedCoatTypes });
       }
       return;
     }
@@ -329,103 +307,6 @@ const PuppyPreferencesForm = () => {
         </div>
       </div>
       
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Preferred Color <span className="text-red-500">*</span>
-        </h3>
-        <p className="text-sm text-gray-600 mb-2">Check all that apply</p>
-        
-        <div className="space-y-2">
-          {availableColors.map((color) => (
-            <div key={color} className="flex items-center">
-              <input
-                type="checkbox"
-                id={`preferredColors-${color.toLowerCase().replace(' ', '-')}`}
-                name={`preferredColors-${color.toLowerCase().replace(' ', '-')}`}
-                checked={formData.preferredColors.includes(color.toLowerCase())}
-                onChange={handleInputChange}
-                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                disabled={!!selectedPuppyId}
-              />
-              <label 
-                htmlFor={`preferredColors-${color.toLowerCase().replace(' ', '-')}`} 
-                className="ml-2 block text-sm text-gray-700"
-              >
-                {color}
-              </label>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Preferred Coat Type <span className="text-red-500">*</span>
-        </h3>
-        <p className="text-sm text-gray-600 mb-2">Check all that apply</p>
-        
-        <div className="space-y-2">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="preferredCoatTypes-curly"
-              name="preferredCoatTypes-curly"
-              checked={formData.preferredCoatTypes.includes('curly')}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-              disabled={!!selectedPuppyId}
-            />
-            <label htmlFor="preferredCoatTypes-curly" className="ml-2 block text-sm text-gray-700">
-              Curly (Poodle-like)
-            </label>
-          </div>
-          
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="preferredCoatTypes-wavy"
-              name="preferredCoatTypes-wavy"
-              checked={formData.preferredCoatTypes.includes('wavy')}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-              disabled={!!selectedPuppyId}
-            />
-            <label htmlFor="preferredCoatTypes-wavy" className="ml-2 block text-sm text-gray-700">
-              Wavy (Doodle-like)
-            </label>
-          </div>
-          
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="preferredCoatTypes-straight"
-              name="preferredCoatTypes-straight"
-              checked={formData.preferredCoatTypes.includes('straight')}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-              disabled={!!selectedPuppyId}
-            />
-            <label htmlFor="preferredCoatTypes-straight" className="ml-2 block text-sm text-gray-700">
-              Straight
-            </label>
-          </div>
-          
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="preferredCoatTypes-furnishings"
-              name="preferredCoatTypes-furnishings"
-              checked={formData.preferredCoatTypes.includes('furnishings')}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-              disabled={!!selectedPuppyId}
-            />
-            <label htmlFor="preferredCoatTypes-furnishings" className="ml-2 block text-sm text-gray-700">
-              With Furnishings (beard, eyebrows)
-            </label>
-          </div>
-        </div>
-      </div>
       
       <div>
         <label htmlFor="activityLevel" className="block text-lg font-medium text-gray-900 mb-1">

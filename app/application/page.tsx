@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { FaCheckCircle, FaShieldAlt, FaHome, FaHeart } from 'react-icons/fa';
+import { FaCheckCircle, FaShieldAlt, FaHome, FaHeart, FaCreditCard, FaApple, FaGoogle, FaCoins, FaBtc } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
 import ApplicationForm from '../components/organisms/ApplicationForm/ApplicationForm';
 import { ApplicationFormProvider } from '../context/ApplicationFormContext';
@@ -181,7 +181,7 @@ const ApplicationPage = () => {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Submit Application</h4>
-                      <p className="text-sm text-gray-600">Complete the form below</p>
+                      <p className="text-sm text-gray-600">Fill out our comprehensive form</p>
                     </div>
                   </li>
                   <li className="flex">
@@ -199,7 +199,38 @@ const ApplicationPage = () => {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Place Deposit</h4>
-                      <p className="text-sm text-gray-600">If approved, secure your spot</p>
+                      <div className="space-y-2 mt-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <FaCreditCard className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="text-sm font-medium">Credit Cards</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <FaApple className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="text-sm font-medium">Apple Pay</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <FaGoogle className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="text-sm font-medium">Google Pay</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <FaCoins className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="text-sm font-medium">Bank Transfer</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <FaBtc className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="text-sm font-medium">Binance</span>
+                        </div>
+                      </div>
                     </div>
                   </li>
                   <li className="flex">
