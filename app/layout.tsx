@@ -94,7 +94,7 @@ export default function RootLayout({
             <CartProvider>
               <PromotionNavbar />
               <Navbar />
-              <main id="main-content" className="grow pt-20 md:pt-40">
+              <main id="main-content" className="grow pt-16 md:pt-32">
                 {children}
               </main>
               <Footer />

@@ -58,7 +58,7 @@ const PromotionPage = () => {
   return (
     <div className="bg-linear-to-b from-red-50 via-white to-green-50 min-h-screen">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden">
+      <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-10 right-10 opacity-20 animate-pulse">
           <FaSnowflake className="h-24 w-24 text-blue-400" />
