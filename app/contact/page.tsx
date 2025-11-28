@@ -71,8 +71,8 @@ const ContactPage = () => {
     {
       icon: <FaMapMarkerAlt className="h-6 w-6 text-primary" />,
       title: 'Headquarters',
-      content: '1234 Puppy Lane, Denver, CO 80202',
-      link: 'https://maps.google.com/?q=1234+Puppy+Lane,+Denver,+CO+80202'
+      content: '4747 S. Broadway Suite 1, Englewood, CO 80113',
+      link: 'https://maps.google.com/?q=4747+S.+Broadway+Suite+1,+Englewood,+CO+80113'
     },
     {
       icon: <FaClock className="h-6 w-6 text-primary" />,
@@ -307,7 +307,7 @@ const ContactPage = () => {
                 ></iframe>
               </div>
               <p className="text-gray-700">
-                Our Denver headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located in downtown Denver with ample parking available.
+                Our Englewood headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located on South Broadway with ample parking available.
               </p>
             </div>
             

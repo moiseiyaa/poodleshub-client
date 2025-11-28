@@ -226,8 +226,8 @@ const TermsPage = () => {
                   <strong>PuppyHub USA</strong>
                 </p>
                 <p className="text-gray-700 mb-2">
-                  1234 Puppy Lane<br />
-                  Denver, CO 80202
+                  4747 S. Broadway Suite 1<br />
+                  Englewood, CO 80113
                 </p>
                 <p className="text-gray-700 mb-2">
                   Email: <a href="mailto:puppyhubusa@gmail.com" className="text-primary hover:text-primary/80">puppyhubusa@gmail.com</a>
