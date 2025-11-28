@@ -54,7 +54,7 @@ export const applicationFormSchema = z.object({
   welcomeCall: z.boolean().default(false),
   
   // Payment Info (for deposit)
-  paymentMethod: z.enum(['creditCard', 'bankTransfer', 'applePay', 'googlePay', 'binance', 'crypto']).optional(),
+  paymentMethod: z.enum(['creditCard', 'bankTransfer', 'applePay', 'googlePay', 'paypal', 'cashapp', 'binance', 'crypto']).optional(),
   depositAmount: z.coerce.number().default(300),
   
   // Optional: Specific puppy ID if selected

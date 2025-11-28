@@ -83,6 +83,8 @@ const AgreementsForm = () => {
             <option value="bankTransfer">Bank Transfer</option>
             <option value="applePay">Apple Pay</option>
             <option value="googlePay">Google Pay</option>
+            <option value="paypal">PayPal</option>
+            <option value="cashapp">Cash App</option>
             <option value="binance">Binance</option>
           </select>
         </div>

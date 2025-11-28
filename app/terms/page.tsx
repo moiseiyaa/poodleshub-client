@@ -123,7 +123,7 @@ const TermsPage = () => {
             <section>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Payment Terms</h2>
               <p className="text-gray-700 mb-4">
-                <strong>Payment Methods:</strong> We accept credit cards, debit cards, Apple Pay, Google Pay, bank transfers, and Binance as specified on our website.
+                <strong>Payment Methods:</strong> We accept credit cards, debit cards, Apple Pay, Google Pay, PayPal, Cash App, bank transfers, and Binance as specified on our website.
               </p>
               <p className="text-gray-700 mb-4">
                 <strong>Payment Schedule:</strong>
