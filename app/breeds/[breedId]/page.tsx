@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation';
 import { FaCheckCircle, FaPaw, FaHeart, FaBrain, FaRuler } from 'react-icons/fa';
 import Container from '../../components/organisms/Container';
 import PuppyCard from '../../components/molecules/PuppyCard';
-import { getBreedById, getAllBreeds } from '../../data/breeds';
+import { getBreedById, getAllBreeds, getBreedImage } from '../../data/breeds';
 import { getPuppiesByBreed, Puppy } from '../../data/puppies';
 import { getTestimonialsByBreed } from '../../data/testimonials';
 import { getFormattedColors, getPuppiesByColor } from '../../data/colors';
@@ -97,7 +97,7 @@ const BreedPage = () => {
             <div className="relative">
               <div className="relative h-[400px] rounded-2xl overflow-hidden">
                 <Image
-                  src={breed.image || '/images/placeholder-breed.jpg'}
+                  src={getBreedImage(breed)}
                   alt={`${breed.name} breed`}
                   fill
                   className="object-cover"

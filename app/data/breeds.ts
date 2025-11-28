@@ -1,3 +1,7 @@
+// Import color utilities for consistency
+import { getFormattedColors, getPuppiesByColor } from './colors';
+import { getPuppiesByBreed } from './puppies';
+
 export interface Breed {
   id: string;
   name: string;
@@ -15,9 +19,6 @@ export interface Breed {
   image: string;
   gallery: string[];
 }
-
-// Import color utilities for consistency
-import { getFormattedColors, getPuppiesByColor } from './colors';
 
 export const breeds: Breed[] = [
   {
@@ -160,4 +161,29 @@ export const getBreedById = (id: string): Breed | undefined => {
 
 export const getAllBreeds = (): Breed[] => {
   return breeds;
+};
+
+/**
+ * Get breed image, falling back to a puppy image of the same breed if breed image is missing
+ */
+export const getBreedImage = (breed: Breed | undefined): string => {
+  if (!breed) return '/images/placeholder-breed.jpg';
+  
+  // If breed has a valid image, use it
+  if (breed.image && breed.image !== '/images/placeholder-breed.jpg') {
+    return breed.image;
+  }
+  
+  // Otherwise, try to find a puppy image from the same breed
+  const breedPuppies = getPuppiesByBreed(breed.name);
+  
+  if (breedPuppies.length > 0) {
+    const firstPuppy = breedPuppies[0];
+    if (firstPuppy.images && firstPuppy.images.length > 0) {
+      return firstPuppy.images[0];
+    }
+  }
+  
+  // Final fallback
+  return '/images/placeholder-breed.jpg';
 };
