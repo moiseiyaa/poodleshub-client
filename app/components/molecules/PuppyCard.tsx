@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaMars, FaVenus, FaHeart } from 'react-icons/fa';
-import { Puppy } from '../../data/puppies';
+import { Puppy } from '../../lib/api/puppies';
 import { useCart } from '../../context/CartContext';
 
 interface PuppyCardProps {

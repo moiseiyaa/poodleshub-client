@@ -1,19 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaArrowRight, FaChevronLeft, FaChevronRight, FaPaw, FaHeart } from 'react-icons/fa';
 import Container from './Container';
 import PuppyCard from '../molecules/PuppyCard';
-import { getAvailablePuppies } from '../../data/puppies';
+import { getAvailablePuppies, Puppy } from '../../lib/api/puppies';
 
 /**
  * Enhanced Available Puppies Preview section component for the homepage
  * Features a modern carousel with smooth animations and working pagination
  */
 const AvailablePuppiesPreview = () => {
-  const availablePuppies = getAvailablePuppies();
+  const [availablePuppies, setAvailablePuppies] = useState<Puppy[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPuppies = async () => {
+      try {
+        const puppies = await getAvailablePuppies();
+        setAvailablePuppies(puppies);
+      } catch (error) {
+        console.error('Failed to fetch available puppies:', error);
+        setAvailablePuppies([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPuppies();
+  }, []);
   
   // Responsive puppies per view
   const puppiesPerView = { mobile: 1, tablet: 2, desktop: 4 };

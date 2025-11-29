@@ -1,19 +1,39 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaGift, FaSnowflake, FaFire, FaCheckCircle, FaArrowRight } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
-import { puppies } from '../data/puppies';
+import { puppiesApi, Puppy } from '../lib/api/puppies';
 
 /**
  * Black Friday & Christmas Promotion Page
  * Showcases featured puppies with festive design and holiday theme
  */
 const PromotionPage = () => {
+  const [allPuppies, setAllPuppies] = useState<Puppy[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPuppies = async () => {
+      try {
+        const puppies = await puppiesApi.getAll();
+        setAllPuppies(puppies);
+      } catch (error) {
+        console.error('Failed to fetch puppies:', error);
+        setAllPuppies([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPuppies();
+  }, []);
+
   // Get featured Poodles and Maltese puppies that are available
-  const poodlePuppies = puppies.filter(p => p.breed === 'Poodle' && p.status === 'available');
-  const maltesePuppies = puppies.filter(p => p.breed === 'Maltese' && p.status === 'available');
+  const poodlePuppies = allPuppies.filter(p => p.breed === 'Poodle' && p.status === 'available');
+  const maltesePuppies = allPuppies.filter(p => p.breed === 'Maltese' && p.status === 'available');
   
   // Create featured puppies with discount (20% off)
   // Prioritize showing 2 Poodles and 2 Maltese, or as many as available

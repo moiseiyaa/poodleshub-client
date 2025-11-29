@@ -9,7 +9,7 @@ import { FaCheckCircle, FaPaw, FaHeart, FaBrain, FaRuler } from 'react-icons/fa'
 import Container from '../../components/organisms/Container';
 import PuppyCard from '../../components/molecules/PuppyCard';
 import { getBreedById, getAllBreeds } from '../../data/breeds';
-import { getPuppiesByBreed, Puppy } from '../../data/puppies';
+import { getPuppiesByBreed, Puppy } from '../../lib/api/puppies';
 import { getTestimonialsByBreed } from '../../data/testimonials';
 import { getFormattedColors, getPuppiesByColor } from '../../data/colors';
 
@@ -24,6 +24,7 @@ const BreedPage = () => {
   const [availablePuppies, setAvailablePuppies] = useState<Puppy[]>([]);
   const [pastPuppies, setPastPuppies] = useState<Puppy[]>([]);
   const [testimonials, setTestimonials] = useState(getTestimonialsByBreed(breed?.name || ''));
+  const [isLoadingPuppies, setIsLoadingPuppies] = useState(true);
   
   useEffect(() => {
     if (breedId) {
@@ -31,15 +32,29 @@ const BreedPage = () => {
       setBreed(breedData);
       
       if (breedData) {
-        const allPuppies = getPuppiesByBreed(breedData.name);
-        setPuppies(allPuppies);
-        
-        // Filter available and past puppies
-        setAvailablePuppies(allPuppies.filter(puppy => puppy.status === 'available'));
-        setPastPuppies(allPuppies.filter(puppy => puppy.status === 'adopted'));
-        
         // Get testimonials for this breed
         setTestimonials(getTestimonialsByBreed(breedData.name));
+        
+        // Fetch puppies from API
+        const fetchPuppies = async () => {
+          try {
+            const allPuppies = await getPuppiesByBreed(breedData.name);
+            setPuppies(allPuppies);
+            
+            // Filter available and past puppies
+            setAvailablePuppies(allPuppies.filter(puppy => puppy.status === 'available'));
+            setPastPuppies(allPuppies.filter(puppy => puppy.status === 'adopted'));
+          } catch (error) {
+            console.error('Failed to fetch puppies by breed:', error);
+            setPuppies([]);
+            setAvailablePuppies([]);
+            setPastPuppies([]);
+          } finally {
+            setIsLoadingPuppies(false);
+          }
+        };
+
+        fetchPuppies();
       }
     }
   }, [breedId]);

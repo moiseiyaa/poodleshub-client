@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Puppy } from '../data/puppies';
+import { Puppy } from '../lib/api/puppies';
 
 interface CartItem {
   puppy: Puppy;
