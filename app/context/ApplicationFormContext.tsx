@@ -151,6 +151,14 @@ export const ApplicationFormProvider = ({ children }: ApplicationFormProviderPro
       const savedForm = localStorage.getItem('puppyhub-application-form');
       if (savedForm) {
         const parsedForm = JSON.parse(savedForm);
+        
+        // Clear cached data if it contains old test puppy IDs
+        if (parsedForm.puppyId && parsedForm.puppyId.startsWith('p-')) {
+          console.log('🧹 Clearing cached form data with old test puppy ID:', parsedForm.puppyId);
+          localStorage.removeItem('puppyhub-application-form');
+          return;
+        }
+        
         setFormData(parsedForm);
       }
     } catch (error) {
