@@ -53,7 +53,7 @@ export const puppiesApi = {
 
 // Helper functions
 export const getPuppyById = async (id: string): Promise<Puppy | undefined> => {
-  return await puppiesApi.getById(id);
+  return await puppiesApi.getById(id) || undefined;
 };
 
 export const getPuppiesByBreed = async (breed: string): Promise<Puppy[]> => {
