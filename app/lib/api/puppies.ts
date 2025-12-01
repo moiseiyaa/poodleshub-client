@@ -8,12 +8,17 @@ export interface Puppy {
   images: string[];
   color: string;
   generation: string;
-  parents: {
+  parents?: {
     mother: string;
   };
   vaccinations: string[];
   price: number;
-  notes: string;
+  notes?: string;
+  damImage?: string;
+  sireId?: string;
+  damId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 

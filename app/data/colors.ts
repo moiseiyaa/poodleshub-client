@@ -1,13 +1,21 @@
-import { getAvailablePuppies } from './puppies';
-
 /**
- * Get all unique colors from available puppies
- * This ensures we only show colors that actually exist in our current inventory
+ * Common color names for puppies
+ * This provides a static list of typical puppy colors for the application
  */
 export const getAvailableColors = (): string[] => {
-  const availablePuppies = getAvailablePuppies();
-  const uniqueColors = [...new Set(availablePuppies.map(puppy => puppy.color.toLowerCase()))];
-  return uniqueColors.sort();
+  return [
+    'black',
+    'white',
+    'golden',
+    'cream',
+    'apricot',
+    'chocolate',
+    'black and white',
+    'red',
+    'red and white',
+    'blue merle',
+    'sable'
+  ];
 };
 
 /**
@@ -22,19 +30,18 @@ export const getFormattedColors = (): string[] => {
 };
 
 /**
+ * Get puppies by color (placeholder for API integration)
+ */
+export const getPuppiesByColor = async (color: string) => {
+  // This would typically make an API call
+  // For now, return empty array to prevent errors
+  return [];
+};
+
+/**
  * Check if a specific color is available in any puppy
  */
 export const isColorAvailable = (color: string): boolean => {
   const availableColors = getAvailableColors();
   return availableColors.includes(color.toLowerCase());
-};
-
-/**
- * Get all puppies by color
- */
-export const getPuppiesByColor = (color: string) => {
-  const availablePuppies = getAvailablePuppies();
-  return availablePuppies.filter(puppy => 
-    puppy.color.toLowerCase() === color.toLowerCase()
-  );
 };
