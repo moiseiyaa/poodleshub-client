@@ -1,42 +1,42 @@
-\"use client\";
-import { useEffect, useState } from \"react\";
-import { useRouter } from \"next/navigation\";
-import Link from \"next/link\";
-import { useAdminAuth } from \"../../context/AdminAuthContext\";
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useAdminAuth } from "../../context/AdminAuthContext";
 
 const TABS = [
-  { key: \"applications\", label: \"Applications\" },
-  { key: \"puppies\", label: \"Puppies\" },
-  { key: \"reservations\", label: \"Reservations\" },
-  { key: \"notifications\", label: \"Notifications\" },
-  { key: \"clients\", label: \"Clients\" },
+  { key: "applications", label: "Applications" },
+  { key: "puppies", label: "Puppies" },
+  { key: "reservations", label: "Reservations" },
+  { key: "notifications", label: "Notifications" },
+  { key: "clients", label: "Clients" },
 ];
 
-const PUPPY_STATUS = [\"available\", \"reserved\", \"adopted\"];
+const PUPPY_STATUS = ["available", "reserved", "adopted"];
 
 const getApiUrl = () =>
   process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === \"production\"
-    ? \"https://api.puppyhubusa.com\"
-    : \"http://localhost:4000\");
+  (process.env.NODE_ENV === "production"
+    ? "https://api.puppyhubusa.com"
+    : "http://localhost:4000");
 
 function PuppiesPanel() {
   const { token } = useAdminAuth();
   const [puppies, setPuppies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(\"\");
+  const [error, setError] = useState("");
   const [updateStatus, setUpdateStatus] = useState<{ [k: string]: boolean }>({});
 
   async function fetchPuppies() {
     setLoading(true);
-    setError(\"\");
+    setError("");
     try {
       const res = await fetch(`${getApiUrl()}/api/puppies`);
-      if (!res.ok) throw new Error(\"Failed to fetch puppies\");
+      if (!res.ok) throw new Error("Failed to fetch puppies");
       setPuppies(await res.json());
       setLoading(false);
     } catch (err: any) {
-      setError(\"Could not load puppies.\");
+      setError("Could not load puppies.");
       setLoading(false);
     }
   }
@@ -48,69 +48,69 @@ function PuppiesPanel() {
   async function handleStatusChange(id: string, status: string) {
     if (!token) return;
     setUpdateStatus((us) => ({ ...us, [id]: true }));
-    setError(\"\");
+    setError("");
     try {
       const res = await fetch(`${getApiUrl()}/api/puppies/${id}`, {
-        method: \"PATCH\",
+        method: "PATCH",
         headers: {
-          \"Content-Type\": \"application/json\",
+          "Content-Type": "application/json",
           admin_token: token,
         },
         body: JSON.stringify({ status }),
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || \"Failed to update puppy\");
+        throw new Error(data.error || "Failed to update puppy");
       }
       // Update local state
       setPuppies((prev) =>
         prev.map((p) => (p.id === id ? { ...p, status } : p))
       );
     } catch (err: any) {
-      setError(err.message || \"Could not update puppy\");
+      setError(err.message || "Could not update puppy");
     } finally {
       setUpdateStatus((us) => ({ ...us, [id]: false }));
     }
   }
 
-  if (loading) return <div className=\"text-center py-8\">Loading puppies…</div>;
-  if (error) return <div className=\"text-red-500 py-4\">{error}</div>;
+  if (loading) return <div className="text-center py-8">Loading puppies…</div>;
+  if (error) return <div className="text-red-500 py-4">{error}</div>;
 
   if (!puppies.length)
-    return <div className=\"text-gray-500\">No puppies found.</div>;
+    return <div className="text-gray-500">No puppies found.</div>;
 
   return (
-    <div className=\"overflow-x-auto\">
-      <table className=\"min-w-full border border-gray-200 rounded-lg bg-white shadow\">
+    <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-200 rounded-lg bg-white shadow">
         <thead>
-          <tr className=\"bg-primary-100 text-primary-700\">
-            <th className=\"py-2 px-2 font-semibold text-left\">Name</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Breed</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Status</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Edit</th>
+          <tr className="bg-primary-100 text-primary-700">
+            <th className="py-2 px-2 font-semibold text-left">Name</th>
+            <th className="py-2 px-2 font-semibold text-left">Breed</th>
+            <th className="py-2 px-2 font-semibold text-left">Status</th>
+            <th className="py-2 px-2 font-semibold text-left">Edit</th>
           </tr>
         </thead>
         <tbody>
           {puppies.map((puppy) => (
-            <tr key={puppy.id} className=\"border-t hover:bg-primary-50\">
-              <td className=\"py-2 px-2\">{puppy.name}</td>
-              <td className=\"py-2 px-2\">{puppy.breed}</td>
-              <td className=\"py-2 px-2\">
+            <tr key={puppy.id} className="border-t hover:bg-primary-50">
+              <td className="py-2 px-2">{puppy.name}</td>
+              <td className="py-2 px-2">{puppy.breed}</td>
+              <td className="py-2 px-2">
                 <span
                   className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                    puppy.status === \"available\"
-                      ? \"bg-green-100 text-green-800\"
-                      : puppy.status === \"reserved\"
-                      ? \"bg-yellow-100 text-yellow-800\"
-                      : \"bg-gray-200 text-gray-700\"
+                    puppy.status === "available"
+                      ? "bg-green-100 text-green-800"
+                      : puppy.status === "reserved"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-gray-200 text-gray-700"
                   }`}
                 >
                   {puppy.status}
                 </span>
               </td>
-              <td className=\"py-2 px-2\">
+              <td className="py-2 px-2">
                 <select
-                  className=\"border rounded px-2 py-1 focus:border-primary-500\"
+                  className="border rounded px-2 py-1 focus:border-primary-500"
                   value={puppy.status}
                   onChange={(e) => handleStatusChange(puppy.id, e.target.value)}
                   disabled={updateStatus[puppy.id]}
@@ -122,7 +122,7 @@ function PuppiesPanel() {
                   ))}
                 </select>
                 {updateStatus[puppy.id] && (
-                  <span className=\"ml-2 text-primary-500 text-xs\">
+                  <span className="ml-2 text-primary-500 text-xs">
                     Updating…
                   </span>
                 )}
@@ -144,12 +144,12 @@ function ApplicationsPanel() {
     try {
       setError(null);
       const res = await fetch(`${getApiUrl()}/api/applications`);
-      if (!res.ok) throw new Error(\"Failed to fetch applications\");
+      if (!res.ok) throw new Error("Failed to fetch applications");
       const data = await res.json();
       setApplications(data);
     } catch (err: any) {
-      console.error(\"Failed to fetch applications\", err);
-      setError(err.message || \"Could not load applications\");
+      console.error("Failed to fetch applications", err);
+      setError(err.message || "Could not load applications");
     } finally {
       setLoading(false);
     }
@@ -164,54 +164,54 @@ function ApplicationsPanel() {
     return () => clearInterval(intervalId);
   }, []);
 
-  if (loading) return <div className=\"text-center py-8\">Loading applications…</div>;
+  if (loading) return <div className="text-center py-8">Loading applications…</div>;
   if (error)
-    return <div className=\"text-red-500 py-4\">{error}</div>;
+    return <div className="text-red-500 py-4">{error}</div>;
 
   if (!applications.length)
-    return <div className=\"text-gray-500\">No applications found.</div>;
+    return <div className="text-gray-500">No applications found.</div>;
 
   return (
-    <div className=\"overflow-x-auto\">
-      <table className=\"min-w-full border border-gray-200 rounded-lg bg-white shadow\">
+    <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-200 rounded-lg bg-white shadow">
         <thead>
-          <tr className=\"bg-primary-100 text-primary-700\">
-            <th className=\"py-2 px-2 font-semibold text-left\">ID</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Applicant</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Email</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Status</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">Submitted</th>
-            <th className=\"py-2 px-2 font-semibold text-left\">View</th>
+          <tr className="bg-primary-100 text-primary-700">
+            <th className="py-2 px-2 font-semibold text-left">ID</th>
+            <th className="py-2 px-2 font-semibold text-left">Applicant</th>
+            <th className="py-2 px-2 font-semibold text-left">Email</th>
+            <th className="py-2 px-2 font-semibold text-left">Status</th>
+            <th className="py-2 px-2 font-semibold text-left">Submitted</th>
+            <th className="py-2 px-2 font-semibold text-left">View</th>
           </tr>
         </thead>
         <tbody>
           {applications.map((app) => (
-            <tr key={app.id} className=\"border-t hover:bg-primary-50\">
-              <td className=\"py-2 px-2 font-mono text-xs\">
+            <tr key={app.id} className="border-t hover:bg-primary-50">
+              <td className="py-2 px-2 font-mono text-xs">
                 {app.displayId || app.id}
               </td>
-              <td className=\"py-2 px-2\">
+              <td className="py-2 px-2">
                 {app.firstName} {app.lastName}
               </td>
-              <td className=\"py-2 px-2 text-sm\">{app.email}</td>
-              <td className=\"py-2 px-2\">
+              <td className="py-2 px-2 text-sm">{app.email}</td>
+              <td className="py-2 px-2">
                 <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                  app.status === \"approved\"
-                    ? \"bg-green-100 text-green-800\"
-                    : app.status === \"rejected\"
-                    ? \"bg-red-100 text-red-800\"
-                    : \"bg-yellow-100 text-yellow-800\"
+                  app.status === "approved"
+                    ? "bg-green-100 text-green-800"
+                    : app.status === "rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
                 }`}>
                   {app.status}
                 </span>
               </td>
-              <td className=\"py-2 px-2 text-xs text-gray-600\">
+              <td className="py-2 px-2 text-xs text-gray-600">
                 {new Date(app.createdAt).toLocaleString()}
               </td>
-              <td className=\"py-2 px-2\">
+              <td className="py-2 px-2">
                 <Link
                   href={`/admin/applications/${app.id}`}
-                  className=\"text-primary-600 hover:text-primary-800 text-sm font-medium\"
+                  className="text-primary-600 hover:text-primary-800 text-sm font-medium"
                 >
                   View
                 </Link>
