@@ -151,6 +151,28 @@ export const breeds: Breed[] = [
       '/images/breeds/bernedoodle-3.jpg',
       '/images/breeds/bernedoodle-4.jpg'
     ]
+  },
+  {
+    id: 'border-collie',
+    name: 'Border Collie',
+    description: 'The Border Collie is a highly intelligent and energetic working dog breed, originally developed for herding livestock along the Scottish-English border. Known for their exceptional intelligence, trainability, and boundless energy, Border Collies excel in various dog sports and activities including agility, obedience, and flyball.',
+    traits: ['Intelligent', 'Energetic', 'Trainable', 'Athletic', 'Responsive', 'Working'],
+    origin: 'Scottish-English border, 19th century',
+    temperament: 'Border Collies are known for their exceptional intelligence, energy, and strong work ethic. They form strong bonds with their owners and are highly responsive to training. They thrive on mental stimulation and physical activity. While they can be reserved with strangers, they are typically good with children and other pets when properly socialized.',
+    trainability: 'Extremely trainable and highly intelligent. Border Collies are considered one of the most trainable dog breeds, excelling in obedience, agility, herding, and various dog sports. They require consistent training and mental challenges to prevent boredom.',
+    colors: ['Black', 'Black and White', 'Red', 'Red and White', 'Blue Merle', 'Sable'],
+    sizes: {
+      height: '18-22 inches (males), 17-21 inches (females)',
+      weight: '30-55 pounds'
+    },
+    lifeExpectancy: '12-15 years',
+    image: '/images/breeds/border-collie-hero.jpg',
+    gallery: [
+      '/images/breeds/border-collie-1.jpg',
+      '/images/breeds/border-collie-2.jpg',
+      '/images/breeds/border-collie-3.jpg',
+      '/images/breeds/border-collie-4.jpg'
+    ]
   }
 ];
 

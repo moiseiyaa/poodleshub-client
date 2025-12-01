@@ -95,7 +95,7 @@ export default function RootLayout({
             <CartProvider>
               <PromotionNavbar />
               <Navbar />
-              <main id="main-content" className="grow pt-16 md:pt-32">
+              <main id="main-content" className="grow pt-20 md:pt-24">
                 <ScrollToTopOnMount />
                 {children}
               </main>
