@@ -7,6 +7,7 @@ import { format } from "date-fns";
 
 interface Application {
   id: string;
+  displayId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -21,6 +22,8 @@ interface Application {
   breedChoices: Array<{ priority: number; breed: string }>;
   preferredSizes: string[];
   preferredGender: string;
+  preferredColors: string[];
+  preferredCoatTypes: string[];
   activityLevel: string;
   pickupLocation: string;
   secondPickupLocation?: string;
@@ -90,11 +93,7 @@ export default function ApplicationDetailPage({
   async function fetchApplication() {
     try {
       setLoading(true);
-      const response = await fetch(`${getApiUrl()}/api/applications/${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(`${getApiUrl()}/api/applications/${params.id}`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch application");
@@ -116,7 +115,6 @@ export default function ApplicationDetailPage({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status, rejectionReason }),
       });
@@ -177,7 +175,7 @@ export default function ApplicationDetailPage({
                 ← Back to Dashboard
               </button>
               <h1 className="text-2xl font-bold text-gray-900">
-                Application #{application.id.slice(-4)}
+                Application #{application.displayId}
               </h1>
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -277,6 +275,16 @@ export default function ApplicationDetailPage({
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Delivery Method</h3>
                     <p className="text-gray-900 capitalize">{application.deliveryMethod}</p>
                   </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Method</h3>
+                    <p className="text-gray-900 capitalize">{application.paymentMethod || "Not specified"}</p>
+                  </div>
+                  {application.depositAmount && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Deposit Amount</h3>
+                      <p className="text-gray-900">${application.depositAmount}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -299,6 +307,57 @@ export default function ApplicationDetailPage({
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Why You're a Good Fit</h3>
                     <p className="text-gray-900">{application.whyGoodFit}</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Other Pets</h3>
+                      <p className="text-gray-900">{application.otherPets ? "Yes" : "No"}</p>
+                    </div>
+                    {application.otherPets && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Pet Types</h3>
+                        <p className="text-gray-900">{application.petTypes || "Not specified"}</p>
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Allergies</h3>
+                      <p className="text-gray-900">{application.allergies || "Not specified"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Has Children</h3>
+                      <p className="text-gray-900">{application.hasChildren ? "Yes" : "No"}</p>
+                    </div>
+                    {application.hasChildren && (
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Children Ages</h3>
+                        <p className="text-gray-900">{application.childrenAges || "Not specified"}</p>
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Has Fence</h3>
+                      <p className="text-gray-900">{application.hasFence ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">First Dog</h3>
+                      <p className="text-gray-900">{application.firstDog ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Previous Puppies</h3>
+                      <p className="text-gray-900">{application.previousPuppies}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Interested in Training</h3>
+                      <p className="text-gray-900">{application.interestedInTraining ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Opt-in Communications</h3>
+                      <p className="text-gray-900">{application.optInCommunications ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Welcome Call</h3>
+                      <p className="text-gray-900">{application.welcomeCall ? "Yes" : "No"}</p>
+                    </div>
                   </div>
                 </div>
               </div>
