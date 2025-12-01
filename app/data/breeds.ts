@@ -16,9 +16,6 @@ export interface Breed {
   gallery: string[];
 }
 
-// Import color utilities for consistency
-import { getFormattedColors, getPuppiesByColor } from './colors';
-
 export const breeds: Breed[] = [
   {
     id: 'poodle',

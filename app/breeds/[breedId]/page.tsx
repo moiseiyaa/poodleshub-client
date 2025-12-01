@@ -11,7 +11,6 @@ import PuppyCard from '../../components/molecules/PuppyCard';
 import { getBreedById, getAllBreeds } from '../../data/breeds';
 import { getPuppiesByBreed, Puppy } from '../../lib/api/puppies';
 import { getTestimonialsByBreed } from '../../data/testimonials';
-import { getFormattedColors, getPuppiesByColor } from '../../data/colors';
 
 /**
  * Breed page component
