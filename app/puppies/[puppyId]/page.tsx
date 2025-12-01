@@ -307,22 +307,24 @@ const PuppyDetailPage = () => {
         </div>
 
         {/* Parent Information */}
-        <div className="bg-gray-50 p-8 rounded-2xl mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Parent Information</h2>
-          <div className="max-w-md mx-auto">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Dam (Mother)</h3>
-              <div className="relative h-64 rounded-lg overflow-hidden bg-white">
-                <Image
-                  src={puppy.parents.mother}
-                  alt="Puppy's mother"
-                  fill
-                  className="object-cover"
-                />
+        {puppy.parents && puppy.parents.mother && (
+          <div className="bg-gray-50 p-8 rounded-2xl mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Parent Information</h2>
+            <div className="max-w-md mx-auto">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Dam (Mother)</h3>
+                <div className="relative h-64 rounded-lg overflow-hidden bg-white">
+                  <Image
+                    src={puppy.parents.mother}
+                    alt="Puppy's mother"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Health Guarantee & Process Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
