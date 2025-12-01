@@ -6,6 +6,7 @@ import Footer from "./components/organisms/Footer";
 import CrispProvider from "./components/providers/CrispProvider";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import ScrollToTopOnMount from "./components/utils/ScrollToTopOnMount";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { Analytics } from "@vercel/analytics/next"
 
@@ -95,6 +96,7 @@ export default function RootLayout({
               <PromotionNavbar />
               <Navbar />
               <main id="main-content" className="grow pt-16 md:pt-32">
+                <ScrollToTopOnMount />
                 {children}
               </main>
               <Footer />
