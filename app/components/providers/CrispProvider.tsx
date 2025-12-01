@@ -22,45 +22,45 @@ export default function CrispProvider({
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (!websiteId) return;
+    // Delay loading Crisp until after page is fully loaded
+    const timer = setTimeout(() => {
+      if (!websiteId) return;
 
-    // Initialize Crisp
-    window.CRISP_WEBSITE_ID = websiteId;
-    
-    // Load Crisp script
-    const script = document.createElement('script');
-    script.src = 'https://client.crisp.chat/l.js';
-    script.async = true;
-    script.onload = () => {
-      setIsLoaded(true);
-      // Configure Crisp
-      if (window.$crisp) {
-        // Set company info
-        window.$crisp.push(['set', 'company', [
-          ['name', 'PuppyHub USA'],
-          ['url', 'https://puppyhubusa.com'],
-          ['description', 'Professional puppy adoption platform']
-        ]]);
+      // Initialize Crisp
+      window.CRISP_WEBSITE_ID = websiteId;
+      
+      // Load Crisp script
+      const script = document.createElement('script');
+      script.src = 'https://client.crisp.chat/l.js';
+      script.async = true;
+      script.onload = () => {
+        setIsLoaded(true);
+        // Configure Crisp
+        if (window.$crisp) {
+          // Set company info
+          window.$crisp.push(['set', 'company', [
+            ['name', 'PuppyHub USA'],
+            ['url', 'https://puppyhubusa.com'],
+            ['description', 'Professional puppy adoption platform']
+          ]]);
 
-        // Set chat colors to match your brand
-        window.$crisp.push(['set', 'color:web', '#7c3aed']); // Purple theme
-        window.$crisp.push(['set', 'color:chat', '#7c3aed']);
-        
-        // Hide WhatsApp field in chat
-        window.$crisp.push(['set', 'hide:whatsapp', true]);
-        
-        // Set availability
-        window.$crisp.push(['set', 'availability:is_available', [true, true, true, true, true, true, true]]);
-      }
-    };
+          // Set chat colors to match your brand
+          window.$crisp.push(['set', 'color:web', '#7c3aed']); // Purple theme
+          window.$crisp.push(['set', 'color:chat', '#7c3aed']);
+          
+          // Hide WhatsApp field in chat
+          window.$crisp.push(['set', 'hide:whatsapp', true]);
+          
+          // Set availability
+          window.$crisp.push(['set', 'availability:is_available', [true, true, true, true, true, true, true]]);
+        }
+      };
 
-    document.head.appendChild(script);
+      document.head.appendChild(script);
+    }, 3000); // Load after 3 seconds
 
     return () => {
-      // Cleanup
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
+      clearTimeout(timer);
     };
   }, [websiteId]);
 
