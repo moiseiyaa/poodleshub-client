@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { FaGift, FaFire } from 'react-icons/fa';
 
 /**
@@ -10,6 +11,13 @@ import { FaGift, FaFire } from 'react-icons/fa';
  * Responsive design: Different layout and text for mobile vs desktop
  */
 const PromotionNavbar = () => {
+  const pathname = usePathname();
+
+  // Hide promotion bar on admin routes
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <div className="fixed top-0 left-0 w-full z-50 bg-linear-to-r from-red-600 via-red-500 to-green-600 text-white shadow-lg" style={{ top: '0px' }}>
       {/* Desktop View */}

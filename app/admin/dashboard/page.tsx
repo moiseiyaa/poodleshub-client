@@ -238,50 +238,88 @@ export default function AdminDashboard() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center py-8 px-2 md:px-4">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow p-4 md:p-8">
-        <div className="flex flex-row justify-between items-center mb-4 gap-2">
-          <h1 className="text-2xl font-bold text-primary-700">Admin Dashboard</h1>
-          <button onClick={logout} className="btn btn-secondary ml-2">Log out</button>
-        </div>
-        {/* Tabs */}
-        <nav className="flex border-b mb-6 space-x-2 overflow-x-auto" role="tablist">
-          {TABS.map(({ key, label }) => (
-            <button
-              key={key}
-              role="tab"
-              aria-selected={tab === key}
-              className={`px-3 py-2 whitespace-nowrap rounded-t-lg font-medium transition-colors duration-200 ${
-                tab === key ? "bg-primary-100 text-primary-700 border-b-2 border-primary-500" : "text-gray-500 hover:text-primary-700"
-              }`}
-              onClick={() => setTab(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-        {/* Tab content */}
-        <div className="p-2 md:p-4">
-          {tab === "puppies" && <PuppiesPanel />}
-          {tab === "reservations" && (
-            <section>
-              <h2 className="text-xl font-semibold mb-2">Reservations</h2>
-              <div className="text-gray-500">(Feature coming soon)</div>
-            </section>
-          )}
-          {tab === "notifications" && (
-            <section>
-              <h2 className="text-xl font-semibold mb-2">Notifications</h2>
-              <div className="text-gray-500">(Feature coming soon)</div>
-            </section>
-          )}
-          {tab === "clients" && (
-            <section>
-              <h2 className="text-xl font-semibold mb-2">Clients</h2>
-              <div className="text-gray-500">(Feature coming soon)</div>
-            </section>
-          )}
-        </div>
+    <div className="min-h-screen bg-slate-100 py-6 px-3 md:px-6">
+      <div className="max-w-6xl mx-auto h-full flex gap-6">
+        {/* Sidebar */}
+        <aside className="w-60 bg-slate-900 text-slate-100 rounded-2xl shadow-lg flex flex-col py-6 px-4">
+          <div className="mb-8">
+            <div className="text-xl font-extrabold tracking-tight">PuppyHub</div>
+            <div className="text-xs text-slate-400 mt-1">Admin Workspace</div>
+          </div>
+          <nav className="flex-1 space-y-1">
+            {TABS.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  tab === key
+                    ? "bg-slate-100 text-slate-900"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
+              >
+                <span>{label}</span>
+                {tab === key && (
+                  <span className="h-2 w-2 rounded-full bg-blue-500" />
+                )}
+              </button>
+            ))}
+          </nav>
+          <button
+            onClick={logout}
+            className="mt-6 w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+          >
+            Log out
+          </button>
+        </aside>
+
+        {/* Main content */}
+        <main className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col">
+          {/* Header */}
+          <header className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h1 className="text-xl md:text-2xl font-semibold text-slate-900">
+                {tab === "applications"
+                  ? "Application Management"
+                  : tab === "puppies"
+                  ? "Puppies Inventory"
+                  : "Admin Dashboard"}
+              </h1>
+              <p className="text-xs md:text-sm text-slate-500 mt-1">
+                Monitor submissions, manage puppies, and keep your pipeline up to date.
+              </p>
+            </div>
+          </header>
+
+          {/* Content area */}
+          <section className="flex-1 px-4 md:px-6 py-4 overflow-auto">
+            {tab === "applications" && <ApplicationsPanel />}
+            {tab === "puppies" && <PuppiesPanel />}
+            {tab === "reservations" && (
+              <section className="text-slate-500 text-sm">
+                <h2 className="text-lg font-semibold mb-2 text-slate-800">
+                  Reservations
+                </h2>
+                <p>(Feature coming soon)</p>
+              </section>
+            )}
+            {tab === "notifications" && (
+              <section className="text-slate-500 text-sm">
+                <h2 className="text-lg font-semibold mb-2 text-slate-800">
+                  Notifications
+                </h2>
+                <p>(Feature coming soon)</p>
+              </section>
+            )}
+            {tab === "clients" && (
+              <section className="text-slate-500 text-sm">
+                <h2 className="text-lg font-semibold mb-2 text-slate-800">
+                  Clients
+                </h2>
+                <p>(Feature coming soon)</p>
+              </section>
+            )}
+          </section>
+        </main>
       </div>
     </div>
   );

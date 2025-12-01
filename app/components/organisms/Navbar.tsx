@@ -22,6 +22,11 @@ const Navbar = () => {
   const breeds = getAllBreeds();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Hide navbar entirely on admin routes
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   // Handle scroll event to make navbar sticky
   useEffect(() => {
     const handleScroll = () => {

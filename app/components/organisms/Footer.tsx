@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { FaFacebook, FaTiktok, FaInstagram, FaYoutube, FaPinterest } from 'react-icons/fa';
 
 /**
@@ -7,6 +10,12 @@ import { FaFacebook, FaTiktok, FaInstagram, FaYoutube, FaPinterest } from 'react
  * Includes navigation links, contact information, and social media links
  */
 const Footer = () => {
+  const pathname = usePathname();
+  
+  // Hide footer on admin routes (login, dashboard, application detail, etc.)
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
   const currentYear = new Date().getFullYear();
 
   return (
