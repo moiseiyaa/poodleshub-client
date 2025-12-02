@@ -38,20 +38,23 @@ const PuppyDetailPage = () => {
         setError(null);
         
         if (puppyData) {
-          const breedData = getBreedById(puppyData.breed.toLowerCase().replace(/\s+/g, '-'));
-          setBreed(breedData);
+          // Temporarily comment out breed lookup to isolate SSR issue
+          // const breedData = getBreedById(puppyData.breed.toLowerCase().replace(/\s+/g, '-'));
+          // setBreed(breedData);
+          setBreed(null); // Set to null temporarily
           
-          // Get related puppies (same breed, different puppy)
-          try {
-            const related = await puppiesApi.getByBreed(puppyData.breed);
-            const filteredRelated = related
-              .filter(p => p.id !== puppyData.id && p.status === 'available')
-              .slice(0, 3);
-            setRelatedPuppies(filteredRelated);
-          } catch (err) {
-            console.error('Failed to fetch related puppies:', err);
-            setRelatedPuppies([]);
-          }
+          // Temporarily comment out related puppies to isolate SSR issue
+          // try {
+          //   const related = await puppiesApi.getByBreed(puppyData.breed);
+          //   const filteredRelated = related
+          //     .filter(p => p.id !== puppyData.id && p.status === 'available')
+          //     .slice(0, 3);
+          //   setRelatedPuppies(filteredRelated);
+          // } catch (err) {
+          //   console.error('Failed to fetch related puppies:', err);
+          //   setRelatedPuppies([]);
+          // }
+          setRelatedPuppies([]); // Set to empty array temporarily
         }
       } catch (err) {
         console.error('Failed to fetch puppy:', err);
