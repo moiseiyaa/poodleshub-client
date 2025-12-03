@@ -37,22 +37,9 @@ export default function CrispProvider({
         setIsLoaded(true);
         // Configure Crisp
         if (window.$crisp) {
-          // Set company info
-          window.$crisp.push(['set', 'company', [
-            ['name', 'PuppyHub USA'],
-            ['url', 'https://puppyhubusa.com'],
-            ['description', 'Professional puppy adoption platform']
-          ]]);
-
           // Set chat colors to match your brand
           window.$crisp.push(['set', 'color:web', '#7c3aed']); // Purple theme
           window.$crisp.push(['set', 'color:chat', '#7c3aed']);
-          
-          // Hide WhatsApp field in chat
-          window.$crisp.push(['set', 'hide:whatsapp', true]);
-          
-          // Set availability
-          window.$crisp.push(['set', 'availability:is_available', [true, true, true, true, true, true, true]]);
         }
       };
 
@@ -82,15 +69,8 @@ export default function CrispProvider({
                 s.async = 1;
                 d.getElementsByTagName("head")[0].appendChild(s);
               })();
-              window.$crisp.push(['set', 'company', [
-                ['name', 'PuppyHub USA'],
-                ['url', 'https://puppyhubusa.com'],
-                ['description', 'Professional puppy adoption platform']
-              ]]);
               window.$crisp.push(['set', 'color:web', '#7c3aed']);
               window.$crisp.push(['set', 'color:chat', '#7c3aed']);
-              window.$crisp.push(['set', 'hide:whatsapp', true]);
-              window.$crisp.push(['set', 'availability:is_available', [true, true, true, true, true, true, true]]);
             `
           }}
         />
