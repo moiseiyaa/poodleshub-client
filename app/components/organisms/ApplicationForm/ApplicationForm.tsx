@@ -35,6 +35,12 @@ const ApplicationForm = () => {
     
     if (isValid) {
       goToNextStep();
+      if (typeof window !== 'undefined') {
+        const section = document.getElementById('application-form');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
     }
   };
   
