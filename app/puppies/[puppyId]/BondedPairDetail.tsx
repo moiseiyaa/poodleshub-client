@@ -88,7 +88,7 @@ const BondedPairDetail = ({ bondedPair }: BondedPairDetailProps) => {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${
+                    className={`relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${
                       currentImageIndex === index ? 'border-purple-500 scale-105' : 'border-gray-200'
                     }`}
                   >

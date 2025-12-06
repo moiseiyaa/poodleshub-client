@@ -8,7 +8,7 @@ import PuppyFilters, { FilterOptions } from '../components/molecules/PuppyFilter
 import PuppyCard from '../components/molecules/PuppyCard';
 import BondedPairCard from '../components/molecules/BondedPairCard';
 import { puppiesApi, Puppy } from '../lib/api/puppies';
-import { bondedPairs, BondedPair } from '../data/puppies';
+import { BondedPair } from '../data/puppies';
 
 /**
  * Puppies Listing page
@@ -39,7 +39,34 @@ const PuppiesPage = () => {
       try {
         const puppies = await puppiesApi.getAll();
         setAllPuppies(puppies);
-        setFilteredPuppies(puppies);
+        
+        // Separate bonded pairs from individual puppies
+        const bonded = puppies.filter(p => p.name.includes('&') || p.gender === 'pair');
+        const individual = puppies.filter(p => !p.name.includes('&') && p.gender !== 'pair');
+        
+        setAllPuppies(individual);
+        setFilteredPuppies(individual);
+        
+        // Convert bonded pairs to BondedPair format
+        const bondedPairsFormatted: BondedPair[] = bonded.map(p => ({
+          id: p.id,
+          names: p.name.split(' & ').map(n => n.trim()),
+          pairName: p.name,
+          breed: p.breed,
+          status: p.status,
+          genders: ['male', 'female'], // Default assumption
+          colors: p.color.split(' & ').map(c => c.trim()),
+          birthDate: p.birthDate,
+          images: p.images,
+          generation: p.generation,
+          parents: p.parents,
+          vaccinations: p.vaccinations,
+          price: p.price,
+          notes: p.notes,
+          isBondedPair: true
+        }));
+        
+        setFilteredBondedPairs(bondedPairsFormatted);
         setError(null);
       } catch (err) {
         console.error('Failed to fetch puppies:', err);
