@@ -16,6 +16,15 @@ export interface Puppy {
   notes: string;
 }
 
+export interface BondedPair extends Omit<Puppy, 'name' | 'gender' | 'color'> {
+  id: string;
+  names: string[];
+  genders: ('male' | 'female')[];
+  colors: string[];
+  pairName: string;
+  isBondedPair: true;
+}
+
 export const puppies: Puppy[] = [
   {
     id: 'p-101',
@@ -220,40 +229,29 @@ export const puppies: Puppy[] = [
     vaccinations: ['DHLPP'],
     price: 875,
     notes: 'Energetic and friendly, loves to play'
-  },
+  }
+];
+
+// Bonded pairs - puppies that must be adopted together
+export const bondedPairs: BondedPair[] = [
   {
-    id: 'p-104',
-    name: 'Jasper',
+    id: 'bp-001',
+    names: ['Jasper', 'Lizzy'],
+    pairName: 'Jasper & Lizzy',
     breed: 'Poodle',
     status: 'available',
-    gender: 'male',
+    genders: ['male', 'female'],
+    colors: ['black', 'brown'],
     birthDate: '2025-09-15',
     images: ['/images/puppies/jasper-lizzy-1.jpg'],
-    color: 'black',
     generation: 'Purebred',
     parents: {
       mother: '/images/parents/poodle-dam-4.jpg'
     },
     vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
-    price: 1650,
-    notes: 'Part of a bonded pair with Lizzy. These siblings are best friends and should be adopted together for optimal happiness and well-being.'
-  },
-  {
-    id: 'p-105',
-    name: 'Lizzy',
-    breed: 'Poodle',
-    status: 'available',
-    gender: 'female',
-    birthDate: '2025-09-15',
-    images: ['/images/puppies/jasper-lizzy-1.jpg'],
-    color: 'brown',
-    generation: 'Purebred',
-    parents: {
-      mother: '/images/parents/poodle-dam-4.jpg'
-    },
-    vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
-    price: 1650,
-    notes: 'Part of a bonded pair with Jasper. These siblings are best friends and should be adopted together for optimal happiness and well-being.'
+    price: 3300, // Combined price for both
+    notes: 'Jasper and Lizzy are bonded siblings who must be adopted together. They are inseparable best friends who bring double the love and joy to their forever home.',
+    isBondedPair: true
   }
 ];
 

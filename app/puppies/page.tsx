@@ -2,10 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { FaUsers } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
 import PuppyFilters, { FilterOptions } from '../components/molecules/PuppyFilters';
 import PuppyCard from '../components/molecules/PuppyCard';
+import BondedPairCard from '../components/molecules/BondedPairCard';
 import { puppiesApi, Puppy } from '../lib/api/puppies';
+import { bondedPairs, BondedPair } from '../data/puppies';
 
 /**
  * Puppies Listing page
@@ -14,6 +17,7 @@ import { puppiesApi, Puppy } from '../lib/api/puppies';
 const PuppiesPage = () => {
   const searchParams = useSearchParams();
   const [filteredPuppies, setFilteredPuppies] = useState<Puppy[]>([]);
+  const [filteredBondedPairs, setFilteredBondedPairs] = useState<BondedPair[]>([]);
   const [allPuppies, setAllPuppies] = useState<Puppy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,6 +91,33 @@ const PuppiesPage = () => {
     
     // Update results immediately without delay
     setFilteredPuppies(result);
+    
+    // Filter bonded pairs based on breed and status
+    let bondedResult = [...bondedPairs];
+    
+    if (filters.breed) {
+      bondedResult = bondedResult.filter(pair => pair.breed.toLowerCase() === filters.breed.toLowerCase());
+    }
+    
+    if (filters.status) {
+      bondedResult = bondedResult.filter(pair => pair.status === filters.status);
+    }
+    
+    // Apply sorting to bonded pairs
+    switch (filters.sort) {
+      case 'price-low':
+        bondedResult.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        bondedResult.sort((a, b) => b.price - a.price);
+        break;
+      case 'newest':
+      default:
+        bondedResult.sort((a, b) => new Date(b.birthDate).getTime() - new Date(a.birthDate).getTime());
+        break;
+    }
+    
+    setFilteredBondedPairs(bondedResult);
     setIsLoading(false);
     hasInitialized.current = true;
   }, [filters, allPuppies]);
@@ -113,11 +144,34 @@ const PuppiesPage = () => {
               <div key={item} className="bg-gray-100 rounded-xl h-96 animate-pulse"></div>
             ))}
           </div>
-        ) : filteredPuppies.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPuppies.map((puppy) => (
-              <PuppyCard key={puppy.id} puppy={puppy} />
-            ))}
+        ) : filteredPuppies.length > 0 || filteredBondedPairs.length > 0 ? (
+          <div>
+            {/* Bonded Pairs Section */}
+            {filteredBondedPairs.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <FaUsers className="text-purple-600" />
+                  Bonded Pairs
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredBondedPairs.map((bondedPair) => (
+                    <BondedPairCard key={bondedPair.id} bondedPair={bondedPair} />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Individual Puppies Section */}
+            {filteredPuppies.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Individual Puppies</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredPuppies.map((puppy) => (
+                    <PuppyCard key={puppy.id} puppy={puppy} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : error ? (
           <div className="text-center py-12">

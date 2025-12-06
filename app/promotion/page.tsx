@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaGift, FaSnowflake, FaFire, FaCheckCircle, FaArrowRight } from 'react-icons/fa';
+import { FaGift, FaSnowflake, FaFire, FaCheckCircle, FaArrowRight, FaUsers } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
 import { puppiesApi, Puppy } from '../lib/api/puppies';
+import { bondedPairs, BondedPair } from '../data/puppies';
 
 /**
  * Black Friday & Christmas Promotion Page
@@ -35,6 +36,9 @@ const PromotionPage = () => {
   const poodlePuppies = allPuppies.filter(p => p.breed === 'Poodle' && p.status === 'available');
   const maltesePuppies = allPuppies.filter(p => p.breed === 'Maltese' && p.status === 'available');
   
+  // Get featured bonded pairs
+  const featuredBondedPairs = bondedPairs.filter(pair => pair.status === 'available');
+  
   // Create featured puppies with discount (20% off)
   // Prioritize showing 2 Poodles and 2 Maltese, or as many as available
   const featuredPuppies = [
@@ -51,6 +55,19 @@ const PromotionPage = () => {
       puppy.breed === 'Poodle' ? 'Perfect Companion' : 'Apartment-Friendly'
     ]
   })).slice(0, 4);
+  
+  // Create featured bonded pairs with discount
+  const featuredBondedPairsWithDiscount = featuredBondedPairs.map(pair => ({
+    ...pair,
+    originalPrice: pair.price,
+    discountPrice: Math.round(pair.price * 0.8),
+    badge: '20% OFF',
+    features: [
+      'Bonded Siblings',
+      'Double the Love',
+      'Perfect Companions'
+    ]
+  }));
 
   const promotionBenefits = [
     {
