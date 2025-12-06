@@ -40,7 +40,7 @@ const PromotionPage = () => {
   const featuredBondedPairs = bondedPairs.filter(pair => pair.status === 'available');
   
   // Create featured puppies with discount (20% off)
-  // Prioritize showing 2 Poodles and 2 Maltese, or as many as available
+  // Prioritize showing 2 Poodles, 2 Maltese, and bonded pairs
   const featuredPuppies = [
     ...poodlePuppies.slice(0, 2),
     ...maltesePuppies.slice(0, 2)
@@ -61,13 +61,16 @@ const PromotionPage = () => {
     ...pair,
     originalPrice: pair.price,
     discountPrice: Math.round(pair.price * 0.8),
-    badge: '20% OFF',
+    badge: 'BEST DEAL',
     features: [
       'Bonded Siblings',
       'Double the Love',
       'Perfect Companions'
     ]
   }));
+
+  // Combine individual puppies and bonded pairs
+  const allFeaturedItems = [...featuredPuppies, ...featuredBondedPairsWithDiscount];
 
   const promotionBenefits = [
     {
@@ -165,34 +168,53 @@ const PromotionPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredPuppies.map((puppy) => (
-              <div
-                key={puppy.id}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 border-red-100"
-              >
-                {/* Image Container */}
-                <div className="relative h-64 bg-gray-200 overflow-hidden">
-                  <Image
-                    src={puppy.images[0] || '/images/placeholder-puppy.jpg'}
-                    alt={`${puppy.name} - ${puppy.breed}`}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                    {puppy.badge}
+            {allFeaturedItems.map((item) => {
+              const isBondedPair = 'pairName' in item;
+              return (
+                <div
+                  key={item.id}
+                  className={`bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-2 ${
+                    isBondedPair ? 'border-yellow-400 ring-2 ring-yellow-200' : 'border-red-100'
+                  }`}
+                >
+                  {/* Image Container */}
+                  <div className="relative h-64 bg-gray-200 overflow-hidden">
+                    <Image
+                      src={item.images[0] || '/images/placeholder-puppy.jpg'}
+                      alt={`${isBondedPair ? item.pairName : item.name} - ${item.breed}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className={`absolute top-4 right-4 px-4 py-2 rounded-full font-bold text-sm shadow-lg ${
+                      item.badge === 'BEST DEAL' 
+                        ? 'bg-linear-to-r from-yellow-400 to-yellow-500 text-white animate-pulse' 
+                        : 'bg-red-600 text-white'
+                    }`}>
+                      {item.badge}
+                    </div>
+                    {isBondedPair && (
+                      <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                        <FaUsers className="inline mr-1" />
+                        Bonded Pair
+                      </div>
+                    )}
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{puppy.name}</h3>
-                  <p className="text-gray-600 mb-4">
-                    <span className="font-semibold">{puppy.breed}</span> • <span className="capitalize">{puppy.color}</span>
-                  </p>
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      {isBondedPair ? item.pairName : item.name}
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      <span className="font-semibold">{item.breed}</span> • 
+                      <span className="capitalize">
+                        {isBondedPair ? item.colors?.join(' & ') : item.color}
+                      </span>
+                    </p>
 
                   {/* Features */}
                   <div className="space-y-2 mb-6">
-                    {puppy.features.map((feature, idx) => (
+                    {item.features.map((feature: string, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
                         <FaCheckCircle className="h-4 w-4 text-green-500 shrink-0" />
                         {feature}
@@ -203,11 +225,12 @@ const PromotionPage = () => {
                   {/* Pricing */}
                   <div className="mb-6 pb-6 border-b border-gray-200">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-red-600">${puppy.discountPrice}</span>
-                      <span className="text-lg text-gray-500 line-through">${puppy.originalPrice}</span>
+                      <span className="text-3xl font-bold text-red-600">${item.discountPrice}</span>
+                      <span className="text-lg text-gray-500 line-through">${item.originalPrice}</span>
                     </div>
                     <p className="text-sm text-green-600 font-semibold mt-2">
-                      Save ${puppy.originalPrice - puppy.discountPrice}!
+                      Save ${item.originalPrice - item.discountPrice}!
+                      {isBondedPair && <span className="block text-xs mt-1">For both puppies</span>}
                     </p>
                   </div>
 
@@ -216,11 +239,12 @@ const PromotionPage = () => {
                     href="/application"
                     className="block w-full bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold py-3 rounded-lg transition-all duration-300 text-center"
                   >
-                    Adopt {puppy.name}
+                    Adopt {isBondedPair ? item.pairName : item.name}
                   </Link>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="text-center mt-12">
