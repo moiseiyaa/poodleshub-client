@@ -11,7 +11,7 @@ import { BondedPair } from '../../data/puppies';
 import { getBreedById } from '../../data/breeds';
 import { useCart } from '../../context/CartContext';
 import PuppyCard from '../../components/molecules/PuppyCard';
-import BondedPairDetail from './BondedPairDetail';
+import BondedPairDetail from '../../components/molecules/BondedPairDetail';
 
 /**
  * Individual puppy detail page

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaMars, FaVenus, FaHeart, FaArrowLeft, FaUsers, FaCheckCircle, FaShieldAlt, FaHome, FaCalendarAlt } from 'react-icons/fa';
-import Container from '../../../../components/organisms/Container';
-import { BondedPair } from '../../../data/puppies';
+import Container from '../organisms/Container';
+import { BondedPair } from '../../data/puppies';
 
 interface BondedPairDetailProps {
   bondedPair: BondedPair;
@@ -65,7 +65,7 @@ const BondedPairDetail = ({ bondedPair }: BondedPairDetailProps) => {
           <div>
             <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-xl mb-6">
               <Image
-                src={bondedPair.images[currentImageIndex] || '/images/placeholder-puppy.jpg'}
+                src={bondedPair.images[0] || '/images/placeholder-puppy.jpg'}
                 alt={`${bondedPair.pairName} - ${bondedPair.breed}`}
                 fill
                 className="object-cover"
