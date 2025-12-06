@@ -87,7 +87,7 @@ const BondedPairCard = ({ bondedPair }: BondedPairCardProps) => {
           <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
             {bondedPair.pairName}
           </h3>
-          <div className="flex gap-1">
+          <div className="shrink-0">
             {bondedPair.genders.map((gender, index) => (
               <div 
                 key={index}

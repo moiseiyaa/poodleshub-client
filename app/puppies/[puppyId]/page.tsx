@@ -4,22 +4,25 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { FaMars, FaVenus, FaCheckCircle, FaShieldAlt, FaHeart, FaArrowLeft, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
+import { FaMars, FaVenus, FaCheckCircle, FaShieldAlt, FaHeart, FaArrowLeft, FaCalendarAlt } from 'react-icons/fa';
 import Container from '../../components/organisms/Container';
 import { puppiesApi, Puppy } from '../../lib/api/puppies';
+import { bondedPairs, BondedPair } from '../../data/puppies';
 import { getBreedById } from '../../data/breeds';
 import { useCart } from '../../context/CartContext';
 import PuppyCard from '../../components/molecules/PuppyCard';
+import BondedPairDetail from './BondedPairDetail';
 
 /**
  * Individual puppy detail page
- * Displays comprehensive information about a specific puppy
+ * Displays comprehensive information about a specific puppy or bonded pair
  */
 const PuppyDetailPage = () => {
   const { puppyId } = useParams();
   const router = useRouter();
   const { addToCart, isInCart } = useCart();
   const [puppy, setPuppy] = useState<Puppy | null>(null);
+  const [bondedPair, setBondedPair] = useState<BondedPair | null>(null);
   const [breed, setBreed] = useState<any>(null);
   const [relatedPuppies, setRelatedPuppies] = useState<Puppy[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -28,44 +31,57 @@ const PuppyDetailPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPuppy = async () => {
+    const fetchData = async () => {
       if (!puppyId) return;
       
       try {
         setIsLoading(true);
-        const puppyData = await puppiesApi.getById(puppyId as string);
-        setPuppy(puppyData);
-        setError(null);
         
-        if (puppyData) {
-          // Temporarily comment out breed lookup to isolate SSR issue
-          // const breedData = getBreedById(puppyData.breed.toLowerCase().replace(/\s+/g, '-'));
-          // setBreed(breedData);
-          setBreed(null); // Set to null temporarily
+        // Check if this is a bonded pair (IDs starting with 'bp-')
+        if (puppyId.toString().startsWith('bp-')) {
+          const pairData = bondedPairs.find(pair => pair.id === puppyId);
+          if (pairData) {
+            setBondedPair(pairData);
+            setPuppy(null);
+            setError(null);
+          } else {
+            setError('Bonded pair not found');
+          }
+        } else {
+          // Regular puppy
+          const puppyData = await puppiesApi.getById(puppyId as string);
+          setPuppy(puppyData);
+          setBondedPair(null);
+          setError(null);
           
-          // Temporarily comment out related puppies to isolate SSR issue
-          // try {
-          //   const related = await puppiesApi.getByBreed(puppyData.breed);
-          //   const filteredRelated = related
-          //     .filter(p => p.id !== puppyData.id && p.status === 'available')
-          //     .slice(0, 3);
-          //   setRelatedPuppies(filteredRelated);
-          // } catch (err) {
-          //   console.error('Failed to fetch related puppies:', err);
-          //   setRelatedPuppies([]);
-          // }
-          setRelatedPuppies([]); // Set to empty array temporarily
+          if (puppyData) {
+            // Temporarily comment out breed lookup to isolate SSR issue
+            // const breedData = getBreedById(puppyData.breed.toLowerCase().replace(/\s+/g, '-'));
+            // setBreed(breedData);
+            setBreed(null); // Set to null temporarily
+            
+            // Temporarily comment out related puppies to isolate SSR issue
+            // try {
+            //   const related = await puppiesApi.getByBreed(puppyData.breed);
+            //   const filteredRelated = related
+            //     .filter(p => p.id !== puppyData.id && p.status === 'available')
+            //     .slice(0, 3);
+            //   setRelatedPuppies(filteredRelated);
+            // } catch (err) {
+            //   console.error('Failed to fetch related puppies:', err);
+            // }
+            setRelatedPuppies([]); // Set to empty array temporarily
+          }
         }
       } catch (err) {
-        console.error('Failed to fetch puppy:', err);
+        console.error('Failed to fetch data:', err);
         setError('Failed to load puppy information. Please try again later.');
-        setPuppy(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPuppy();
+    fetchData();
   }, [puppyId]);
 
   if (isLoading) {
@@ -79,7 +95,7 @@ const PuppyDetailPage = () => {
     );
   }
 
-  if (error || !puppy) {
+  if (error || (!puppy && !bondedPair)) {
     return (
       <Container>
         <div className="py-16 text-center">
@@ -93,12 +109,16 @@ const PuppyDetailPage = () => {
             href="/puppies" 
             className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-full transition-colors"
           >
-            <FaArrowLeft className="mr-2" />
-            Back to All Puppies
+            Back to Puppies
           </Link>
         </div>
       </Container>
     );
+  }
+
+  // Show bonded pair detail if it's a bonded pair
+  if (bondedPair) {
+    return <BondedPairDetail bondedPair={bondedPair} />;
   }
 
   const calculateAge = (birthDate: string): string => {
