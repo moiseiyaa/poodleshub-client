@@ -59,10 +59,10 @@ const PuppiesPage = () => {
           birthDate: p.birthDate,
           images: p.images,
           generation: p.generation,
-          parents: p.parents,
+          parents: p.parents || { mother: '' },
           vaccinations: p.vaccinations,
           price: p.price,
-          notes: p.notes,
+          notes: p.notes || '',
           isBondedPair: true
         }));
         
@@ -118,33 +118,6 @@ const PuppiesPage = () => {
     
     // Update results immediately without delay
     setFilteredPuppies(result);
-    
-    // Filter bonded pairs based on breed and status
-    let bondedResult = [...bondedPairs];
-    
-    if (filters.breed) {
-      bondedResult = bondedResult.filter(pair => pair.breed.toLowerCase() === filters.breed.toLowerCase());
-    }
-    
-    if (filters.status) {
-      bondedResult = bondedResult.filter(pair => pair.status === filters.status);
-    }
-    
-    // Apply sorting to bonded pairs
-    switch (filters.sort) {
-      case 'price-low':
-        bondedResult.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        bondedResult.sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-      default:
-        bondedResult.sort((a, b) => new Date(b.birthDate).getTime() - new Date(a.birthDate).getTime());
-        break;
-    }
-    
-    setFilteredBondedPairs(bondedResult);
     setIsLoading(false);
     hasInitialized.current = true;
   }, [filters, allPuppies]);

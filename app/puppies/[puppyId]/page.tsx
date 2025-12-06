@@ -54,10 +54,10 @@ const PuppyDetailPage = () => {
             birthDate: puppyData.birthDate,
             images: puppyData.images,
             generation: puppyData.generation,
-            parents: puppyData.parents,
+            parents: puppyData.parents || { mother: '' },
             vaccinations: puppyData.vaccinations,
             price: puppyData.price,
-            notes: puppyData.notes,
+            notes: puppyData.notes || '',
             isBondedPair: true
           };
           
@@ -121,6 +121,26 @@ const PuppyDetailPage = () => {
   // Show bonded pair detail if it's a bonded pair
   if (bondedPair) {
     return <BondedPairDetail bondedPair={bondedPair} />;
+  }
+
+  // Guard clause - only render puppy details if puppy exists
+  if (!puppy) {
+    return (
+      <Container>
+        <div className="py-16 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Puppy Not Found</h1>
+          <p className="text-lg text-gray-700 mb-8">
+            The puppy you are looking for does not exist or has been removed.
+          </p>
+          <Link 
+            href="/puppies" 
+            className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-full transition-colors"
+          >
+            Back to Puppies
+          </Link>
+        </div>
+      </Container>
+    );
   }
 
   const calculateAge = (birthDate: string): string => {

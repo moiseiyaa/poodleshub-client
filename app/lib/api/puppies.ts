@@ -3,7 +3,7 @@ export interface Puppy {
   name: string;
   breed: string;
   status: 'available' | 'reserved' | 'adopted';
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'pair';
   birthDate: string;
   images: string[];
   color: string;
