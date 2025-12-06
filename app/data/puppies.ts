@@ -220,6 +220,40 @@ export const puppies: Puppy[] = [
     vaccinations: ['DHLPP'],
     price: 875,
     notes: 'Energetic and friendly, loves to play'
+  },
+  {
+    id: 'p-104',
+    name: 'Jasper',
+    breed: 'Poodle',
+    status: 'available',
+    gender: 'male',
+    birthDate: '2025-09-15',
+    images: ['/images/puppies/jasper-lizzy-1.jpg'],
+    color: 'black',
+    generation: 'Purebred',
+    parents: {
+      mother: '/images/parents/poodle-dam-4.jpg'
+    },
+    vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
+    price: 1650,
+    notes: 'Part of a bonded pair with Lizzy. These siblings are best friends and should be adopted together for optimal happiness and well-being.'
+  },
+  {
+    id: 'p-105',
+    name: 'Lizzy',
+    breed: 'Poodle',
+    status: 'available',
+    gender: 'female',
+    birthDate: '2025-09-15',
+    images: ['/images/puppies/jasper-lizzy-1.jpg'],
+    color: 'brown',
+    generation: 'Purebred',
+    parents: {
+      mother: '/images/parents/poodle-dam-4.jpg'
+    },
+    vaccinations: ['DHLPP', 'Rabies', 'Bordetella'],
+    price: 1650,
+    notes: 'Part of a bonded pair with Jasper. These siblings are best friends and should be adopted together for optimal happiness and well-being.'
   }
 ];
 
