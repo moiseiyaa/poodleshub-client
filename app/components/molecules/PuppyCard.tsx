@@ -67,10 +67,15 @@ const PuppyCard = ({ puppy }: PuppyCardProps) => {
           className="object-cover transition-transform duration-500 ease-in-out"
           style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
         />
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium shadow-sm backdrop-blur-sm ${getStatusColor(puppy.status)}`}>
             {puppy.status.charAt(0).toUpperCase() + puppy.status.slice(1)}
           </span>
+          {puppy.notes && puppy.notes.toLowerCase().includes('bonded pair') && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-600/90 text-white shadow-sm backdrop-blur-sm">
+              👥 Bonded Pair
+            </span>
+          )}
         </div>
         
         {/* Age badge */}
