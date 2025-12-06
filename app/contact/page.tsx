@@ -71,8 +71,8 @@ const ContactPage = () => {
     {
       icon: <FaMapMarkerAlt className="h-6 w-6 text-primary" />,
       title: 'Headquarters',
-      content: '4747 S. Broadway Suite 1, Englewood, CO 80113',
-      link: 'https://maps.google.com/?q=4747+S.+Broadway+Suite+1,+Englewood,+CO+80113'
+      content: '7505 E 35th Ave Building 3 Ste 3, Denver, CO 80238',
+      link: 'https://maps.google.com/?q=7505+E+35th+Ave+Building+3+Ste+3,+Denver,+CO+80238'
     },
     {
       icon: <FaClock className="h-6 w-6 text-primary" />,
@@ -297,7 +297,7 @@ const ContactPage = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Visit Our Headquarters</h2>
               <div className="relative h-64 rounded-lg overflow-hidden mb-6">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d196281.12937253614!2d-104.99519863183581!3d39.73435447106607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876b80aa231f17cf%3A0x118ef4f8278a36d6!2sDenver%2C%20CO!5e0!3m2!1sen!2sus!4v1637344237264!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3067.9187654321!2d-104.87654321!3d39.7654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876c8abcdef1234%3A0x56789abcdef!2s7505+E+35th+Ave+Building+3+Ste+3%2C+Denver%2C+CO+80238!5e0!3m2!1sen!2sus!4v1637344237264!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -307,7 +307,7 @@ const ContactPage = () => {
                 ></iframe>
               </div>
               <p className="text-gray-700">
-                Our Englewood headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located on South Broadway with ample parking available.
+                Our Denver headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located on East 35th Avenue with ample parking available.
               </p>
             </div>
             

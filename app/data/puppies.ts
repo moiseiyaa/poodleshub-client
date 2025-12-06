@@ -38,7 +38,7 @@ export const puppies: Puppy[] = [
     id: 'p-102',
     name: 'Oliver',
     breed: 'Poodle',
-    status: 'available',
+    status: 'reserved',
     gender: 'male',
     birthDate: '2025-09-10',
     images: ['/images/puppies/oliver-1.jpg', '/images/puppies/oliver-2.jpg'],

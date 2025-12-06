@@ -122,8 +122,8 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 bg-linear-to-r from-white to-primary-200 bg-clip-text text-transparent">Contact</h3>
             <address className="not-italic text-gray-300">
-              <p className="mb-2">4747 S. Broadway Suite 1</p>
-              <p className="mb-2">Englewood, CO 80113</p>
+              <p className="mb-2">7505 E 35th Ave Building 3 Ste 3</p>
+              <p className="mb-2">Denver, CO 80238</p>
               <p className="mb-2">
                 <a href="tel:+19092654575" className="hover:text-white transition-colors">
                   +1 909 265-4575
