@@ -27,7 +27,7 @@ export const faqs: FAQ[] = [
   {
     id: "faq-4",
     question: "What is the adoption fee and what does it cover?",
-    answer: "Adoption fees vary by breed and typically range from $1,500 to $3,500. This fee covers the puppy's care prior to adoption, vaccinations, health checks, microchipping, initial training, and a starter kit with food, toys, and care instructions.",
+    answer: "Adoption fees vary by breed and typically range from $450 to $1,000. Individual puppies are priced at $450-$550, while bonded pairs are available at $1,000. This fee covers the puppy's care prior to adoption, vaccinations, health checks, microchipping, initial training, and a starter kit with food, toys, and care instructions.",
     category: "fees"
   },
   {
