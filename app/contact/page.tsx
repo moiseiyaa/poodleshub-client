@@ -59,8 +59,8 @@ const ContactPage = () => {
     {
       icon: <FaPhone className="h-6 w-6 text-primary" />,
       title: 'Phone',
-      content: '+1 909 265-4575',
-      link: 'tel:+19092654575'
+      content: '+1 410 725 8531',
+      link: 'tel:+14107258531'
     },
     {
       icon: <FaEnvelope className="h-6 w-6 text-primary" />,
@@ -71,8 +71,8 @@ const ContactPage = () => {
     {
       icon: <FaMapMarkerAlt className="h-6 w-6 text-primary" />,
       title: 'Headquarters',
-      content: '7505 E 35th Ave Building 3 Ste 3, Denver, CO 80238',
-      link: 'https://maps.google.com/?q=7505+E+35th+Ave+Building+3+Ste+3,+Denver,+CO+80238'
+      content: 'B205 Snowden River Pkwy, Columbia, MD 21045, United States',
+      link: 'https://maps.google.com/?q=B205+Snowden+River+Pkwy,+Columbia,+MD+21045'
     },
     {
       icon: <FaClock className="h-6 w-6 text-primary" />,
@@ -297,7 +297,7 @@ const ContactPage = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Visit Our Headquarters</h2>
               <div className="relative h-64 rounded-lg overflow-hidden mb-6">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3067.9187654321!2d-104.87654321!3d39.7654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876c8abcdef1234%3A0x56789abcdef!2s7505+E+35th+Ave+Building+3+Ste+3%2C+Denver%2C+CO+80238!5e0!3m2!1sen!2sus!4v1637344237264!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3073.123456789!2d-76.823456789!3d39.191234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c123456789ab%3A0x123456789abcdef!2sB205+Snowden+River+Pkwy%2C+Columbia%2C+MD+21045!5e0!3m2!1sen!2sus!4v1637344237264!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -307,7 +307,7 @@ const ContactPage = () => {
                 ></iframe>
               </div>
               <p className="text-gray-700">
-                Our Denver headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located on East 35th Avenue with ample parking available.
+                Our Columbia headquarters features a welcoming environment where you can, by appointment, see some of our available puppies. We're conveniently located at Snowden River Parkway with ample parking available.
               </p>
             </div>
             

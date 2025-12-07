@@ -226,14 +226,15 @@ const TermsPage = () => {
                   <strong>PuppyHub USA</strong>
                 </p>
                 <p className="text-gray-700 mb-2">
-                  7505 E 35th Ave Building 3 Ste 3<br />
-                  Denver, CO 80238
+                  B205 Snowden River Pkwy<br />
+                  Columbia, MD 21045<br />
+                  United States
                 </p>
                 <p className="text-gray-700 mb-2">
                   Email: <a href="mailto:puppyhubusa@gmail.com" className="text-primary hover:text-primary/80">puppyhubusa@gmail.com</a>
                 </p>
                 <p className="text-gray-700">
-                  Phone: <a href="tel:+19092654575" className="text-primary hover:text-primary/80">+1 909 265-4575</a>
+                  Phone: <a href="tel:+14107258531" className="text-primary hover:text-primary/80">+1 410 725 8531</a>
                 </p>
               </div>
             </section>
