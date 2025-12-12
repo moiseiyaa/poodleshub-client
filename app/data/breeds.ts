@@ -18,6 +18,28 @@ export interface Breed {
 
 export const breeds: Breed[] = [
   {
+    id: 'cardigan-welsh-corgi',
+    name: 'Cardigan Welsh Corgi',
+    description: 'The Cardigan Welsh Corgi is a versatile herding breed known for its long tail, fox-like expression, and intelligent, affectionate nature. These sturdy little dogs are more than just cute companions; they were originally bred for herding cattle and are known for their endurance and work ethic. Cardigans are highly trainable and make excellent family pets for active households.',
+    traits: ['Intelligent', 'Loyal', 'Affectionate', 'Alert', 'Adaptable', 'Active'],
+    origin: 'Wales, 1200 BCE',
+    temperament: 'Cardigan Welsh Corgis are intelligent, loyal, and affectionate companions. They are known for their adaptability to different living situations and their strong bond with their families. While they may be reserved with strangers at first, they are generally good with children and other pets when properly socialized. Their herding instincts may lead them to try to herd family members or pets.',
+    trainability: 'Highly intelligent and eager to please, Cardigan Welsh Corgis are generally easy to train. They respond well to positive reinforcement methods and enjoy learning new tricks and commands. Early socialization and consistent training are important to prevent stubbornness and to manage their herding instincts.',
+    colors: ['Red', 'Sable', 'Brindle', 'Black', 'Blue Merle', 'Black & White', 'Red & White'],
+    sizes: {
+      height: '10.5-12.5 inches at the shoulder',
+      weight: '25-38 pounds (females 25-34 lbs, males 30-38 lbs)'
+    },
+    lifeExpectancy: '12-15 years',
+    image: '/images/breeds/cardigan-welsh-corgi-hero.jpg',
+    gallery: [
+      '/images/breeds/cardigan-welsh-corgi-1.jpg',
+      '/images/breeds/cardigan-welsh-corgi-2.jpg',
+      '/images/breeds/cardigan-welsh-corgi-3.jpg',
+      '/images/breeds/cardigan-welsh-corgi-4.jpg'
+    ]
+  },
+  {
     id: 'poodle',
     name: 'Poodle',
     description: 'The Poodle is an elegant and intelligent breed known for its distinctive curly coat and exceptional trainability. Available in three size varieties (Standard, Miniature, and Toy), Poodles are versatile dogs that excel in various activities from companionship to performance sports. They are highly intelligent, hypoallergenic, and make excellent family pets.',
