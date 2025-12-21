@@ -192,9 +192,20 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                         <p className="text-xs text-gray-600">{post.author.role}</p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Read More Options */}
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                     <Link
                       href={`/blog/${post.slug}`}
                       className="text-primary hover:text-secondary flex items-center gap-1 text-sm font-medium"
+                    >
+                      Quick Read
+                      <FaArrowRight className="text-xs" />
+                    </Link>
+                    <Link
+                      href={`/blog/read-more/${post.slug}`}
+                      className="text-gray-600 hover:text-primary flex items-center gap-1 text-sm font-medium"
                     >
                       Read More
                       <FaArrowRight className="text-xs" />
