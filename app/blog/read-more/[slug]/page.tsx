@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
-import Container from '../../components/organisms/Container';
-import { getBlogPostBySlug, getRelatedBlogPosts } from '../../data/blog';
+import Container from '../../../components/organisms/Container';
+import { getBlogPostBySlug, getRelatedBlogPosts, BlogPost } from '../../../data/blog';
 
 interface ReadMorePageProps {
   params: {
@@ -127,7 +127,7 @@ export default function ReadMorePage({ params }: ReadMorePageProps) {
               
               {/* Supporting Images */}
               <div className="space-y-4">
-                {post.images?.slice(0, 2).map((image, index) => (
+                {post.images?.slice(0, 2).map((image: string, index: number) => (
                   <div key={index} className="relative h-[190px] rounded-xl overflow-hidden shadow-md">
                     <Image
                       src={image}
@@ -196,7 +196,7 @@ export default function ReadMorePage({ params }: ReadMorePageProps) {
             <div className="mt-12 p-8 bg-white rounded-xl shadow-md">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Topics Covered</h3>
               <div className="flex flex-wrap gap-3">
-                {post.tags.map((tag) => (
+                {post.tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="bg-linear-to-r from-primary/10 to-secondary/10 text-gray-700 px-4 py-2 rounded-full text-sm hover:bg-primary hover:text-white transition-colors cursor-pointer border border-primary/20"
@@ -261,7 +261,7 @@ export default function ReadMorePage({ params }: ReadMorePageProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {relatedPosts.map((relatedPost) => (
+                {relatedPosts.map((relatedPost: BlogPost) => (
                   <article
                     key={relatedPost.id}
                     className="bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
