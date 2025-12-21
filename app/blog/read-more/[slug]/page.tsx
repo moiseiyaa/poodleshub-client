@@ -16,8 +16,9 @@ interface ReadMorePageProps {
  * Displays expanded blog post content with enhanced reading experience
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default function ReadMorePage({ params }: ReadMorePageProps) {
-  const post = getBlogPostBySlug(params.slug);
+export default async function ReadMorePage({ params }: ReadMorePageProps) {
+  const resolvedParams = await params;
+  const post = getBlogPostBySlug(resolvedParams.slug);
   const relatedPosts = getRelatedBlogPosts(post?.id || '', 4);
 
   if (!post) {
@@ -384,7 +385,8 @@ export async function generateStaticParams() {
 
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: ReadMorePageProps) {
-  const post = getBlogPostBySlug(params.slug);
+  const resolvedParams = await params;
+  const post = getBlogPostBySlug(resolvedParams.slug);
 
   if (!post) {
     return {

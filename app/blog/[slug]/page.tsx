@@ -16,8 +16,9 @@ interface BlogPostPageProps {
  * Displays full blog post content with related articles and sharing options
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = getBlogPostBySlug(params.slug);
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const resolvedParams = await params;
+  const post = getBlogPostBySlug(resolvedParams.slug);
   const relatedPosts = getRelatedBlogPosts(post?.id || '', 3);
 
   if (!post) {
@@ -325,7 +326,8 @@ export async function generateStaticParams() {
 
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: BlogPostPageProps) {
-  const post = getBlogPostBySlug(params.slug);
+  const resolvedParams = await params;
+  const post = getBlogPostBySlug(resolvedParams.slug);
 
   if (!post) {
     return {
