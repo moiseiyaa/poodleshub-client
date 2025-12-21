@@ -169,17 +169,17 @@ Remember: patience, consistency, and positive reinforcement are your best tools.
     author: {
       name: 'Sarah Johnson',
       role: 'Founder & Lead Trainer',
-      avatar: '/images/authors/sarah-johnson.jpg'
+      avatar: '/images/founder-story.jpg'
     },
     publishedAt: '2024-12-15',
     readTime: 8,
     category: 'Puppy Care',
     tags: ['poodle', 'puppy care', 'training', 'first-time owner'],
-    featuredImage: '/images/blog/poodle-puppy-guide.jpg',
+    featuredImage: '/images/puppy-training.jpg',
     images: [
-      '/images/blog/poodle-puppy-crate.jpg',
-      '/images/blog/poodle-grooming.jpg',
-      '/images/blog/poodle-training.jpg'
+      '/images/process-step-1.jpg',
+      '/images/puppy-training.jpg',
+      '/images/training-process.jpg'
     ]
   },
   {
@@ -354,17 +354,17 @@ Remember: these small dogs have big personalities and specific needs. Understand
     author: {
       name: 'Dr. Emily Chen',
       role: 'Veterinary Consultant',
-      avatar: '/images/authors/emily-chen.jpg'
+      avatar: '/images/about-hero.jpg'
     },
     publishedAt: '2024-12-10',
     readTime: 7,
     category: 'Breed Care',
     tags: ['maltese', 'grooming', 'health', 'small dogs'],
-    featuredImage: '/images/blog/maltese-care-guide.jpg',
+    featuredImage: '/images/healthy-puppy.jpg',
     images: [
-      '/images/blog/maltese-grooming.jpg',
-      '/images/blog/maltese-playing.jpg',
-      '/images/blog/maltese-training.jpg'
+      '/images/puppy-training.jpg',
+      '/images/puppies-playing.jpg',
+      '/images/training-process.jpg'
     ]
   },
   {
@@ -590,17 +590,17 @@ The time you invest in training now will pay dividends throughout your dog's lif
     author: {
       name: 'Michael Rodriguez',
       role: 'Certified Professional Trainer',
-      avatar: '/images/authors/michael-rodriguez.jpg'
+      avatar: '/images/about-hero.jpg'
     },
     publishedAt: '2024-12-05',
     readTime: 10,
     category: 'Training',
     tags: ['training', 'puppy', 'commands', 'behavior'],
-    featuredImage: '/images/blog/puppy-training-basics.jpg',
+    featuredImage: '/images/training-process.jpg',
     images: [
-      '/images/blog/puppy-sit-command.jpg',
-      '/images/blog/puppy-recall-training.jpg',
-      '/images/blog/puppy-down-command.jpg'
+      '/images/process-step-1.jpg',
+      '/images/puppy-training.jpg',
+      '/images/training-process.jpg'
     ]
   },
   {
@@ -854,17 +854,17 @@ The investment in good nutrition pays dividends in health, longevity, and veteri
     author: {
       name: 'Dr. Emily Chen',
       role: 'Veterinary Consultant',
-      avatar: '/images/authors/emily-chen.jpg'
+      avatar: '/images/about-hero.jpg'
     },
     publishedAt: '2024-11-28',
     readTime: 12,
     category: 'Health & Nutrition',
     tags: ['nutrition', 'puppy food', 'health', 'feeding'],
-    featuredImage: '/images/blog/puppy-nutrition-guide.jpg',
+    featuredImage: '/images/healthy-puppy.jpg',
     images: [
-      '/images/blog/puppy-feeding-time.jpg',
-      '/images/blog/healthy-puppy-food.jpg',
-      '/images/blog/puppy-growth-chart.jpg'
+      '/images/process-step-2.jpg',
+      '/images/healthy-puppy.jpg',
+      '/images/puppies-grass.jpg'
     ]
   },
   {
@@ -1119,17 +1119,17 @@ With the right approach and persistence, you'll have a fully house-trained puppy
     author: {
       name: 'Michael Rodriguez',
       role: 'Certified Professional Trainer',
-      avatar: '/images/authors/michael-rodriguez.jpg'
+      avatar: '/images/about-hero.jpg'
     },
     publishedAt: '2024-11-20',
     readTime: 11,
     category: 'Training',
     tags: ['house training', 'puppy training', 'behavior', 'crates'],
-    featuredImage: '/images/blog/house-training-puppy.jpg',
+    featuredImage: '/images/puppy-delivery.jpg',
     images: [
-      '/images/blog/puppy-crate-training.jpg',
-      '/images/blog/puppy-potty-break.jpg',
-      '/images/blog/house-training-success.jpg'
+      '/images/process-step-3.jpg',
+      '/images/puppy-delivery.jpg',
+      '/images/after-adoption.jpg'
     ]
   }
 ];

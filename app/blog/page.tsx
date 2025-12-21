@@ -4,14 +4,31 @@ import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowRight } from 'react-icons
 import Container from '../components/organisms/Container';
 import { blogPosts, getBlogCategories, getLatestBlogPosts } from '../data/blog';
 
+interface BlogPageProps {
+  searchParams: {
+    category?: string;
+  };
+}
+
 /**
  * Blog main page component
  * Displays all blog posts with filtering and search functionality
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default function BlogPage() {
+export default function BlogPage({ searchParams }: BlogPageProps) {
   const categories = getBlogCategories();
-  const latestPosts = getLatestBlogPosts(6);
+  
+  // Filter posts by category if specified
+  const filteredPosts = searchParams.category
+    ? blogPosts.filter(post => 
+        post.category.toLowerCase().replace(' & ', '-').replace(' ', '-') === searchParams.category
+      )
+    : getLatestBlogPosts(6);
+
+  const displayPosts = searchParams.category ? filteredPosts : getLatestBlogPosts(6);
+  const currentCategory = searchParams.category 
+    ? categories.find(cat => cat.toLowerCase().replace(' & ', '-').replace(' ', '-') === searchParams.category)
+    : null;
 
   return (
     <div>
@@ -20,11 +37,13 @@ export default function BlogPage() {
         <Container>
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              PuppyHub USA Blog
+              {currentCategory ? `${currentCategory} Articles` : 'PuppyHub USA Blog'}
             </h1>
             <p className="text-xl text-gray-700 mb-8">
-              Expert advice, training tips, and heartwarming stories to help you 
-              give your puppy the best start in life.
+              {currentCategory 
+                ? `Expert advice and tips specifically about ${currentCategory.toLowerCase()}`
+                : 'Expert advice, training tips, and heartwarming stories to help you give your puppy the best start in life.'
+              }
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-2">
@@ -56,7 +75,7 @@ export default function BlogPage() {
               return (
                 <Link
                   key={category}
-                  href={`/blog/category/${category.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}
+                  href={`/blog?category=${category.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}
                   className="bg-gray-100 hover:bg-primary hover:text-white px-6 py-3 rounded-full transition-colors text-center"
                 >
                   {category} ({categoryPosts.length})
@@ -71,14 +90,29 @@ export default function BlogPage() {
       <section className="py-16 bg-gray-50">
         <Container>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Latest Articles</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {currentCategory ? `${currentCategory} Articles` : 'Latest Articles'}
+            </h2>
             <p className="text-lg text-gray-700">
-              Fresh insights and expert advice for puppy parents
+              {currentCategory 
+                ? `All articles about ${currentCategory.toLowerCase()}`
+                : 'Fresh insights and expert advice for puppy parents'
+              }
             </p>
+            {currentCategory && (
+              <div className="mt-4">
+                <Link 
+                  href="/blog" 
+                  className="text-primary hover:text-secondary underline"
+                >
+                  ← Back to all articles
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestPosts.map((post) => (
+            {displayPosts.map((post) => (
               <article
                 key={post.id}
                 className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden group"
@@ -219,7 +253,7 @@ export default function BlogPage() {
               <p className="text-gray-700 text-sm mb-4">
                 Basic commands, house training, and behavior tips
               </p>
-              <Link href="/blog/category/training" className="text-primary hover:text-secondary font-medium text-sm">
+              <Link href="/blog?category=training" className="text-primary hover:text-secondary font-medium text-sm">
                 View Articles →
               </Link>
             </div>
@@ -232,7 +266,7 @@ export default function BlogPage() {
               <p className="text-gray-700 text-sm mb-4">
                 Feeding guides, health advice, and veterinary tips
               </p>
-              <Link href="/blog/category/health-nutrition" className="text-primary hover:text-secondary font-medium text-sm">
+              <Link href="/blog?category=health-nutrition" className="text-primary hover:text-secondary font-medium text-sm">
                 View Articles →
               </Link>
             </div>
@@ -245,7 +279,7 @@ export default function BlogPage() {
               <p className="text-gray-700 text-sm mb-4">
                 Grooming, socialization, and daily care essentials
               </p>
-              <Link href="/blog/category/puppy-care" className="text-primary hover:text-secondary font-medium text-sm">
+              <Link href="/blog?category=puppy-care" className="text-primary hover:text-secondary font-medium text-sm">
                 View Articles →
               </Link>
             </div>
@@ -258,7 +292,7 @@ export default function BlogPage() {
               <p className="text-gray-700 text-sm mb-4">
                 Breed-specific care and characteristics
               </p>
-              <Link href="/blog/category/breed-care" className="text-primary hover:text-secondary font-medium text-sm">
+              <Link href="/blog?category=breed-care" className="text-primary hover:text-secondary font-medium text-sm">
                 View Articles →
               </Link>
             </div>
