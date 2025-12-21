@@ -152,12 +152,12 @@ const Navbar = () => {
             </Link>
             
             <Link 
-              href="/process" 
+              href="/blog" 
               className={`text-base font-medium hover:text-primary transition-colors ${
-                pathname === '/process' ? 'text-primary' : 'text-gray-800'
+                pathname?.startsWith('/blog') ? 'text-primary' : 'text-gray-800'
               }`}
             >
-              How It Works
+              Blog
             </Link>
             
             <Link 
@@ -309,13 +309,13 @@ const Navbar = () => {
               About
             </Link>
             <Link 
-              href="/process" 
+              href="/blog" 
               className={`text-xl font-medium ${
-                pathname === '/process' ? 'text-primary' : 'text-gray-800'
+                pathname?.startsWith('/blog') ? 'text-primary' : 'text-gray-800'
               }`}
               onClick={() => setIsOpen(false)}
             >
-              How It Works
+              Blog
             </Link>
             <Link 
               href="/faq" 
