@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowRight, FaSearch, FaFilter } from 'react-icons/fa';
