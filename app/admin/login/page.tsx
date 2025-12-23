@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAdminAuth } from "../../context/AdminAuthContext";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { login } = useAdminAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,10 +32,11 @@ export default function AdminLogin() {
         setLoading(false);
         return;
       }
-      localStorage.setItem('admin_token', data.token);
-      // Redirect to admin dashboard (to be implemented)
+      // Save token to context + localStorage
+      login(data.token);
       router.push("/admin/dashboard");
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Admin login error:', err);
       setError("Server error. Please try again.");
       setLoading(false);
     }

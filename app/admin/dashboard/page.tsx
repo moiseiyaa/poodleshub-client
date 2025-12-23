@@ -67,9 +67,11 @@ function useLiveCollection<T>(
   const fetchData = async () => {
     try {
       setError(null);
-      const res = await fetch(`${getApiUrl()}${path}`, {
-        headers: token ? { admin_token: token } : undefined,
-      });
+      const headers: Record<string, string> | undefined = token
+        ? { admin_token: token, Authorization: `Bearer ${token}` }
+        : undefined;
+
+      const res = await fetch(`${getApiUrl()}${path}`, { headers });
       if (!res.ok) throw new Error("Failed to load data");
       setData(await res.json());
     } catch (err: any) {
@@ -121,7 +123,7 @@ function OverviewPanel({
         {metrics.map((m) => (
           <div
             key={m.label}
-            className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm"
+            className="rounded-xl border border-slate-200 bg-linear-to-br from-white to-slate-50 p-4 shadow-sm"
           >
             <p className="text-xs uppercase tracking-wide text-slate-500">{m.label}</p>
             <p className="mt-2 text-2xl font-semibold text-slate-900">{m.value}</p>
@@ -300,7 +302,8 @@ function PuppiesManager({ token }: { token: string | null }) {
         method,
         headers: {
           "Content-Type": "application/json",
-          admin_token: token,
+          admin_token: token || "",
+          Authorization: token ? `Bearer ${token}` : "",
         },
         body: JSON.stringify(payload),
       });
@@ -323,7 +326,7 @@ function PuppiesManager({ token }: { token: string | null }) {
     try {
       const res = await fetch(`${getApiUrl()}/api/puppies/${id}`, {
         method: "DELETE",
-        headers: { admin_token: token },
+          headers: { admin_token: token || "", Authorization: token ? `Bearer ${token}` : "" },
       });
       if (!res.ok) throw new Error("Failed to delete");
       await refetch();
@@ -446,8 +449,11 @@ function PuppiesManager({ token }: { token: string | null }) {
               />
             </div>
             <div className="flex gap-2">
+              <label htmlFor="puppy-birthDate" className="sr-only">Birth date</label>
               <input
+                id="puppy-birthDate"
                 type="date"
+                aria-label="Birth date"
                 value={form.birthDate}
                 onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
@@ -581,7 +587,8 @@ function TestimonialsManager({ token }: { token: string | null }) {
         method,
         headers: {
           "Content-Type": "application/json",
-          admin_token: token,
+          admin_token: token || "",
+          Authorization: token ? `Bearer ${token}` : "",
         },
         body: JSON.stringify(payload),
       });
@@ -604,7 +611,7 @@ function TestimonialsManager({ token }: { token: string | null }) {
     try {
       const res = await fetch(`${getApiUrl()}/api/testimonials/${id}`, {
         method: "DELETE",
-        headers: { admin_token: token },
+        headers: { admin_token: token || "", Authorization: token ? `Bearer ${token}` : "" },
       });
       if (!res.ok) throw new Error("Failed to delete");
       await refetch();
@@ -731,8 +738,11 @@ function TestimonialsManager({ token }: { token: string | null }) {
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
               />
             </div>
+            <label htmlFor="testimonial-date" className="sr-only">Testimonial date</label>
             <input
+              id="testimonial-date"
               type="date"
+              aria-label="Testimonial date"
               value={form.date || ""}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
@@ -755,6 +765,7 @@ export default function AdminDashboard() {
   const router = useRouter();
   const { isAuthenticated, logout, token } = useAdminAuth();
   const [tab, setTab] = useState<string>("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const {
     data: apps,
@@ -786,7 +797,8 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-slate-100 py-6 px-3 md:px-6">
       <div className="mx-auto flex max-w-7xl gap-6">
-        <aside className="w-64 rounded-2xl bg-slate-900 px-4 py-6 text-slate-100 shadow-xl">
+        {/* Responsive sidebar: hidden on small screens, toggleable overlay */}
+        <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-slate-900 px-4 py-6 text-slate-100 shadow-xl transition-transform duration-200 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 rounded-2xl`}>
           <div className="mb-8">
             <div className="text-xl font-extrabold tracking-tight">PuppyHub</div>
             <div className="mt-1 text-xs text-slate-400">Admin Workspace</div>
@@ -819,13 +831,33 @@ export default function AdminDashboard() {
           </button>
         </aside>
 
-        <main className="flex-1 rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* Backdrop for mobile when sidebar open */}
+        {isSidebarOpen && (
+          <div
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          />
+        )}
+
+        <main className="flex-1 rounded-2xl border border-slate-200 bg-white shadow-sm md:ml-0">
           <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-            <div>
+            <div className="flex items-center gap-4">
+              <button
+                className="md:hidden rounded p-2 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsSidebarOpen((s) => !s)}
+                aria-label="Toggle menu"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clipRule="evenodd" />
+                </svg>
+              </button>
+
+              <div>
               <h1 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h1>
               <p className="text-sm text-slate-500">
                 Bold management experience: applications, puppies, testimonials in one place.
               </p>
+              </div>
             </div>
             <div className="flex gap-2">
               <button
