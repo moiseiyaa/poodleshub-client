@@ -1,18 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaStar, FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Container from './Container';
-import { getAllTestimonials } from '../../data/testimonials';
+import { Testimonial } from '../../data/testimonials';
 
 /**
  * Testimonials section component for the homepage
  * Displays customer reviews with photos, names, and ratings
  */
 const TestimonialsSection = () => {
-  const testimonials = getAllTestimonials();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const res = await fetch(`${apiUrl}/api/testimonials`);
+        if (!res.ok) {
+          throw new Error('Failed to fetch testimonials');
+        }
+        const data = await res.json();
+        console.log('Testimonials fetched from API:', data);
+        // Sort by date descending to show newest first
+        const sorted = data.sort((a: Testimonial, b: Testimonial) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
+        console.log('Testimonials sorted:', sorted);
+        setTestimonials(sorted);
+      } catch (err: any) {
+        console.error('Error fetching testimonials:', err);
+        setError(err.message || 'Failed to load testimonials');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
   
   const handlePrev = () => {
     setActiveIndex((prevIndex) => 
@@ -52,7 +85,25 @@ const TestimonialsSection = () => {
           </p>
         </div>
         
-        <div className="relative max-w-4xl mx-auto">
+        {loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-600">Loading testimonials...</p>
+          </div>
+        )}
+        
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-600">Unable to load testimonials. Please try again later.</p>
+          </div>
+        )}
+        
+        {!loading && !error && testimonials.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600">No testimonials available yet.</p>
+          </div>
+        )}
+        
+        {!loading && !error && testimonials.length > 0 && (
           {/* Testimonial Card */}
           <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-soft p-6 md:p-10 border border-gray-100 relative overflow-hidden">
             {/* Decorative quote marks */}
@@ -67,11 +118,11 @@ const TestimonialsSection = () => {
               <div className="md:w-1/3 flex flex-col items-center">
                 <div className="relative w-32 h-32 rounded-full bg-linear-to-br from-primary-500 to-primary-600 flex items-center justify-center mb-4 border-4 border-white shadow-md">
                   <span className="text-3xl font-bold text-white">
-                    {testimonials[activeIndex].initials}
+                    {testimonials[activeIndex].initials || testimonials[activeIndex].name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>
                 <h4 className="text-lg font-bold text-gray-900">{testimonials[activeIndex].name}</h4>
-                <p className="text-gray-600 mb-2">{testimonials[activeIndex].location}</p>
+                <p className="text-gray-600 mb-2">{testimonials[activeIndex].location || 'USA'}</p>
                 <div className="flex">
                   {renderStars(testimonials[activeIndex].rating)}
                 </div>
@@ -86,7 +137,7 @@ const TestimonialsSection = () => {
                 <div className="flex items-center bg-primary-50 px-4 py-2 rounded-lg">
                   <span className="text-sm font-medium text-primary-700">Puppy: </span>
                   <span className="text-sm text-primary-600 ml-1 font-medium">
-                    {testimonials[activeIndex].puppyName} ({testimonials[activeIndex].puppyBreed})
+                    {testimonials[activeIndex].puppyName || 'N/A'} ({testimonials[activeIndex].puppyBreed || 'N/A'})
                   </span>
                 </div>
               </div>
@@ -126,6 +177,7 @@ const TestimonialsSection = () => {
             />
           ))}
         </div>
+        )}
       </Container>
     </section>
   );
