@@ -1,5 +1,36 @@
 @import "tailwindcss";
 
+/* Remove top spacing for admin routes */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Admin dashboard specific overrides - remove padding from main element for admin routes */
+html body main[id="main-content"]:has(> div[class*="admin"]) {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Alternative selector for admin routes */
+html body main[id="main-content"] > div:has([class*="bg-\\[#0A1628\\]"]) {
+  margin-top: -5rem !important;
+  padding-top: 0 !important;
+}
+
+/* Direct override for admin dashboard container */
+.admin-dashboard-container {
+  margin-top: -5rem !important;
+  padding-top: 0 !important;
+  top: 0 !important;
+}
+
+/* Admin layout wrapper */
+.admin-layout-wrapper {
+  margin-top: -5rem !important;
+  padding-top: 0 !important;
+}
+
 :root {
   /* Base colors */
   --background: #ffffff;

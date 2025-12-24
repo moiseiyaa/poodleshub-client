@@ -151,13 +151,19 @@ export default function BlogPage() {
                   type="text"
                   placeholder="Search articles, topics, or tags..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    updateURL({ search: e.target.value });
+                  }}
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 {searchTerm && (
                   <button
-                    onClick={() => setSearchTerm('')}
+                    onClick={() => {
+                      setSearchTerm('');
+                      updateURL({ search: '' });
+                    }}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     ×
@@ -309,6 +315,7 @@ export default function BlogPage() {
                         setSearchTerm('');
                         setSelectedCategory('');
                         setSelectedTag('');
+                        updateURL({ search: '', category: '', tag: '' });
                       }}
                       className="text-primary hover:text-secondary font-medium text-sm"
                     >
@@ -400,6 +407,7 @@ export default function BlogPage() {
                         setSearchTerm('');
                         setSelectedCategory('');
                         setSelectedTag('');
+                        updateURL({ search: '', category: '', tag: '' });
                       }}
                       className="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-full transition-colors"
                     >
