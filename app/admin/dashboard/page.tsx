@@ -951,12 +951,14 @@ function TestimonialsManager({ token }: { token: string | null }) {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleEdit(t)}
+                      aria-label="Edit testimonial"
                       className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
                     >
                       <FiEdit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => destroy(t.id)}
+                      aria-label="Delete testimonial"
                       className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
                     >
                       <FiTrash2 className="h-4 w-4" />
