@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { 
-  FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
+  FiHome, FiUsers, FiDollarSign, FiPuzzle, FiSettings, FiChevronDown, FiChevronRight,
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
   FiFileText, FiHeart, FiStar, FiTrendingUp, FiTrendingDown, FiMoreVertical,
   FiCalendar, FiMail, FiPhone, FiMapPin, FiImage, FiTag, FiBarChart2, FiGlobe,
@@ -611,14 +611,12 @@ function PuppiesManager({ token }: { token: string | null }) {
                       <button
                         onClick={() => handleEdit(p)}
                         className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
-                        title="Edit puppy"
                       >
                         <FiEdit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => destroy(p.id)}
                         className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
-                        title="Delete puppy"
                       >
                         <FiTrash2 className="h-4 w-4" />
                       </button>
@@ -1438,21 +1436,8 @@ export default function AdminDashboard() {
   if (!isAuthenticated) return null;
 
   return (
-    <div 
-      className="h-screen bg-[#0A1628] overflow-hidden admin-dashboard-container" 
-      style={{ 
-        margin: 0, 
-        padding: 0, 
-        marginTop: '-5rem',
-        paddingTop: 0,
-        position: 'relative',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: '100%'
-      }}
-    >
-      <div className="flex h-full" style={{ margin: 0, padding: 0 }}>
+    <div className="h-screen bg-[#0A1628] overflow-hidden">
+      <div className="flex h-full">
         {/* Sidebar */}
         <aside
           className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-[#1A2A3F] bg-[#0F1F3A] shadow-2xl transition-transform duration-300 lg:relative lg:translate-x-0 lg:flex-shrink-0 ${
