@@ -838,10 +838,10 @@ Seek veterinary advice for:
 
 ## Final Thoughts
 
-Proper nutrition is one of the most important gifts you can give your puppy. A well-fed puppy grows into a healthy, active adult dog with; a poorly fed one may.
+Proper nutrition is one of the most important gifts you can give your puppy. A well-fed puppy grows into a healthy, active adult dog with strong bones, a shiny coat, and boundless energy; a poorly fed one may struggle with health issues, low energy, and a shorter lifespan.
   
 Remember:
--; Quality ingredients matter more than price
+- Quality ingredients matter more than price
 - Consistency is key to digestive health
 - Monitor your puppy's individual needs
 - Adjust as they grow and develop
@@ -1134,6 +1134,34 @@ With the right approach and persistence, you'll have a fully house-trained puppy
   }
 ];
 
+// Local (client-side) persistence key for admin-created posts
+const LOCAL_BLOG_KEY = 'puppyhub_local_blog_posts';
+
+// Return merged list: local posts (newest first) + packaged `blogPosts`
+export const getAllBlogPosts = (): BlogPost[] => {
+  if (typeof window === 'undefined') return blogPosts;
+  try {
+    const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
+    const local: BlogPost[] = raw ? JSON.parse(raw) : [];
+    return [...local, ...blogPosts];
+  } catch (e) {
+    return blogPosts;
+  }
+};
+
+export const addLocalBlogPost = (post: BlogPost) => {
+  if (typeof window === 'undefined') return;
+  try {
+    const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
+    const local: BlogPost[] = raw ? JSON.parse(raw) : [];
+    const updated = [post, ...local];
+    window.localStorage.setItem(LOCAL_BLOG_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    console.error('Failed to save local blog post', e);
+  }
+};
+
 // Helper function to get blog posts by category
 export const getBlogPostsByCategory = (category: string) => {
   return blogPosts.filter(post => post.category === category);
@@ -1155,19 +1183,23 @@ export const getRelatedBlogPosts = (currentPostId: string, limit: number = 3) =>
 
 // Helper function to get latest blog posts
 export const getLatestBlogPosts = (limit: number = 10) => {
-  return blogPosts
+  const posts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  return posts
+    .slice()
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, limit);
 };
 
 // Helper function to get blog post by slug
 export const getBlogPostBySlug = (slug: string) => {
-  return blogPosts.find(post => post.slug === slug);
+  const posts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  return posts.find(post => post.slug === slug);
 };
 
 // Get all unique categories
 export const getBlogCategories = () => {
-  const categories = blogPosts.map(post => post.category);
+  const posts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  const categories = posts.map(post => post.category);
   return [...new Set(categories)];
 };
 

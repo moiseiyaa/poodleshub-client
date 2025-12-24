@@ -3,6 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAdminAuth } from "../../context/AdminAuthContext";
+import { 
+  FiHome, FiUsers, FiDollarSign, FiPuzzle, FiSettings, FiChevronDown, FiChevronRight,
+  FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
+  FiFileText, FiHeart, FiStar, FiTrendingUp, FiTrendingDown, FiMoreVertical,
+  FiCalendar, FiMail, FiPhone, FiMapPin, FiImage, FiTag, FiBarChart2, FiGlobe,
+  FiEye, FiMousePointer, FiClock, FiUsers as FiUsersIcon, FiShare2, FiTarget
+} from "react-icons/fi";
 
 const getApiUrl = () =>
   process.env.NEXT_PUBLIC_API_URL ||
@@ -49,11 +56,12 @@ type Testimonial = {
   createdAt?: string;
 };
 
-const TAB_CONFIG = [
-  { key: "overview", label: "Overview" },
-  { key: "applications", label: "Applications" },
-  { key: "puppies", label: "Puppies" },
-  { key: "testimonials", label: "Testimonials" },
+const NAV_ITEMS = [
+  { key: "overview", label: "Dashboard", icon: FiHome },
+  { key: "applications", label: "Applications", icon: FiFileText },
+  { key: "puppies", label: "Puppies", icon: FiHeart },
+  { key: "testimonials", label: "Testimonials", icon: FiStar },
+  { key: "analytics", label: "Marketing & SEO", icon: FiBarChart2 },
 ];
 
 function useLiveCollection<T>(
@@ -95,6 +103,48 @@ function useLiveCollection<T>(
   return { data, loading, error, refetch: fetchData };
 }
 
+function MetricCard({ 
+  label, 
+  value, 
+  change, 
+  icon: Icon, 
+  trend = "up" 
+}: { 
+  label: string; 
+  value: string | number; 
+  change?: string; 
+  icon: any;
+  trend?: "up" | "down";
+}) {
+  const isPositive = trend === "up";
+  return (
+    <div className="relative rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-gradient-to-br from-[#B344FF] to-[#FF44EC] p-2.5">
+            <Icon className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-[#8B9CC8]">{label}</p>
+            <p className="mt-1 text-3xl font-bold text-white">{value}</p>
+          </div>
+        </div>
+        <button className="text-[#8B9CC8] hover:text-white">
+          <FiMoreVertical className="h-5 w-5" />
+        </button>
+      </div>
+      {change && (
+        <div className={`mt-4 flex items-center gap-1 text-sm font-medium ${
+          isPositive ? "text-[#00D9FF]" : "text-red-400"
+        }`}>
+          {isPositive ? <FiTrendingUp className="h-4 w-4" /> : <FiTrendingDown className="h-4 w-4" />}
+          <span>{change}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OverviewPanel({
   applications,
   puppies,
@@ -108,33 +158,121 @@ function OverviewPanel({
     const available = puppies.filter((p) => p.status === "available").length;
     const reserved = puppies.filter((p) => p.status === "reserved").length;
     const adopted = puppies.filter((p) => p.status === "adopted").length;
+    const pending = applications.filter((a) => a.status === "submitted").length;
+    const approved = applications.filter((a) => a.status === "approved").length;
+    
+    const totalRevenue = puppies
+      .filter((p) => p.status === "adopted" || p.status === "reserved")
+      .reduce((sum, p) => sum + p.price, 0);
+    
+    const avgRating = testimonials.length > 0
+      ? (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1)
+      : "0.0";
+
+    // Mock analytics data for overview
+    const pageViews = 45820;
+    const conversionRate = ((applications.length / pageViews) * 100).toFixed(2);
+
     return [
-      { label: "Applications", value: applications.length, tone: "blue" },
-      { label: "Available puppies", value: available, tone: "green" },
-      { label: "Reserved", value: reserved, tone: "amber" },
-      { label: "Adopted", value: adopted, tone: "slate" },
-      { label: "Testimonials", value: testimonials.length, tone: "purple" },
+      { 
+        label: "Total Applications", 
+        value: applications.length, 
+        change: `${pending} pending`,
+        icon: FiFileText,
+        trend: "up" as const
+      },
+      { 
+        label: "Available Puppies", 
+        value: available, 
+        change: `${reserved} reserved`,
+        icon: FiHeart,
+        trend: "up" as const
+      },
+      { 
+        label: "Total Revenue", 
+        value: `$${(totalRevenue / 1000).toFixed(1)}K`, 
+        change: `${approved} approved`,
+        icon: FiDollarSign,
+        trend: "up" as const
+      },
+      { 
+        label: "Page Views (30d)", 
+        value: "45.8K", 
+        change: "+12.4%",
+        icon: FiEye,
+        trend: "up" as const
+      },
     ];
   }, [applications, puppies, testimonials]);
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((m) => (
-          <div
-            key={m.label}
-            className="rounded-xl border border-slate-200 bg-linear-to-br from-white to-slate-50 p-4 shadow-sm"
-          >
-            <p className="text-xs uppercase tracking-wide text-slate-500">{m.label}</p>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{m.value}</p>
-          </div>
+    <div className="space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {metrics.map((m, idx) => (
+          <MetricCard key={idx} {...m} />
         ))}
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="text-sm text-slate-600">
-          Bold management workspace: live-refreshing lists, inline editing, and safeguarded
-          actions with confirmations. Data auto-refreshes every ~15s and on focus.
-        </p>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Puppy Status Distribution</h3>
+            <Link href="/admin/dashboard?tab=puppies" className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {[
+              { label: "Available", count: puppies.filter(p => p.status === "available").length, color: "bg-[#00D9FF]" },
+              { label: "Reserved", count: puppies.filter(p => p.status === "reserved").length, color: "bg-[#FF44EC]" },
+              { label: "Adopted", count: puppies.filter(p => p.status === "adopted").length, color: "bg-[#B344FF]" },
+            ].map((stat) => (
+              <div key={stat.label} className="flex items-center justify-between">
+                <span className="text-sm text-[#8B9CC8]">{stat.label}</span>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-24 rounded-full bg-[#1A2A3F]">
+                    <div 
+                      className={`h-2 rounded-full ${stat.color}`}
+                      style={{ width: `${(stat.count / puppies.length) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-semibold text-white">{stat.count}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Recent Applications</h3>
+            <Link href="/admin/dashboard?tab=applications" className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {applications.slice(0, 5).map((app) => (
+              <div key={app.id} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                <div>
+                  <p className="text-sm font-medium text-white">{app.firstName} {app.lastName}</p>
+                  <p className="text-xs text-[#8B9CC8]">{app.email}</p>
+                </div>
+                <span className={`rounded-full px-2 py-1 text-xs font-semibold ${
+                  app.status === "approved"
+                    ? "bg-green-500/20 text-green-400"
+                    : app.status === "rejected"
+                    ? "bg-red-500/20 text-red-400"
+                    : "bg-[#FF44EC]/20 text-[#FF44EC]"
+                }`}>
+                  {app.status}
+                  </span>
+              </div>
+            ))}
+            {applications.length === 0 && (
+              <p className="text-sm text-[#8B9CC8]">No applications yet</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -145,65 +283,101 @@ function ApplicationsPanel({ token }: { token: string | null }) {
     "/api/applications",
     { token }
   );
+  const [searchTerm, setSearchTerm] = useState("");
 
-  if (loading) return <div className="py-6 text-center text-slate-500">Loading applications…</div>;
-  if (error) return <div className="py-4 text-red-600">{error}</div>;
+  const filteredData = useMemo(() => {
+    if (!searchTerm) return data;
+    const term = searchTerm.toLowerCase();
+    return data.filter(
+      (app) =>
+        app.firstName.toLowerCase().includes(term) ||
+        app.lastName.toLowerCase().includes(term) ||
+        app.email.toLowerCase().includes(term) ||
+        app.displayId?.toLowerCase().includes(term)
+    );
+  }, [data, searchTerm]);
+
+  if (loading) return <div className="py-12 text-center text-[#8B9CC8]">Loading applications…</div>;
+  if (error) return <div className="py-4 text-red-400">{error}</div>;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Applications</h2>
-        <button
-          onClick={refetch}
-          className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
-        >
-          Refresh
-        </button>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Applications</h2>
+          <p className="mt-1 text-sm text-[#8B9CC8]">Manage and review adoption applications</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={refetch}
+            className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
+          >
+            <FiRefreshCw className="h-4 w-4" />
+            Refresh
+          </button>
+        </div>
       </div>
-      {!data.length ? (
-        <div className="text-sm text-slate-500">No applications yet.</div>
+
+      <div className="relative">
+        <FiSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8B9CC8]" />
+        <input
+          type="text"
+          placeholder="Search applications..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] py-2.5 pl-10 pr-4 text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+        />
+      </div>
+
+      {!filteredData.length ? (
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-8 text-center">
+          <p className="text-sm text-[#8B9CC8]">No applications found.</p>
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] shadow-lg">
           <table className="min-w-full text-sm">
-            <thead className="bg-slate-50 text-slate-700">
+            <thead className="border-b border-[#1A2A3F]">
               <tr>
-                <th className="px-3 py-2 text-left">ID</th>
-                <th className="px-3 py-2 text-left">Applicant</th>
-                <th className="px-3 py-2 text-left">Email</th>
-                <th className="px-3 py-2 text-left">Status</th>
-                <th className="px-3 py-2 text-left">Submitted</th>
-                <th className="px-3 py-2 text-left">View</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {data.map((app) => (
-                <tr key={app.id} className="hover:bg-slate-50">
-                  <td className="px-3 py-2 font-mono text-xs">{app.displayId || app.id}</td>
-                  <td className="px-3 py-2">{app.firstName} {app.lastName}</td>
-                  <td className="px-3 py-2 text-slate-600">{app.email}</td>
-                  <td className="px-3 py-2">
-                    <span className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                      app.status === "approved"
-                        ? "bg-green-100 text-green-700"
-                        : app.status === "rejected"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}>
-                      {app.status}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2 text-xs text-slate-500">
-                    {new Date(app.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-3 py-2">
-                    <Link href={`/admin/applications/${app.id}`} className="text-sm font-medium text-slate-900 hover:underline">
-                      Open
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Applicant</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Email</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Submitted</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Action</th>
+          </tr>
+        </thead>
+            <tbody className="divide-y divide-[#1A2A3F]">
+              {filteredData.map((app) => (
+                <tr key={app.id} className="hover:bg-[#1A2A3F]/50 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-white">{app.displayId || app.id}</td>
+                  <td className="px-4 py-3 text-white">{app.firstName} {app.lastName}</td>
+                  <td className="px-4 py-3 text-[#8B9CC8]">{app.email}</td>
+                  <td className="px-4 py-3">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  app.status === "approved"
+                        ? "bg-green-500/20 text-green-400"
+                    : app.status === "rejected"
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-[#FF44EC]/20 text-[#FF44EC]"
+                }`}>
+                  {app.status}
+                </span>
+              </td>
+                  <td className="px-4 py-3 text-xs text-[#8B9CC8]">
+                {new Date(app.createdAt).toLocaleString()}
+              </td>
+                  <td className="px-4 py-3">
+                <Link
+                  href={`/admin/applications/${app.id}`}
+                      className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC] transition-colors"
+                >
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
         </div>
       )}
     </div>
@@ -235,6 +409,18 @@ function PuppiesManager({ token }: { token: string | null }) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPuppies = useMemo(() => {
+    if (!searchTerm) return puppies;
+    const term = searchTerm.toLowerCase();
+    return puppies.filter(
+      (p) =>
+        p.name.toLowerCase().includes(term) ||
+        p.breed.toLowerCase().includes(term) ||
+        p.color.toLowerCase().includes(term)
+    );
+  }, [puppies, searchTerm]);
 
   const resetForm = () => {
     setEditingId(null);
@@ -326,7 +512,7 @@ function PuppiesManager({ token }: { token: string | null }) {
     try {
       const res = await fetch(`${getApiUrl()}/api/puppies/${id}`, {
         method: "DELETE",
-          headers: { admin_token: token || "", Authorization: token ? `Bearer ${token}` : "" },
+        headers: { admin_token: token || "", Authorization: token ? `Bearer ${token}` : "" },
       });
       if (!res.ok) throw new Error("Failed to delete");
       await refetch();
@@ -338,178 +524,221 @@ function PuppiesManager({ token }: { token: string | null }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Puppies</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Puppies Management</h2>
+          <p className="mt-1 text-sm text-[#8B9CC8]">Add, edit, and manage puppy listings</p>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={resetForm}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
           >
-            New
+            <FiPlus className="h-4 w-4" />
+            New Puppy
           </button>
           <button
             onClick={refetch}
-            className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
           >
+            <FiRefreshCw className="h-4 w-4" />
             Refresh
           </button>
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+      <div className="relative">
+        <FiSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8B9CC8]" />
+        <input
+          type="text"
+          placeholder="Search puppies..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] py-2.5 pl-10 pr-4 text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+        />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-4">
           {loading ? (
-            <div className="py-4 text-slate-500">Loading puppies…</div>
+            <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-8 text-center text-[#8B9CC8]">
+              Loading puppies…
+            </div>
           ) : error ? (
-            <div className="py-4 text-red-600">{error}</div>
-          ) : puppies.length === 0 ? (
-            <div className="text-sm text-slate-500">No puppies yet.</div>
+            <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-red-400">{error}</div>
+          ) : filteredPuppies.length === 0 ? (
+            <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-8 text-center">
+              <p className="text-sm text-[#8B9CC8]">No puppies found.</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th className="px-3 py-2 text-left">Name</th>
-                    <th className="px-3 py-2 text-left">Breed</th>
-                    <th className="px-3 py-2 text-left">Status</th>
-                    <th className="px-3 py-2 text-left">Price</th>
-                    <th className="px-3 py-2 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {puppies.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50">
-                      <td className="px-3 py-2 font-medium text-slate-900">{p.name}</td>
-                      <td className="px-3 py-2 text-slate-700">{p.breed}</td>
-                      <td className="px-3 py-2">
-                        <span className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                          p.status === "available"
-                            ? "bg-green-100 text-green-700"
-                            : p.status === "reserved"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-200 text-slate-700"
-                        }`}>
-                          {p.status}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2">${p.price}</td>
-                      <td className="px-3 py-2 space-x-2">
-                        <button
-                          onClick={() => handleEdit(p)}
-                          className="text-sm font-medium text-slate-900 hover:underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => destroy(p.id)}
-                          className="text-sm font-medium text-red-600 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-3">
+              {filteredPuppies.map((p) => (
+                <div
+                  key={p.id}
+                  className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-4 shadow-lg hover:border-[#B344FF]/50 transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        {p.images && p.images.length > 0 && (
+                          <img
+                            src={p.images[0]}
+                            alt={p.name}
+                            className="h-16 w-16 rounded-lg object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "/images/puppies/placeholder.jpg";
+                            }}
+                          />
+                        )}
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">{p.name}</h3>
+                          <p className="text-sm text-[#8B9CC8]">{p.breed} • {p.color} • {p.gender}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                              p.status === "available"
+                                ? "bg-[#00D9FF]/20 text-[#00D9FF]"
+                                : p.status === "reserved"
+                                ? "bg-[#FF44EC]/20 text-[#FF44EC]"
+                                : "bg-[#8B9CC8]/20 text-[#8B9CC8]"
+                            }`}>
+                              {p.status}
+                            </span>
+                            <span className="text-sm font-semibold text-white">${p.price}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleEdit(p)}
+                        className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
+                      >
+                        <FiEdit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => destroy(p.id)}
+                        className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
+                      >
+                        <FiTrash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="text-md font-semibold text-slate-900">
-              {editingId ? "Edit puppy" : "Add puppy"}
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">
+              {editingId ? "Edit Puppy" : "Add New Puppy"}
             </h3>
+            {editingId && (
+              <button
+                onClick={resetForm}
+                className="text-sm text-[#8B9CC8] hover:text-white"
+              >
+                Cancel
+              </button>
+            )}
           </div>
-          {actionError && <p className="mt-2 text-sm text-red-600">{actionError}</p>}
-          <div className="mt-3 space-y-3">
+          {actionError && (
+            <div className="mb-4 rounded-lg bg-red-500/20 p-3 text-sm text-red-400">
+              {actionError}
+            </div>
+          )}
+          <div className="space-y-3">
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Name"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
             />
             <input
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
               placeholder="Breed"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
             />
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 value={form.gender}
                 onChange={(e) => setForm({ ...form, gender: e.target.value })}
                 placeholder="Gender"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
-              <input
+              <select
                 value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}
-                placeholder="Status"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-              />
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
+              >
+                <option value="available">Available</option>
+                <option value="reserved">Reserved</option>
+                <option value="adopted">Adopted</option>
+              </select>
             </div>
-            <div className="flex gap-2">
-              <label htmlFor="puppy-birthDate" className="sr-only">Birth date</label>
+            <div className="grid grid-cols-2 gap-2">
               <input
-                id="puppy-birthDate"
                 type="date"
-                aria-label="Birth date"
                 value={form.birthDate}
                 onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
               />
               <input
                 type="number"
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
                 placeholder="Price"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 value={form.color}
                 onChange={(e) => setForm({ ...form, color: e.target.value })}
                 placeholder="Color"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
               <input
                 value={form.generation}
                 onChange={(e) => setForm({ ...form, generation: e.target.value })}
                 placeholder="Generation"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
             <textarea
               value={form.vaccinationsText}
               onChange={(e) => setForm({ ...form, vaccinationsText: e.target.value })}
               placeholder="Vaccinations (comma separated)"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+              rows={2}
             />
             <textarea
               value={form.imagesText}
               onChange={(e) => setForm({ ...form, imagesText: e.target.value })}
               placeholder="Image URLs (comma separated)"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+              rows={2}
             />
             <input
               value={form.damImage ?? ""}
               onChange={(e) => setForm({ ...form, damImage: e.target.value })}
               placeholder="Dam image URL (optional)"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
             />
             <textarea
               value={form.notes ?? ""}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               placeholder="Notes"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+              rows={3}
             />
             <button
               onClick={submit}
               disabled={saving}
-              className="w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
+              className="w-full rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
             >
-              {saving ? "Saving..." : editingId ? "Update puppy" : "Add puppy"}
+              {saving ? "Saving..." : editingId ? "Update Puppy" : "Add Puppy"}
             </button>
           </div>
         </div>
@@ -537,6 +766,18 @@ function TestimonialsManager({ token }: { token: string | null }) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm) return data;
+    const term = searchTerm.toLowerCase();
+    return data.filter(
+      (t) =>
+        t.name.toLowerCase().includes(term) ||
+        t.text.toLowerCase().includes(term) ||
+        t.puppyBreed?.toLowerCase().includes(term)
+    );
+  }, [data, searchTerm]);
 
   const reset = () => {
     setEditingId(null);
@@ -623,137 +864,536 @@ function TestimonialsManager({ token }: { token: string | null }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Testimonials</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-white">Testimonials</h2>
+          <p className="mt-1 text-sm text-[#8B9CC8]">Manage customer reviews and testimonials</p>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={reset}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
           >
+            <FiPlus className="h-4 w-4" />
             New
           </button>
           <button
             onClick={refetch}
-            className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
           >
+            <FiRefreshCw className="h-4 w-4" />
             Refresh
           </button>
         </div>
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+
+      <div className="relative">
+        <FiSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8B9CC8]" />
+        <input
+          type="text"
+          placeholder="Search testimonials..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] py-2.5 pl-10 pr-4 text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+        />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-3">
           {loading ? (
-            <div className="py-4 text-slate-500">Loading testimonials…</div>
-          ) : error ? (
-            <div className="py-4 text-red-600">{error}</div>
-          ) : data.length === 0 ? (
-            <div className="text-sm text-slate-500">No testimonials yet.</div>
-          ) : (
-            <div className="divide-y divide-slate-100">
-              {data.map((t) => (
-                <div key={t.id} className="py-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{t.name}</p>
-                      <p className="text-xs text-slate-500">
-                        {t.location || "No location"} • {t.puppyBreed || "Breed N/A"}
-                      </p>
-                    </div>
-                    <div className="space-x-2">
-                      <button
-                        onClick={() => handleEdit(t)}
-                        className="text-sm font-medium text-slate-900 hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => destroy(t.id)}
-                        className="text-sm font-medium text-red-600 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  <p className="mt-2 text-sm text-slate-700">{t.text}</p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Rating: {t.rating} • {t.date ? new Date(t.date).toLocaleDateString() : "No date"}
-                  </p>
-                </div>
-              ))}
+            <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-8 text-center text-[#8B9CC8]">
+              Loading testimonials…
             </div>
+          ) : error ? (
+            <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-red-400">{error}</div>
+          ) : filteredData.length === 0 ? (
+            <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-8 text-center">
+              <p className="text-sm text-[#8B9CC8]">No testimonials found.</p>
+            </div>
+          ) : (
+            filteredData.map((t) => (
+              <div
+                key={t.id}
+                className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-5 shadow-lg hover:border-[#B344FF]/50 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
+                        {t.initials || t.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">{t.name}</h3>
+                        <p className="text-sm text-[#8B9CC8]">
+                          {t.location || "No location"} • {t.puppyBreed || "Breed N/A"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <FiStar
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < t.rating ? "fill-[#FF44EC] text-[#FF44EC]" : "text-[#8B9CC8]"
+                          }`}
+                        />
+                      ))}
+                      <span className="ml-2 text-sm text-[#8B9CC8]">
+                        {t.date ? new Date(t.date).toLocaleDateString() : "No date"}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm leading-relaxed text-[#8B9CC8]">{t.text}</p>
+                    {t.puppyName && (
+                      <p className="mt-2 text-xs text-[#8B9CC8]">
+                        Puppy: <span className="text-white">{t.puppyName}</span>
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(t)}
+                      className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
+                    >
+                      <FiEdit2 className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => destroy(t.id)}
+                      className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
+                    >
+                      <FiTrash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
           )}
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <h3 className="text-md font-semibold text-slate-900">
-            {editingId ? "Edit testimonial" : "Add testimonial"}
-          </h3>
-          {actionError && <p className="mt-2 text-sm text-red-600">{actionError}</p>}
-          <div className="mt-3 space-y-3">
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">
+              {editingId ? "Edit Testimonial" : "Add Testimonial"}
+            </h3>
+            {editingId && (
+              <button
+                onClick={reset}
+                className="text-sm text-[#8B9CC8] hover:text-white"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+          {actionError && (
+            <div className="mb-4 rounded-lg bg-red-500/20 p-3 text-sm text-red-400">
+              {actionError}
+            </div>
+          )}
+          <div className="space-y-3">
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Name"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              placeholder="Name *"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
             />
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 value={form.location || ""}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="Location"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
               <input
                 value={form.initials || ""}
                 onChange={(e) => setForm({ ...form, initials: e.target.value })}
                 placeholder="Initials"
-                className="w-28 rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
-            <input
-              type="number"
-              value={form.rating}
-              min={1}
-              max={5}
-              onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })}
-              placeholder="Rating (1-5)"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-            />
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-[#8B9CC8]">Rating:</label>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setForm({ ...form, rating: r })}
+                    className={`rounded p-1 ${
+                      r <= form.rating
+                        ? "text-[#FF44EC]"
+                        : "text-[#8B9CC8] hover:text-[#B344FF]"
+                    }`}
+                  >
+                    <FiStar className="h-5 w-5" />
+                  </button>
+                ))}
+              </div>
+            </div>
             <textarea
               value={form.text}
               onChange={(e) => setForm({ ...form, text: e.target.value })}
-              placeholder="Testimonial text"
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              placeholder="Testimonial text *"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+              rows={4}
             />
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 value={form.puppyName || ""}
                 onChange={(e) => setForm({ ...form, puppyName: e.target.value })}
                 placeholder="Puppy name"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
               <input
                 value={form.puppyBreed || ""}
                 onChange={(e) => setForm({ ...form, puppyBreed: e.target.value })}
                 placeholder="Puppy breed"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
-            <label htmlFor="testimonial-date" className="sr-only">Testimonial date</label>
             <input
-              id="testimonial-date"
               type="date"
-              aria-label="Testimonial date"
               value={form.date || ""}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
             />
             <button
               onClick={submit}
               disabled={saving}
-              className="w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
+              className="w-full rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
             >
-              {saving ? "Saving..." : editingId ? "Update testimonial" : "Add testimonial"}
+              {saving ? "Saving..." : editingId ? "Update Testimonial" : "Add Testimonial"}
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type AnalyticsData = {
+  pageViews: number;
+  uniqueVisitors: number;
+  sessions: number;
+  bounceRate: number;
+  avgSessionDuration: number;
+  conversionRate: number;
+  topPages: Array<{ path: string; views: number; change: number }>;
+  trafficSources: Array<{ source: string; visitors: number; percentage: number }>;
+  topKeywords: Array<{ keyword: string; impressions: number; clicks: number; ctr: number }>;
+  devices: Array<{ device: string; percentage: number }>;
+  countries: Array<{ country: string; visitors: number; percentage: number }>;
+  referrers: Array<{ domain: string; visits: number; percentage: number }>;
+};
+
+function MarketingAnalyticsPanel({ token }: { token: string | null }) {
+  const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "1y">("30d");
+  const [loading, setLoading] = useState(false);
+  
+  // Mock analytics data - in production, this would come from your analytics API
+  const [analytics] = useState<AnalyticsData>({
+    pageViews: 45820,
+    uniqueVisitors: 12350,
+    sessions: 18920,
+    bounceRate: 42.5,
+    avgSessionDuration: 3.2,
+    conversionRate: 4.8,
+    topPages: [
+      { path: "/puppies", views: 15230, change: 12.5 },
+      { path: "/", views: 12890, change: 8.3 },
+      { path: "/breeds", views: 8560, change: -2.1 },
+      { path: "/application", views: 4320, change: 25.7 },
+      { path: "/about", views: 3120, change: 5.2 },
+    ],
+    trafficSources: [
+      { source: "Organic Search", visitors: 18500, percentage: 48.2 },
+      { source: "Direct", visitors: 12300, percentage: 32.1 },
+      { source: "Social Media", visitors: 4560, percentage: 11.9 },
+      { source: "Referral", visitors: 1890, percentage: 4.9 },
+      { source: "Paid Ads", visitors: 1070, percentage: 2.8 },
+    ],
+    topKeywords: [
+      { keyword: "puppies for sale", impressions: 12500, clicks: 890, ctr: 7.12 },
+      { keyword: "goldendoodle puppies", impressions: 8900, clicks: 650, ctr: 7.30 },
+      { keyword: "labradoodle puppies", impressions: 7200, clicks: 520, ctr: 7.22 },
+      { keyword: "maltipoo puppies", impressions: 5600, clicks: 410, ctr: 7.32 },
+      { keyword: "puppy adoption", impressions: 4500, clicks: 320, ctr: 7.11 },
+    ],
+    devices: [
+      { device: "Desktop", percentage: 45.2 },
+      { device: "Mobile", percentage: 48.7 },
+      { device: "Tablet", percentage: 6.1 },
+    ],
+    countries: [
+      { country: "United States", visitors: 28500, percentage: 74.3 },
+      { country: "Canada", visitors: 4200, percentage: 11.0 },
+      { country: "United Kingdom", visitors: 2100, percentage: 5.5 },
+      { country: "Australia", visitors: 1800, percentage: 4.7 },
+      { country: "Other", visitors: 1800, percentage: 4.5 },
+    ],
+    referrers: [
+      { domain: "google.com", visits: 18500, percentage: 48.2 },
+      { domain: "facebook.com", visits: 3200, percentage: 8.3 },
+      { domain: "instagram.com", visits: 1360, percentage: 3.5 },
+      { domain: "bing.com", visits: 890, percentage: 2.3 },
+      { domain: "pinterest.com", visits: 650, percentage: 1.7 },
+    ],
+  });
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header with Date Range */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Marketing & SEO Analytics</h2>
+          <p className="mt-1 text-sm text-[#8B9CC8]">Track your website performance and marketing ROI</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <select
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value as any)}
+            className="rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
+          >
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+            <option value="1y">Last year</option>
+          </select>
+          <button className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors">
+            <FiDownload className="h-4 w-4" />
+            Export
+          </button>
+        </div>
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard
+          label="Page Views"
+          value={formatNumber(analytics.pageViews)}
+          change="+12.4%"
+          icon={FiEye}
+          trend="up"
+        />
+        <MetricCard
+          label="Unique Visitors"
+          value={formatNumber(analytics.uniqueVisitors)}
+          change="+8.7%"
+          icon={FiUsersIcon}
+          trend="up"
+        />
+        <MetricCard
+          label="Sessions"
+          value={formatNumber(analytics.sessions)}
+          change="+15.2%"
+          icon={FiMousePointer}
+          trend="up"
+        />
+        <MetricCard
+          label="Conversion Rate"
+          value={`${analytics.conversionRate}%`}
+          change="+2.3%"
+          icon={FiTarget}
+          trend="up"
+        />
+      </div>
+
+      {/* Secondary Metrics */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="rounded-lg bg-[#00D9FF]/20 p-2">
+              <FiTrendingDown className="h-5 w-5 text-[#00D9FF]" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[#8B9CC8]">Bounce Rate</p>
+              <p className="text-2xl font-bold text-white">{analytics.bounceRate}%</p>
+            </div>
+          </div>
+          <p className="text-xs text-[#8B9CC8] mt-2">-2.1% from last period</p>
+        </div>
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="rounded-lg bg-[#B344FF]/20 p-2">
+              <FiClock className="h-5 w-5 text-[#B344FF]" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[#8B9CC8]">Avg. Session Duration</p>
+              <p className="text-2xl font-bold text-white">{analytics.avgSessionDuration}m</p>
+            </div>
+          </div>
+          <p className="text-xs text-[#8B9CC8] mt-2">+0.5m from last period</p>
+        </div>
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="rounded-lg bg-[#FF44EC]/20 p-2">
+              <FiGlobe className="h-5 w-5 text-[#FF44EC]" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[#8B9CC8]">Top Country</p>
+              <p className="text-lg font-bold text-white">United States</p>
+            </div>
+          </div>
+          <p className="text-xs text-[#8B9CC8] mt-2">{analytics.countries[0].percentage}% of traffic</p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Top Pages */}
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Top Pages</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </button>
+          </div>
+          <div className="space-y-3">
+            {analytics.topPages.map((page, idx) => (
+              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-white">{page.path}</p>
+                  <p className="text-xs text-[#8B9CC8]">{formatNumber(page.views)} views</p>
+                </div>
+                <div className={`flex items-center gap-1 text-sm font-semibold ${
+                  page.change >= 0 ? "text-[#00D9FF]" : "text-red-400"
+                }`}>
+                  {page.change >= 0 ? <FiTrendingUp className="h-4 w-4" /> : <FiTrendingDown className="h-4 w-4" />}
+                  <span>{Math.abs(page.change)}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Traffic Sources */}
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Traffic Sources</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View report
+            </button>
+          </div>
+          <div className="space-y-4">
+            {analytics.trafficSources.map((source, idx) => (
+              <div key={idx}>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm font-medium text-white">{source.source}</span>
+                  <span className="text-sm text-[#8B9CC8]">{source.percentage}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-[#1A2A3F]">
+                  <div
+                    className="h-2 rounded-full bg-gradient-to-r from-[#B344FF] to-[#FF44EC]"
+                    style={{ width: `${source.percentage}%` }}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-[#8B9CC8]">{formatNumber(source.visitors)} visitors</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Top Keywords */}
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Top SEO Keywords</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </button>
+          </div>
+          <div className="space-y-3">
+            {analytics.topKeywords.map((keyword, idx) => (
+              <div key={idx} className="rounded-lg border border-[#1A2A3F] p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-sm font-medium text-white">{keyword.keyword}</p>
+                  <span className="text-xs text-[#8B9CC8]">CTR: {keyword.ctr}%</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-[#8B9CC8]">Impressions: </span>
+                    <span className="text-white">{formatNumber(keyword.impressions)}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#8B9CC8]">Clicks: </span>
+                    <span className="text-white">{formatNumber(keyword.clicks)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Device Breakdown */}
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Device Breakdown</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View report
+            </button>
+          </div>
+          <div className="space-y-4">
+            {analytics.devices.map((device, idx) => (
+              <div key={idx}>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm font-medium text-white">{device.device}</span>
+                  <span className="text-sm text-[#8B9CC8]">{device.percentage}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-[#1A2A3F]">
+                  <div
+                    className={`h-2 rounded-full ${
+                      idx === 0 ? "bg-[#00D9FF]" : idx === 1 ? "bg-[#B344FF]" : "bg-[#FF44EC]"
+                    }`}
+                    style={{ width: `${device.percentage}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Top Countries & Referrers */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Top Countries</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </button>
+          </div>
+          <div className="space-y-3">
+            {analytics.countries.slice(0, 5).map((country, idx) => (
+              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                <div>
+                  <p className="text-sm font-medium text-white">{country.country}</p>
+                  <p className="text-xs text-[#8B9CC8]">{formatNumber(country.visitors)} visitors</p>
+                </div>
+                <span className="text-sm font-semibold text-[#8B9CC8]">{country.percentage}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Top Referrers</h3>
+            <button className="text-sm font-medium text-[#B344FF] hover:text-[#FF44EC]">
+              View all
+            </button>
+          </div>
+          <div className="space-y-3">
+            {analytics.referrers.map((referrer, idx) => (
+              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                <div>
+                  <p className="text-sm font-medium text-white">{referrer.domain}</p>
+                  <p className="text-xs text-[#8B9CC8]">{formatNumber(referrer.visits)} visits</p>
+                </div>
+                <span className="text-sm font-semibold text-[#8B9CC8]">{referrer.percentage}%</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -766,6 +1406,7 @@ export default function AdminDashboard() {
   const { isAuthenticated, logout, token } = useAdminAuth();
   const [tab, setTab] = useState<string>("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarSearch, setSidebarSearch] = useState("");
 
   const {
     data: apps,
@@ -795,95 +1436,140 @@ export default function AdminDashboard() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-slate-100 py-6 px-3 md:px-6">
-      <div className="mx-auto flex max-w-7xl gap-6">
-        {/* Responsive sidebar: hidden on small screens, toggleable overlay */}
-        <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-slate-900 px-4 py-6 text-slate-100 shadow-xl transition-transform duration-200 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 rounded-2xl`}>
+    <div className="h-screen bg-[#0A1628] overflow-hidden">
+      <div className="flex h-full">
+        {/* Sidebar */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-[#1A2A3F] bg-[#0F1F3A] shadow-2xl transition-transform duration-300 lg:relative lg:translate-x-0 lg:flex-shrink-0 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          }`}
+        >
+          <div className="flex h-full flex-col p-6">
+            {/* Logo */}
           <div className="mb-8">
-            <div className="text-xl font-extrabold tracking-tight">PuppyHub</div>
-            <div className="mt-1 text-xs text-slate-400">Admin Workspace</div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#B344FF] to-[#FF44EC]">
+                  <FiHeart className="h-6 w-6 text-white" />
           </div>
-          <nav className="space-y-1">
-            {TAB_CONFIG.map(({ key, label }) => (
+                <div>
+                  <div className="text-xl font-extrabold tracking-tight text-white">PuppyHub</div>
+                  <div className="text-xs text-[#8B9CC8]">Admin Dashboard</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Search */}
+            <div className="relative mb-6">
+              <FiSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B9CC8]" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={sidebarSearch}
+                onChange={(e) => setSidebarSearch(e.target.value)}
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] py-2 pl-10 pr-3 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
+              />
+          </div>
+
+            {/* Navigation */}
+          <nav className="flex-1 space-y-1">
+              {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
-                onClick={() => setTab(key)}
-                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                  onClick={() => {
+                    setTab(key);
+                    setIsSidebarOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   tab === key
-                    ? "bg-white text-slate-900"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      ? "border-l-4 border-[#B344FF] bg-[#0A1628] text-white"
+                      : "text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white"
                 }`}
               >
+                  <Icon className={`h-5 w-5 ${tab === key ? "text-[#B344FF]" : ""}`} />
                 <span>{label}</span>
-                {tab === key && <span className="h-2 w-2 rounded-full bg-blue-500" />}
               </button>
             ))}
           </nav>
-          <div className="mt-8 space-y-2 text-xs text-slate-400">
-            <p>Live sync every 12-20s + on focus.</p>
-            <p>Use admin token for mutating actions.</p>
-          </div>
+
+            {/* User Profile */}
+            <div className="mt-6 border-t border-[#1A2A3F] pt-4">
+              <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#0A1628] cursor-pointer">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
+                  A
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-white">Admin User</p>
+                  <p className="text-xs text-[#8B9CC8]">Account settings</p>
+                </div>
+                <FiChevronDown className="h-4 w-4 text-[#8B9CC8]" />
+              </div>
           <button
             onClick={logout}
-            className="mt-6 w-full rounded-lg px-3 py-2 text-left text-sm text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
+                className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-[#8B9CC8] transition-colors hover:bg-[#0A1628] hover:text-white"
           >
             Log out
           </button>
+            </div>
+          </div>
         </aside>
 
-        {/* Backdrop for mobile when sidebar open */}
+        {/* Backdrop */}
         {isSidebarOpen && (
           <div
             onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 z-30 bg-black/40 md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           />
         )}
 
-        <main className="flex-1 rounded-2xl border border-slate-200 bg-white shadow-sm md:ml-0">
-          <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-            <div className="flex items-center gap-4">
-              <button
-                className="md:hidden rounded p-2 text-slate-700 hover:bg-slate-100"
-                onClick={() => setIsSidebarOpen((s) => !s)}
-                aria-label="Toggle menu"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clipRule="evenodd" />
-                </svg>
-              </button>
-
-              <div>
-              <h1 className="text-2xl font-semibold text-slate-900">Admin Dashboard</h1>
-              <p className="text-sm text-slate-500">
-                Bold management experience: applications, puppies, testimonials in one place.
-              </p>
+        {/* Main Content */}
+        <main className="flex-1 lg:ml-0 flex flex-col overflow-hidden">
+          {/* Header */}
+          <header className="flex-shrink-0 border-b border-[#1A2A3F] bg-[#0F1F3A] px-6 py-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button
+                  className="lg:hidden rounded-lg p-2 text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white transition-colors"
+                  onClick={() => setIsSidebarOpen((s) => !s)}
+                  aria-label="Toggle menu"
+                >
+                  {isSidebarOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+                </button>
+            <div>
+                  <h1 className="text-2xl font-bold text-white">Welcome back, Admin</h1>
+                  <p className="text-sm text-[#8B9CC8]">
+                    Manage your puppy adoption platform and track performance
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  refetchApps();
-                  refetchPuppies();
-                  refetchTestimonials();
-                }}
-                className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-              >
-                Sync now
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    refetchApps();
+                    refetchPuppies();
+                    refetchTestimonials();
+                  }}
+                  className="flex items-center gap-2 rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-4 py-2 text-sm font-medium text-white hover:bg-[#1A2A3F] transition-colors"
+                >
+                  <FiRefreshCw className="h-4 w-4" />
+                  Sync Now
+                </button>
+                <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+                  <FiDownload className="h-4 w-4" />
+                  Export Data
+                </button>
+              </div>
             </div>
           </header>
 
-          <section className="max-h-[80vh] overflow-auto px-4 py-4">
+          {/* Content */}
+          <section className="flex-1 overflow-y-auto p-6">
             {tab === "overview" && (
-              <OverviewPanel
-                applications={apps}
-                puppies={puppies}
-                testimonials={testimonials}
-              />
+              <OverviewPanel applications={apps} puppies={puppies} testimonials={testimonials} />
             )}
             {tab === "applications" && <ApplicationsPanel token={token} />}
             {tab === "puppies" && <PuppiesManager token={token} />}
             {tab === "testimonials" && <TestimonialsManager token={token} />}
+            {tab === "analytics" && <MarketingAnalyticsPanel token={token} />}
           </section>
         </main>
       </div>

@@ -74,8 +74,8 @@ const TestimonialsSection = () => {
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary-100 mix-blend-multiply opacity-30 animate-float"></div>
-        <div className="absolute -bottom-20 right-10 w-80 h-80 rounded-full bg-secondary-100 mix-blend-multiply opacity-30 animate-float" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute top-1/3 right-1/4 w-20 h-20 rounded-full bg-accent-purple/10 mix-blend-multiply opacity-60 animate-float" style={{ animationDelay: '2.5s' }}></div>
+        <div className="absolute -bottom-20 right-10 w-80 h-80 rounded-full bg-secondary-100 mix-blend-multiply opacity-30 animate-float" style={{animationDelay: '1.5s'}}></div>
+        <div className="absolute top-1/3 right-1/4 w-20 h-20 rounded-full bg-accent-purple/10 mix-blend-multiply opacity-60 animate-float" style={{animationDelay: '2.5s'}}></div>
       </div>
       <Container>
         <div className="text-center mb-16 relative z-10">
@@ -104,6 +104,8 @@ const TestimonialsSection = () => {
         )}
         
         {!loading && !error && testimonials.length > 0 && (
+        <>
+        <div className="relative max-w-4xl mx-auto">
           {/* Testimonial Card */}
           <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-soft p-6 md:p-10 border border-gray-100 relative overflow-hidden">
             {/* Decorative quote marks */}
@@ -177,6 +179,7 @@ const TestimonialsSection = () => {
             />
           ))}
         </div>
+        </>
         )}
       </Container>
     </section>

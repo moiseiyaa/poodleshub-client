@@ -2,43 +2,78 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowRight, FaSearch, FaFilter } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
-import { blogPosts, getBlogCategories, getLatestBlogPosts } from '../data/blog';
-import { useState, useMemo } from 'react';
-
-interface BlogPageProps {
-  searchParams: {
-    category?: string;
-    search?: string;
-    tag?: string;
-  };
-}
+import { getAllBlogPosts, getBlogCategories, getLatestBlogPosts, blogPosts } from '../data/blog';
+import { useState, useMemo, useEffect } from 'react';
 
 /**
  * Blog main page component
  * Displays all blog posts with filtering and search functionality
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default function BlogPage({ searchParams }: BlogPageProps) {
+export default function BlogPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const categories = getBlogCategories();
-  const [searchTerm, setSearchTerm] = useState(searchParams.search || '');
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.category || '');
-  const [selectedTag, setSelectedTag] = useState(searchParams.tag || '');
+  const allPosts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  
+  // Initialize state from URL search params
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedTag, setSelectedTag] = useState('');
+  
+  // Sync state with URL params on mount and when params change
+  useEffect(() => {
+    const category = searchParams.get('category') || '';
+    const search = searchParams.get('search') || '';
+    const tag = searchParams.get('tag') || '';
+    
+    setSelectedCategory(category);
+    setSearchTerm(search);
+    setSelectedTag(tag);
+  }, [searchParams]);
+
+  // Update URL when filters change
+  const updateURL = (updates: { category?: string; search?: string; tag?: string }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (updates.category) {
+      params.set('category', updates.category);
+    } else if (updates.category === '') {
+      params.delete('category');
+    }
+    
+    if (updates.search) {
+      params.set('search', updates.search);
+    } else if (updates.search === '') {
+      params.delete('search');
+    }
+    
+    if (updates.tag) {
+      params.set('tag', updates.tag);
+    } else if (updates.tag === '') {
+      params.delete('tag');
+    }
+    
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
   const [showFilters, setShowFilters] = useState(false);
 
   // Get all unique tags
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    blogPosts.forEach(post => {
+    allPosts.forEach(post => {
       post.tags.forEach(tag => tags.add(tag));
     });
     return Array.from(tags).sort();
-  }, []);
+  }, [allPosts]);
 
   // Filter posts based on search, category, and tag
   const filteredPosts = useMemo(() => {
-    let posts = blogPosts;
+    let posts = allPosts;
 
     // Filter by category
     if (selectedCategory) {
@@ -195,7 +230,10 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                     <h3 className="font-semibold text-gray-900 mb-3">Category</h3>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => setSelectedCategory('')}
+                        onClick={() => {
+                          setSelectedCategory('');
+                          updateURL({ category: '' });
+                        }}
                         className={`px-3 py-1 rounded-full text-sm transition-colors ${
                           !selectedCategory
                             ? 'bg-primary text-white'
@@ -209,7 +247,10 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                         return (
                           <button
                             key={category}
-                            onClick={() => setSelectedCategory(categorySlug)}
+                            onClick={() => {
+                              setSelectedCategory(categorySlug);
+                              updateURL({ category: categorySlug });
+                            }}
                             className={`px-3 py-1 rounded-full text-sm transition-colors ${
                               selectedCategory === categorySlug
                                 ? 'bg-primary text-white'
@@ -228,7 +269,10 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                     <h3 className="font-semibold text-gray-900 mb-3">Popular Tags</h3>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => setSelectedTag('')}
+                        onClick={() => {
+                          setSelectedTag('');
+                          updateURL({ tag: '' });
+                        }}
                         className={`px-3 py-1 rounded-full text-sm transition-colors ${
                           !selectedTag
                             ? 'bg-primary text-white'
@@ -240,7 +284,10 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                       {allTags.slice(0, 8).map((tag) => (
                         <button
                           key={tag}
-                          onClick={() => setSelectedTag(tag)}
+                          onClick={() => {
+                            setSelectedTag(tag);
+                            updateURL({ tag });
+                          }}
                           className={`px-3 py-1 rounded-full text-sm transition-colors ${
                             selectedTag === tag
                               ? 'bg-primary text-white'
@@ -283,7 +330,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => {
-              const categoryPosts = blogPosts.filter(post => post.category === category);
+              const categoryPosts = allPosts.filter(post => post.category === category);
               return (
                 <Link
                   key={category}
