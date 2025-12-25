@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { 
-  FiHome, FiUsers, FiDollarSign, FiPuzzle, FiSettings, FiChevronDown, FiChevronRight,
+  FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
   FiFileText, FiHeart, FiStar, FiTrendingUp, FiTrendingDown, FiMoreVertical,
   FiCalendar, FiMail, FiPhone, FiMapPin, FiImage, FiTag, FiBarChart2, FiGlobe,
@@ -121,7 +121,7 @@ function MetricCard({
     <div className="relative rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-gradient-to-br from-[#B344FF] to-[#FF44EC] p-2.5">
+          <div className="rounded-lg bg-linear-to-br from-[#B344FF] to-[#FF44EC] p-2.5">
             <Icon className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -736,7 +736,7 @@ function PuppiesManager({ token }: { token: string | null }) {
             <button
               onClick={submit}
               disabled={saving}
-              className="w-full rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
+              className="w-full rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
             >
               {saving ? "Saving..." : editingId ? "Update Puppy" : "Add Puppy"}
             </button>
@@ -918,7 +918,7 @@ function TestimonialsManager({ token }: { token: string | null }) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
                         {t.initials || t.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
@@ -1059,7 +1059,7 @@ function TestimonialsManager({ token }: { token: string | null }) {
             <button
               onClick={submit}
               disabled={saving}
-              className="w-full rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
+              className="w-full rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 transition-opacity"
             >
               {saving ? "Saving..." : editingId ? "Update Testimonial" : "Add Testimonial"}
             </button>
@@ -1286,7 +1286,7 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
                 </div>
                 <div className="h-2 rounded-full bg-[#1A2A3F]">
                   <div
-                    className="h-2 rounded-full bg-gradient-to-r from-[#B344FF] to-[#FF44EC]"
+                    className="h-2 rounded-full bg-linear-to-r from-[#B344FF] to-[#FF44EC]"
                     style={{ width: `${source.percentage}%` }}
                   />
                 </div>
@@ -1442,7 +1442,7 @@ export default function AdminDashboard() {
       <div className="flex h-full">
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-[#1A2A3F] bg-[#0F1F3A] shadow-2xl transition-transform duration-300 lg:relative lg:translate-x-0 lg:flex-shrink-0 ${
+          className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-[#1A2A3F] bg-[#0F1F3A] shadow-2xl transition-transform duration-300 lg:relative lg:translate-x-0 lg:shrink-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           }`}
         >
@@ -1450,7 +1450,7 @@ export default function AdminDashboard() {
             {/* Logo */}
           <div className="mb-8">
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#B344FF] to-[#FF44EC]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-[#B344FF] to-[#FF44EC]">
                   <FiHeart className="h-6 w-6 text-white" />
           </div>
                 <div>
@@ -1496,7 +1496,7 @@ export default function AdminDashboard() {
             {/* User Profile */}
             <div className="mt-6 border-t border-[#1A2A3F] pt-4">
               <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#0A1628] cursor-pointer">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
                   A
                 </div>
                 <div className="flex-1">
@@ -1526,7 +1526,7 @@ export default function AdminDashboard() {
         {/* Main Content */}
         <main className="flex-1 lg:ml-0 flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="flex-shrink-0 border-b border-[#1A2A3F] bg-[#0F1F3A] px-6 py-4 shadow-lg">
+          <header className="shrink-0 border-b border-[#1A2A3F] bg-[#0F1F3A] px-6 py-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button
@@ -1555,7 +1555,7 @@ export default function AdminDashboard() {
                   <FiRefreshCw className="h-4 w-4" />
                   Sync Now
                 </button>
-                <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+                <button className="flex items-center gap-2 rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
                   <FiDownload className="h-4 w-4" />
                   Export Data
                 </button>
