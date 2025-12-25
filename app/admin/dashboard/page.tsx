@@ -1438,7 +1438,7 @@ export default function AdminDashboard() {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="h-screen bg-[#0A1628] overflow-hidden">
+    <div className="h-screen bg-[#0A1628] overflow-hidden -mt-20">
       <div className="flex h-full">
         {/* Sidebar */}
         <aside

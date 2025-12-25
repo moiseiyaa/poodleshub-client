@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./components/organisms/Navbar";
+import Navbars from "./components/organisms/Navbars";
 import PromotionNavbar from "./components/organisms/PromotionNavbar";
 import Footer from "./components/organisms/Footer";
 import CrispProvider from "./components/providers/CrispProvider";
@@ -93,8 +94,7 @@ export default function RootLayout({
         <AdminAuthProvider>
           <CrispProvider>
             <CartProvider>
-              <PromotionNavbar />
-              <Navbar />
+              <Navbars />
               <main id="main-content" className="grow pt-20 md:pt-20">
                 <ScrollToTopOnMount />
                 {children}
