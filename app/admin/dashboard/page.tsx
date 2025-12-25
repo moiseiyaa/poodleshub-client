@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAdminAuth } from "../../context/AdminAuthContext";
+import { toast } from "react-hot-toast";
 import { 
   FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
@@ -1407,6 +1408,7 @@ export default function AdminDashboard() {
   const router = useRouter();
   const { isAuthenticated, logout, token } = useAdminAuth();
   const [tab, setTab] = useState<string>("overview");
+  const [isExporting, setIsExporting] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sidebarSearch, setSidebarSearch] = useState("");
 
@@ -1555,9 +1557,46 @@ export default function AdminDashboard() {
                   <FiRefreshCw className="h-4 w-4" />
                   Sync Now
                 </button>
-                <button className="flex items-center gap-2 rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
-                  <FiDownload className="h-4 w-4" />
-                  Export Data
+                <button 
+                  onClick={async () => {
+                    try {
+                      setIsExporting(true);
+                      const res = await fetch(`${getApiUrl()}/api/export?type=applications`, {
+                        headers: {
+                          'Authorization': `Bearer ${token}`,
+                        },
+                      });
+                      
+                      if (!res.ok) {
+                        const error = await res.text();
+                        throw new Error(error || 'Failed to export data');
+                      }
+                      
+                      // Trigger file download
+                      const blob = await res.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+                      a.href = url;
+                      a.download = `puppyhub-export-${timestamp}.csv`;
+                      document.body.appendChild(a);
+                      a.click();
+                      window.URL.revokeObjectURL(url);
+                      a.remove();
+                      
+                      toast.success('Data exported successfully!');
+                    } catch (err) {
+                      console.error('Export error:', err);
+                      toast.error(err instanceof Error ? err.message : 'Failed to export data');
+                    } finally {
+                      setIsExporting(false);
+                    }
+                  }}
+                  disabled={isExporting}
+                  className={`flex items-center gap-2 rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity ${isExporting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  <FiDownload className={`h-4 w-4 ${isExporting ? 'animate-spin' : ''}`} />
+                  {isExporting ? 'Exporting...' : 'Export Data'}
                 </button>
               </div>
             </div>
