@@ -7,6 +7,11 @@ export interface Testimonial {
   puppyName: string;
   puppyBreed: string;
   date: string;
+  /**
+   * Optional ISO date string when testimonial was created in DB.
+   * Present when data comes from backend API.
+   */
+  createdAt?: string;
   initials: string;
 }
 
