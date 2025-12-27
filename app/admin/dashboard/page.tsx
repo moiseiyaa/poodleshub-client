@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import SeoManager from "../seo/page";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
 import { 
@@ -62,7 +63,8 @@ const NAV_ITEMS = [
   { key: "applications", label: "Applications", icon: FiFileText },
   { key: "puppies", label: "Puppies", icon: FiHeart },
   { key: "testimonials", label: "Testimonials", icon: FiStar },
-  { key: "analytics", label: "Marketing & SEO", icon: FiBarChart2 },
+  { key: "seo", label: "SEO Management", icon: FiGlobe },
+  { key: "analytics", label: "Analytics", icon: FiBarChart2 },
 ];
 
 function useLiveCollection<T>(
@@ -1610,6 +1612,7 @@ export default function AdminDashboard() {
             {tab === "applications" && <ApplicationsPanel token={token} />}
             {tab === "puppies" && <PuppiesManager token={token} />}
             {tab === "testimonials" && <TestimonialsManager token={token} />}
+            {tab === "seo" && <SeoManager />}
             {tab === "analytics" && <MarketingAnalyticsPanel token={token} />}
           </section>
         </main>
