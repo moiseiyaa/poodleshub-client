@@ -6,6 +6,7 @@ import Script from 'next/script';
 interface CrispProviderProps {
   children: React.ReactNode;
   websiteId?: string;
+  hideChat?: boolean;
 }
 
 declare global {
@@ -17,11 +18,15 @@ declare global {
 
 export default function CrispProvider({ 
   children, 
-  websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID || "dffd5542-eb23-4338-8bf7-33df9a51e8f1"
+  websiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID || "dffd5542-eb23-4338-8bf7-33df9a51e8f1",
+  hideChat = false
 }: CrispProviderProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    // Don't load Crisp if hideChat is true
+    if (hideChat) return;
+
     // Delay loading Crisp until after page is fully loaded
     const timer = setTimeout(() => {
       if (!websiteId) return;
@@ -49,12 +54,12 @@ export default function CrispProvider({
     return () => {
       clearTimeout(timer);
     };
-  }, [websiteId]);
+  }, [websiteId, hideChat]);
 
   return (
     <>
       {children}
-      {websiteId && (
+      {websiteId && !hideChat && (
         <Script
           id="crisp-chat"
           strategy="afterInteractive"
