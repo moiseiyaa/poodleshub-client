@@ -232,7 +232,7 @@ function OverviewPanel({
             ].map((stat) => (
               <div key={stat.label} className="flex items-center justify-between">
                 <span className="text-sm text-[#8B9CC8]">{stat.label}</span>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                   <div className="h-2 w-24 rounded-full bg-[#1A2A3F]">
                     <div 
                       className={`h-2 rounded-full ${stat.color}`}
@@ -610,7 +610,7 @@ function PuppiesManager({ token }: { token: string | null }) {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                       <button
                         onClick={() => handleEdit(p)}
                         className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
@@ -951,7 +951,7 @@ function TestimonialsManager({ token }: { token: string | null }) {
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                     <button
                       onClick={() => handleEdit(t)}
                       aria-label="Edit testimonial"
@@ -1013,7 +1013,7 @@ function TestimonialsManager({ token }: { token: string | null }) {
                 className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
               <label className="text-sm text-[#8B9CC8]">Rating:</label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((r) => (
@@ -1155,7 +1155,7 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
           <h2 className="text-2xl font-bold text-white">Marketing & SEO Analytics</h2>
           <p className="mt-1 text-sm text-[#8B9CC8]">Track your website performance and marketing ROI</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value as any)}
@@ -1453,7 +1453,7 @@ export default function AdminDashboard() {
           <div className="flex h-full flex-col p-6">
             {/* Logo */}
           <div className="mb-8">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-[#B344FF] to-[#FF44EC]">
                   <FiHeart className="h-6 w-6 text-white" />
           </div>
@@ -1547,7 +1547,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                 <button
                   onClick={() => {
                     refetchApps();
