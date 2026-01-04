@@ -14,6 +14,20 @@ import {
   FiEye, FiMousePointer, FiClock, FiUsers as FiUsersIcon, FiShare2, FiTarget, FiBook
 } from "react-icons/fi";
 
+// Ensure Tailwind generates arbitrary width classes for percent-based bars
+// (kept as a string so the extractor sees them). This avoids inline style attributes.
+const _TW_PERCENT_WIDTHS = "" +
+  "w-[0%] w-[1%] w-[2%] w-[3%] w-[4%] w-[5%] w-[6%] w-[7%] w-[8%] w-[9%] " +
+  "w-[10%] w-[11%] w-[12%] w-[13%] w-[14%] w-[15%] w-[16%] w-[17%] w-[18%] w-[19%] " +
+  "w-[20%] w-[21%] w-[22%] w-[23%] w-[24%] w-[25%] w-[26%] w-[27%] w-[28%] w-[29%] " +
+  "w-[30%] w-[31%] w-[32%] w-[33%] w-[34%] w-[35%] w-[36%] w-[37%] w-[38%] w-[39%] " +
+  "w-[40%] w-[41%] w-[42%] w-[43%] w-[44%] w-[45%] w-[46%] w-[47%] w-[48%] w-[49%] " +
+  "w-[50%] w-[51%] w-[52%] w-[53%] w-[54%] w-[55%] w-[56%] w-[57%] w-[58%] w-[59%] " +
+  "w-[60%] w-[61%] w-[62%] w-[63%] w-[64%] w-[65%] w-[66%] w-[67%] w-[68%] w-[69%] " +
+  "w-[70%] w-[71%] w-[72%] w-[73%] w-[74%] w-[75%] w-[76%] w-[77%] w-[78%] w-[79%] " +
+  "w-[80%] w-[81%] w-[82%] w-[83%] w-[84%] w-[85%] w-[86%] w-[87%] w-[88%] w-[89%] " +
+  "w-[90%] w-[91%] w-[92%] w-[93%] w-[94%] w-[95%] w-[96%] w-[97%] w-[98%] w-[99%] w-[100%]";
+
 const getApiUrl = () =>
   process.env.NEXT_PUBLIC_API_URL ||
   (process.env.NODE_ENV === "production"
@@ -236,10 +250,12 @@ function OverviewPanel({
                 <span className="text-sm text-[#8B9CC8]">{stat.label}</span>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4">
                   <div className="h-2 w-24 rounded-full bg-[#1A2A3F]">
-                    <div 
-                      className={`h-2 rounded-full ${stat.color}`}
-                      style={{ width: `${(stat.count / puppies.length) * 100}%` }}
-                    />
+                    {(() => {
+                      const pct = puppies.length ? Math.round((stat.count / puppies.length) * 100) : 0;
+                      return (
+                        <div className={`h-2 rounded-full ${stat.color} w-[${pct}%]`} />
+                      );
+                    })()}
                   </div>
                   <span className="text-sm font-semibold text-white">{stat.count}</span>
                 </div>
@@ -1308,10 +1324,12 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
                   <span className="text-sm text-[#8B9CC8]">{source.percentage}%</span>
                 </div>
                 <div className="h-2 rounded-full bg-[#1A2A3F]">
-                  <div
-                    className="h-2 rounded-full bg-linear-to-r from-[#B344FF] to-[#FF44EC]"
-                    style={{ width: `${source.percentage}%` }}
-                  />
+                  {(() => {
+                    const pct = Math.round(source.percentage || 0);
+                    return (
+                      <div className={`h-2 rounded-full bg-linear-to-r from-[#B344FF] to-[#FF44EC] w-[${pct}%]`} />
+                    );
+                  })()}
                 </div>
                 <p className="mt-1 text-xs text-[#8B9CC8]">{formatNumber(source.visitors)} visitors</p>
               </div>
@@ -1367,12 +1385,11 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
                   <span className="text-sm text-[#8B9CC8]">{device.percentage}%</span>
                 </div>
                 <div className="h-2 rounded-full bg-[#1A2A3F]">
-                  <div
-                    className={`h-2 rounded-full ${
-                      idx === 0 ? "bg-[#00D9FF]" : idx === 1 ? "bg-[#B344FF]" : "bg-[#FF44EC]"
-                    }`}
-                    style={{ width: `${device.percentage}%` }}
-                  />
+                  {(() => {
+                    const pct = Math.round(device.percentage || 0);
+                    const bg = idx === 0 ? "bg-[#00D9FF]" : idx === 1 ? "bg-[#B344FF]" : "bg-[#FF44EC]";
+                    return <div className={`h-2 rounded-full ${bg} w-[${pct}%]`} />;
+                  })()}
                 </div>
               </div>
             ))}
