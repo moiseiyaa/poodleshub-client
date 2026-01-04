@@ -36,9 +36,16 @@ export default function AdminBlog() {
         headers: { "Content-Type": "application/json" }
       });
       const data = await res.json();
+      if (!res.ok) {
+        console.error('API error:', data);
+        toast.error(data.error || 'Failed to fetch blogs');
+        setPosts([]);
+        return;
+      }
       setPosts(data.data || []);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Fetch error:', err);
+      toast.error(err.message || 'Failed to fetch blogs');
     } finally {
       setLoading(false);
     }
