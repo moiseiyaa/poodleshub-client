@@ -155,7 +155,7 @@ export default async function ReadMorePage({ params }: ReadMorePageProps) {
                 <span>{post.readTime} minute read</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '0%' }}></div>
+                <div className="bg-primary h-2 rounded-full w-0" data-progress="0"></div>
               </div>
             </div>
 

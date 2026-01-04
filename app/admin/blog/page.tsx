@@ -44,9 +44,10 @@ export default function AdminBlog() {
         return;
       }
       setPosts(data.data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Fetch error:', err);
-      toast.error(err.message || 'Failed to fetch blogs');
+      const message = err instanceof Error ? err.message : 'Failed to fetch blogs';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -90,7 +91,7 @@ export default function AdminBlog() {
           return Math.max(1, Math.ceil(words / 200));
         };
 
-        const localPost: any = {
+        const localPost: BlogPost & { author: { name: string; role: string; avatar: string }; images?: string[] } = {
           id: saved.id || `local_${Date.now()}`,
           slug: saved.slug || (saved.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
           title: saved.title || form.title,
