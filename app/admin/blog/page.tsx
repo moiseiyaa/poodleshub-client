@@ -10,20 +10,20 @@ interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  excerpt?: string;
-  content?: string;
-  author?: {
+  excerpt: string;
+  content: string;
+  author: {
     name: string;
     role: string;
     avatar: string;
   };
-  tags?: string[];
-  published?: boolean;
-  publishedAt?: string;
-  readTime?: number;
-  category?: string;
-  featuredImage?: string;
+  publishedAt: string;
+  readTime: number;
+  category: string;
+  tags: string[];
+  featuredImage: string;
   images?: string[];
+  published?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -151,7 +151,7 @@ export default function AdminBlog() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Blog Management</h1>
-          <button onClick={() => setEditing({ title: '', slug: '', excerpt: '', content: '', tags: [], published: false } as BlogPost)} className="rounded bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-white">Add Post</button>
+          <button onClick={() => setEditing({ id: `new_${Date.now()}`, title: '', slug: '', excerpt: '', content: '', tags: [], published: false, author: { name: 'Admin', role: 'Admin', avatar: '/images/about-hero.jpg' }, publishedAt: new Date().toISOString(), readTime: 1, category: 'Blog', featuredImage: '/images/puppy-training.jpg' } as BlogPost)} className="rounded bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-4 py-2 text-white">Add Post</button>
         </div>
 
         {editing ? (
