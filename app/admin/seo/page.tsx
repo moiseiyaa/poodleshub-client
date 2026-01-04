@@ -83,7 +83,10 @@ function SeoForm({
   onCancel: () => void;
   saving: boolean;
 }) {
-  const [form, setForm] = useState(seo);
+  const [form, setForm] = useState<Partial<SeoMeta>>(seo || {});
+  useEffect(() => {
+    setForm(seo || {});
+  }, [seo]);
   const [slugError, setSlugError] = useState<string | null>(null);
   const [checkingSlug, setCheckingSlug] = useState(false);
 
@@ -117,7 +120,8 @@ function SeoForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (slugError) return;
-    await onSave(form);
+    // ensure focusKeywords is always an array when saving
+    await onSave({ ...form, focusKeywords: form.focusKeywords || [] });
   };
 
   const addKeyword = () => {
