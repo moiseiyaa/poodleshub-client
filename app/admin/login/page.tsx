@@ -35,7 +35,7 @@ export default function AdminLogin() {
       // Save token to context + localStorage
       login(data.token);
       router.push("/admin/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Admin login error:', err);
       setError("Server error. Please try again.");
       setLoading(false);

@@ -12,9 +12,18 @@ interface BlogPost {
   slug: string;
   excerpt?: string;
   content?: string;
+  author?: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
   tags?: string[];
   published?: boolean;
   publishedAt?: string;
+  readTime?: number;
+  category?: string;
+  featuredImage?: string;
+  images?: string[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -91,7 +100,7 @@ export default function AdminBlog() {
           return Math.max(1, Math.ceil(words / 200));
         };
 
-        const localPost: BlogPost & { author: { name: string; role: string; avatar: string }; images?: string[] } = {
+        const localPost: BlogPost = {
           id: saved.id || `local_${Date.now()}`,
           slug: saved.slug || (saved.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
           title: saved.title || form.title,
