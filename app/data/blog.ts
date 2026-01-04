@@ -1208,3 +1208,31 @@ export const getBlogTags = () => {
   const tags = blogPosts.flatMap(post => post.tags);
   return [...new Set(tags)];
 };
+
+// Parse markdown content to HTML
+export const parseMarkdownToHtml = (content: string): string => {
+  let html = content;
+  // Headers
+  html = html.replace(/^### (.*?)$/gm, "<h3 style='font-size: 1.25rem; font-weight: bold; margin: 1rem 0; color: #333;'>$1</h3>");
+  html = html.replace(/^## (.*?)$/gm, "<h2 style='font-size: 1.5rem; font-weight: bold; margin: 1rem 0; color: #333;'>$1</h2>");
+  html = html.replace(/^# (.*?)$/gm, "<h1 style='font-size: 1.875rem; font-weight: bold; margin: 1rem 0; color: #333;'>$1</h1>");
+  // Bold
+  html = html.replace(/\*\*(.*?)\*\*/g, "<strong style='font-weight: bold;'>$1</strong>");
+  // Italic
+  html = html.replace(/\*(.*?)\*/g, "<em style='font-style: italic;'>$1</em>");
+  // Links
+  html = html.replace(/\[(.*?)\]\((.*?)\)/g, "<a href='$2' style='color: #0066cc; text-decoration: underline;'>$1</a>");
+  // Images
+  html = html.replace(/!\[(.*?)\]\((.*?)\)/g, "<img src='$2' alt='$1' style='max-width: 100%; height: auto; margin: 1rem 0; border-radius: 0.5rem;' />");
+  // Bullet lists
+  html = html.replace(/^- (.*?)$/gm, "<li style='margin-left: 1rem;'>$1</li>");
+  html = html.replace(/<li[^>]*>.*?<\/li>/g, (match) => `<ul style='list-style: disc; padding-left: 1rem;'>${match}</ul>`);
+  // Code blocks
+  html = html.replace(/```(.*?)```/gs, "<pre style='background: #f5f5f5; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;'><code>$1</code></pre>");
+  // Inline code
+  html = html.replace(/`(.*?)`/g, "<code style='background: #f5f5f5; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace;'>$1</code>");
+  // Paragraphs
+  html = html.replace(/\n\n/g, "</p><p style='margin: 1rem 0; line-height: 1.6;'>");
+  html = `<p style='margin: 1rem 0; line-height: 1.6;'>${html}</p>`;
+  return html;
+};

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../../components/organisms/Container';
-import { getBlogPostBySlug, getRelatedBlogPosts, BlogPost } from '../../../data/blog';
+import { getBlogPostBySlug, getRelatedBlogPosts, BlogPost, parseMarkdownToHtml } from '../../../data/blog';
 
 interface ReadMorePageProps {
   params: {
@@ -164,7 +164,7 @@ export default async function ReadMorePage({ params }: ReadMorePageProps) {
               <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
                 <div 
                   className="text-gray-700 leading-relaxed space-y-8 text-lg"
-                  dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br>') }}
+                  dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(post.content) }}
                 />
                 
                 {/* Call to Action Box */}

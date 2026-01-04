@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../components/organisms/Container';
-import { getBlogPostBySlug, getRelatedBlogPosts } from '../../data/blog';
+import { getBlogPostBySlug, getRelatedBlogPosts, parseMarkdownToHtml } from '../../data/blog';
 
 interface BlogPostPageProps {
   params: {
@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <article className="prose prose-lg max-w-none">
               <div 
                 className="text-gray-700 leading-relaxed space-y-6"
-                dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br>') }}
+                dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(post.content) }}
               />
             </article>
 
