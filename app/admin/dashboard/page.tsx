@@ -134,7 +134,7 @@ function MetricCard({
             <p className="mt-1 text-3xl font-bold text-white">{value}</p>
           </div>
         </div>
-        <button className="text-[#8B9CC8] hover:text-white">
+        <button className="text-[#8B9CC8] hover:text-white" title="More options">
           <FiMoreVertical className="h-5 w-5" />
         </button>
       </div>
@@ -616,12 +616,16 @@ function PuppiesManager({ token }: { token: string | null }) {
                       <button
                         onClick={() => handleEdit(p)}
                         className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
+                        aria-label="Edit puppy"
+                        title="Edit puppy"
                       >
                         <FiEdit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => destroy(p.id)}
                         className="rounded-lg p-2 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
+                        aria-label="Delete puppy"
+                        title="Delete puppy"
                       >
                         <FiTrash2 className="h-4 w-4" />
                       </button>
@@ -675,6 +679,7 @@ function PuppiesManager({ token }: { token: string | null }) {
               <select
                 value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}
+                aria-label="Select puppy status"
                 className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
               >
                 <option value="available">Available</option>
@@ -683,12 +688,17 @@ function PuppiesManager({ token }: { token: string | null }) {
               </select>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <input
-                type="date"
-                value={form.birthDate}
-                onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
-              />
+              <div>
+                <label htmlFor="birthDate" className="block text-xs font-medium text-[#8B9CC8] mb-1">Birth Date</label>
+                <input
+                  id="birthDate"
+                  type="date"
+                  value={form.birthDate}
+                  onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
+                  aria-label="Select birth date"
+                  className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
+                />
+              </div>
               <input
                 type="number"
                 value={form.price}
@@ -1023,6 +1033,8 @@ function TestimonialsManager({ token }: { token: string | null }) {
                     key={r}
                     type="button"
                     onClick={() => setForm({ ...form, rating: r })}
+                    aria-label={`Rate ${r} stars`}
+                    title={`Rate ${r} stars`}
                     className={`rounded p-1 ${
                       r <= form.rating
                         ? "text-[#FF44EC]"
@@ -1055,12 +1067,17 @@ function TestimonialsManager({ token }: { token: string | null }) {
                 className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               />
             </div>
-            <input
-              type="date"
-              value={form.date || ""}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
-            />
+            <div>
+              <label htmlFor="testimonialDate" className="block text-xs font-medium text-[#8B9CC8] mb-1">Date</label>
+              <input
+                id="testimonialDate"
+                type="date"
+                value={form.date || ""}
+                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                aria-label="Select testimonial date"
+                className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
+              />
+            </div>
             <button
               onClick={submit}
               disabled={saving}
@@ -1161,6 +1178,7 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value as any)}
+            aria-label="Select date range for analytics"
             className="rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-4 py-2 text-sm text-white focus:border-[#B344FF] focus:outline-none"
           >
             <option value="7d">Last 7 days</option>

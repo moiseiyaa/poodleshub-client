@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
-import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiImagePlus, FiHeading2, FiAlignLeft } from "react-icons/fi";
+import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiFeather, FiType, FiAlignLeft } from "react-icons/fi";
 
 interface BlogPost {
   id?: string;
@@ -74,8 +74,8 @@ export default function AdminBlog() {
       toast.success('Saved');
       setEditing(null);
       await fetchPosts();
-    } catch (err: Error) {
-      toast.error(err.message || 'Failed to save');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -91,8 +91,8 @@ export default function AdminBlog() {
       if (!res.ok) throw new Error('Delete failed');
       toast.success('Deleted');
       await fetchPosts();
-    } catch (err: Error) {
-      toast.error(err.message || 'Failed to delete');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to delete');
     }
   };
 
@@ -261,8 +261,8 @@ function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: 
     // Images
     html = html.replace(/!\[(.*?)\]\((.*?)\)/g, "<img src='$2' alt='$1' style='max-width: 100%; height: auto; margin: 1rem 0; border-radius: 0.5rem;' />");
     // Bullet lists
-    html = html.replace(/^\- (.*?)$/gm, "<li style='margin-left: 1rem;'>$1</li>");
-    html = html.replace(/(<li.*?<\/li>)/s, "<ul style='list-style: disc; padding-left: 1rem;'>$1</ul>");
+    html = html.replace(/^- (.*?)$/gm, "<li style='margin-left: 1rem;'>$1</li>");
+    html = html.replace(/<li[^>]*>.*?<\/li>/g, (match) => `<ul style='list-style: disc; padding-left: 1rem;'>${match}</ul>`);
     // Paragraphs
     html = html.replace(/\n\n/g, "</p><p style='margin: 1rem 0; line-height: 1.6;'>");
     html = `<p style='margin: 1rem 0; line-height: 1.6;'>${html}</p>`;
@@ -278,35 +278,47 @@ function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: 
       </div>
 
       <form onSubmit={handleSubmit} className="grid gap-4">
-        <input 
-          value={form.title || ""} 
-          onChange={(e) => setForm({ ...form, title: e.target.value })} 
-          placeholder="Blog Title" 
-          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-lg font-semibold"
-          required
-        />
+        <div>
+          <label htmlFor="blogTitle" className="block text-sm font-medium text-white mb-2">Blog Title</label>
+          <input 
+            id="blogTitle"
+            value={form.title || ""} 
+            onChange={(e) => setForm({ ...form, title: e.target.value })} 
+            placeholder="Blog Title" 
+            className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-lg font-semibold w-full"
+            required
+          />
+        </div>
 
-        <input 
-          value={form.slug || ""} 
-          onChange={(e) => setForm({ ...form, slug: e.target.value })} 
-          placeholder="Slug (for URL)" 
-          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-sm"
-        />
+        <div>
+          <label htmlFor="slug" className="block text-sm font-medium text-white mb-2">Slug (URL)</label>
+          <input 
+            id="slug"
+            value={form.slug || ""} 
+            onChange={(e) => setForm({ ...form, slug: e.target.value })} 
+            placeholder="Slug (for URL)" 
+            className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-sm w-full"
+          />
+        </div>
 
-        <textarea 
-          value={form.excerpt || ""} 
-          onChange={(e) => setForm({ ...form, excerpt: e.target.value })} 
-          placeholder="Excerpt (short summary)" 
-          rows={2}
-          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none"
-        />
+        <div>
+          <label htmlFor="excerpt" className="block text-sm font-medium text-white mb-2">Excerpt</label>
+          <textarea 
+            id="excerpt"
+            value={form.excerpt || ""} 
+            onChange={(e) => setForm({ ...form, excerpt: e.target.value })} 
+            placeholder="Excerpt (short summary)" 
+            rows={2}
+            className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none w-full"
+          />
+        </div>
 
         {!preview ? (
           <div className="space-y-3">
             {/* Formatting Toolbar */}
             <div className="flex flex-wrap gap-2 p-3 bg-[#0A1628] rounded border border-[#1A2A3F]">
               <button type="button" onClick={addHeading} title="Add Heading" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
-                <FiHeading2 className="h-5 w-5" />
+                <FiType className="h-5 w-5" />
               </button>
               <button type="button" onClick={addBold} title="Bold" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
                 <FiBold className="h-5 w-5" />
@@ -330,7 +342,7 @@ function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: 
                 title="Insert Image" 
                 className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors disabled:opacity-50"
               >
-                {imageUploading ? <FiImage className="h-5 w-5 animate-spin" /> : <FiImagePlus className="h-5 w-5" />}
+                {imageUploading ? <FiImage className="h-5 w-5 animate-spin" /> : <FiFeather className="h-5 w-5" />}
               </button>
               <input 
                 ref={fileInputRef}
@@ -338,17 +350,22 @@ function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: 
                 accept="image/*" 
                 onChange={handleImageUpload} 
                 className="hidden"
+                aria-label="Upload image file"
               />
             </div>
 
-            <textarea 
-              ref={contentRef}
-              value={form.content || ""} 
-              onChange={(e) => setForm({ ...form, content: e.target.value })} 
-              rows={12}
-              placeholder="Write your blog content here... Use markdown formatting:&#10;# Heading 1&#10;## Heading 2&#10;**Bold text**&#10;*Italic text*&#10;- Bullet point&#10;[Link](url)&#10;![Image](url)"
-              className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none font-mono text-sm resize-none"
-            />
+            <div>
+              <label htmlFor="content" className="block text-sm font-medium text-white mb-2">Content</label>
+              <textarea 
+                id="content"
+                ref={contentRef}
+                value={form.content || ""} 
+                onChange={(e) => setForm({ ...form, content: e.target.value })} 
+                rows={12}
+                placeholder="Write your blog content here... Use markdown formatting:&#10;# Heading 1&#10;## Heading 2&#10;**Bold text**&#10;*Italic text*&#10;- Bullet point&#10;[Link](url)&#10;![Image](url)"
+                className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none font-mono text-sm resize-none w-full"
+              />
+            </div>
           </div>
         ) : (
           <div className="p-4 bg-[#0A1628] rounded border border-[#1A2A3F] min-h-96 text-white max-h-96 overflow-y-auto" 
