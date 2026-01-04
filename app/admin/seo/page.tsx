@@ -147,6 +147,7 @@ function SeoForm({
               Entity Type
             </label>
             <select
+              aria-label="Select entity type"
               value={form.entityType || ""}
               onChange={(e) => setForm({ ...form, entityType: e.target.value as any })}
               className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-white focus:border-[#B344FF] focus:outline-none"
@@ -165,6 +166,7 @@ function SeoForm({
                 Page
               </label>
               <select
+                aria-label="Select page"
                 value={form.entityId || ""}
                 onChange={(e) => setForm({ ...form, entityId: e.target.value })}
                 className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-white focus:border-[#B344FF] focus:outline-none"
@@ -220,6 +222,7 @@ function SeoForm({
               Robots Meta
             </label>
             <select
+              aria-label="Select robots directive"
               value={form.robots || "INDEX"}
               onChange={(e) => setForm({ ...form, robots: e.target.value as any })}
               className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-white focus:border-[#B344FF] focus:outline-none"
@@ -241,6 +244,7 @@ function SeoForm({
               Schema Type
             </label>
             <select
+              aria-label="Select schema type"
               value={form.schemaType || "ARTICLE"}
               onChange={(e) => setForm({ ...form, schemaType: e.target.value as any })}
               className="w-full rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-white focus:border-[#B344FF] focus:outline-none"
@@ -297,6 +301,8 @@ function SeoForm({
                     type="button"
                     onClick={() => removeKeyword(keyword)}
                     className="rounded-lg p-2 text-red-400 hover:bg-red-500/10 transition-colors"
+                    aria-label="Remove keyword"
+                    title="Remove keyword"
                   >
                     <FiX className="h-4 w-4" />
                   </button>
@@ -571,6 +577,8 @@ export default function SeoManager() {
               <button
                 onClick={() => setEditingSeo(null)}
                 className="text-[#8B9CC8] hover:text-white"
+                aria-label="Close SEO form"
+                title="Close"
               >
                 <FiX className="h-6 w-6" />
               </button>
@@ -597,6 +605,7 @@ export default function SeoManager() {
                   />
                 </div>
                 <select
+                  aria-label="Filter by entity type"
                   value={entityFilter}
                   onChange={(e) => setEntityFilter(e.target.value)}
                   className="rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2.5 text-white focus:border-[#B344FF] focus:outline-none"
