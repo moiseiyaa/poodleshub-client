@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
+import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiImagePlus, FiHeading2, FiAlignLeft } from "react-icons/fi";
 
 interface BlogPost {
   id?: string;
@@ -149,6 +150,10 @@ export default function AdminBlog() {
 
 function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: (form: BlogPost) => Promise<void>; onCancel: () => void; saving: boolean }) {
   const [form, setForm] = useState<BlogPost>(post);
+  const [preview, setPreview] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,23 +161,235 @@ function BlogForm({ post, onSave, onCancel, saving }: { post: BlogPost; onSave: 
     void onSave(payload);
   };
 
+  const insertMarkdown = (before: string, after: string = "") => {
+    if (!contentRef.current) return;
+    const textarea = contentRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = form.content?.substring(start, end) || "";
+    const newContent = 
+      (form.content?.substring(0, start) || "") + 
+      before + selected + after + 
+      (form.content?.substring(end) || "");
+    setForm({ ...form, content: newContent });
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, start + before.length + selected.length);
+    }, 0);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be less than 5MB");
+      return;
+    }
+
+    setImageUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploadRes = await fetch(`${getApiUrl()}/api/upload`, {
+        method: "POST",
+        body: formData
+      });
+      
+      if (!uploadRes.ok) {
+        const uploadEndpoint = `${getApiUrl()}/api/blog/upload`;
+        const uploadRes2 = await fetch(uploadEndpoint, {
+          method: "POST",
+          body: formData
+        });
+        if (!uploadRes2.ok) throw new Error("Upload failed");
+        const data = await uploadRes2.json();
+        const imageUrl = data.url || `/uploads/${file.name}`;
+        insertMarkdown(`![${file.name}](${imageUrl})`);
+        toast.success("Image inserted");
+        return;
+      }
+      
+      const data = await uploadRes.json();
+      const imageUrl = data.url || `/uploads/${file.name}`;
+      insertMarkdown(`![${file.name}](${imageUrl})`);
+      toast.success("Image inserted");
+    } catch (err) {
+      console.error(err);
+      toast.error("Image upload failed");
+    } finally {
+      setImageUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const addParagraph = () => {
+    insertMarkdown("\n\n");
+  };
+
+  const addHeading = () => {
+    insertMarkdown("## ");
+  };
+
+  const addBold = () => {
+    insertMarkdown("**", "**");
+  };
+
+  const addItalic = () => {
+    insertMarkdown("*", "*");
+  };
+
+  const addBulletList = () => {
+    insertMarkdown("- ");
+  };
+
+  const addLink = () => {
+    insertMarkdown("[Link text](https://example.com)");
+  };
+
+  const parseMarkdownToHtml = (content: string): string => {
+    let html = content;
+    // Headers
+    html = html.replace(/^### (.*?)$/gm, "<h3 style='font-size: 1.25rem; font-weight: bold; margin: 1rem 0; color: #B344FF;'>$1</h3>");
+    html = html.replace(/^## (.*?)$/gm, "<h2 style='font-size: 1.5rem; font-weight: bold; margin: 1rem 0; color: #B344FF;'>$1</h2>");
+    html = html.replace(/^# (.*?)$/gm, "<h1 style='font-size: 1.875rem; font-weight: bold; margin: 1rem 0; color: #B344FF;'>$1</h1>");
+    // Bold
+    html = html.replace(/\*\*(.*?)\*\*/g, "<strong style='font-weight: bold;'>$1</strong>");
+    // Italic
+    html = html.replace(/\*(.*?)\*/g, "<em style='font-style: italic;'>$1</em>");
+    // Links
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, "<a href='$2' style='color: #B344FF; text-decoration: underline;'>$1</a>");
+    // Images
+    html = html.replace(/!\[(.*?)\]\((.*?)\)/g, "<img src='$2' alt='$1' style='max-width: 100%; height: auto; margin: 1rem 0; border-radius: 0.5rem;' />");
+    // Bullet lists
+    html = html.replace(/^\- (.*?)$/gm, "<li style='margin-left: 1rem;'>$1</li>");
+    html = html.replace(/(<li.*?<\/li>)/s, "<ul style='list-style: disc; padding-left: 1rem;'>$1</ul>");
+    // Paragraphs
+    html = html.replace(/\n\n/g, "</p><p style='margin: 1rem 0; line-height: 1.6;'>");
+    html = `<p style='margin: 1rem 0; line-height: 1.6;'>${html}</p>`;
+    return html;
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6">
-      <div className="grid gap-4">
-        <input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Title" className="p-2 bg-[#0A1628] text-white rounded" />
-        <input value={form.slug || ''} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder="Slug" className="p-2 bg-[#0A1628] text-white rounded" />
-        <input value={form.excerpt || ''} onChange={e => setForm({ ...form, excerpt: e.target.value })} placeholder="Excerpt" className="p-2 bg-[#0A1628] text-white rounded" />
-        <textarea value={form.content || ''} onChange={e => setForm({ ...form, content: e.target.value })} rows={8} placeholder="Content" className="p-2 bg-[#0A1628] text-white rounded" />
-        <input value={(form.tags || []).join(', ')} onChange={e => setForm({ ...form, tags: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) })} placeholder="tags comma separated" className="p-2 bg-[#0A1628] text-white rounded" />
-        <label className="flex items-center gap-2">
-          <input type="checkbox" checked={!!form.published} onChange={e => setForm({ ...form, published: e.target.checked })} /> Published
-        </label>
+    <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <button type="button" onClick={() => setPreview(!preview)} className="px-3 py-1.5 rounded text-sm font-medium text-white border border-[#1A2A3F] hover:bg-[#1A2A3F] transition-colors">
+          {preview ? "Edit" : "Preview"}
+        </button>
       </div>
 
-      <div className="mt-4 flex gap-2 justify-end">
-        <button type="button" onClick={onCancel} className="px-4 py-2 border rounded text-white">Cancel</button>
-        <button type="submit" disabled={saving} className="px-4 py-2 bg-[#B344FF] text-white rounded">{saving ? 'Saving...' : 'Save'}</button>
-      </div>
-    </form>
+      <form onSubmit={handleSubmit} className="grid gap-4">
+        <input 
+          value={form.title || ""} 
+          onChange={(e) => setForm({ ...form, title: e.target.value })} 
+          placeholder="Blog Title" 
+          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-lg font-semibold"
+          required
+        />
+
+        <input 
+          value={form.slug || ""} 
+          onChange={(e) => setForm({ ...form, slug: e.target.value })} 
+          placeholder="Slug (for URL)" 
+          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-sm"
+        />
+
+        <textarea 
+          value={form.excerpt || ""} 
+          onChange={(e) => setForm({ ...form, excerpt: e.target.value })} 
+          placeholder="Excerpt (short summary)" 
+          rows={2}
+          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none"
+        />
+
+        {!preview ? (
+          <div className="space-y-3">
+            {/* Formatting Toolbar */}
+            <div className="flex flex-wrap gap-2 p-3 bg-[#0A1628] rounded border border-[#1A2A3F]">
+              <button type="button" onClick={addHeading} title="Add Heading" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiHeading2 className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={addBold} title="Bold" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiBold className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={addItalic} title="Italic" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiItalic className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={addBulletList} title="Bullet List" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiList className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={addLink} title="Insert Link" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiLink2 className="h-5 w-5" />
+              </button>
+              <button type="button" onClick={addParagraph} title="Add Paragraph" className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors">
+                <FiAlignLeft className="h-5 w-5" />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => fileInputRef.current?.click()} 
+                disabled={imageUploading}
+                title="Insert Image" 
+                className="p-2 hover:bg-[#1A2A3F] rounded text-[#B344FF] transition-colors disabled:opacity-50"
+              >
+                {imageUploading ? <FiImage className="h-5 w-5 animate-spin" /> : <FiImagePlus className="h-5 w-5" />}
+              </button>
+              <input 
+                ref={fileInputRef}
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+                className="hidden"
+              />
+            </div>
+
+            <textarea 
+              ref={contentRef}
+              value={form.content || ""} 
+              onChange={(e) => setForm({ ...form, content: e.target.value })} 
+              rows={12}
+              placeholder="Write your blog content here... Use markdown formatting:&#10;# Heading 1&#10;## Heading 2&#10;**Bold text**&#10;*Italic text*&#10;- Bullet point&#10;[Link](url)&#10;![Image](url)"
+              className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none font-mono text-sm resize-none"
+            />
+          </div>
+        ) : (
+          <div className="p-4 bg-[#0A1628] rounded border border-[#1A2A3F] min-h-96 text-white max-h-96 overflow-y-auto" 
+            dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(form.content || "") }}
+          />
+        )}
+
+        <input 
+          value={(form.tags || []).join(", ")} 
+          onChange={(e) => setForm({ ...form, tags: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} 
+          placeholder="Tags (comma separated)" 
+          className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none text-sm"
+        />
+
+        <label className="flex items-center gap-2 p-3 bg-[#0A1628] rounded border border-[#1A2A3F] cursor-pointer hover:bg-[#1A2A3F] transition-colors">
+          <input 
+            type="checkbox" 
+            checked={!!form.published} 
+            onChange={(e) => setForm({ ...form, published: e.target.checked })}
+            className="w-4 h-4 cursor-pointer"
+          /> 
+          <span className="text-white font-medium">Publish this post</span>
+        </label>
+
+        <div className="flex gap-2 justify-end">
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            className="px-4 py-2 border border-[#1A2A3F] rounded text-white hover:bg-[#1A2A3F] transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            disabled={saving} 
+            className="px-4 py-2 bg-linear-to-r from-[#B344FF] to-[#FF44EC] text-white rounded font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {saving ? "Saving..." : "Save Blog Post"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
