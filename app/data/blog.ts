@@ -1228,7 +1228,7 @@ export const parseMarkdownToHtml = (content: string): string => {
   html = html.replace(/^- (.*?)$/gm, "<li style='margin-left: 1rem;'>$1</li>");
   html = html.replace(/<li[^>]*>.*?<\/li>/g, (match) => `<ul style='list-style: disc; padding-left: 1rem;'>${match}</ul>`);
   // Code blocks
-  html = html.replace(/```(.*?)```/gs, "<pre style='background: #f5f5f5; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;'><code>$1</code></pre>");
+  html = html.replace(/```([\s\S]*?)```/g, "<pre style='background: #f5f5f5; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;'><code>$1</code></pre>");
   // Inline code
   html = html.replace(/`(.*?)`/g, "<code style='background: #f5f5f5; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace;'>$1</code>");
   // Paragraphs
