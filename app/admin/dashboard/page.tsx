@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SeoManager from "../seo/page";
+import AdminBlog from "../blog/page";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
 import { 
@@ -10,7 +11,7 @@ import {
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
   FiFileText, FiHeart, FiStar, FiTrendingUp, FiTrendingDown, FiMoreVertical,
   FiCalendar, FiMail, FiPhone, FiMapPin, FiImage, FiTag, FiBarChart2, FiGlobe,
-  FiEye, FiMousePointer, FiClock, FiUsers as FiUsersIcon, FiShare2, FiTarget
+  FiEye, FiMousePointer, FiClock, FiUsers as FiUsersIcon, FiShare2, FiTarget, FiBook
 } from "react-icons/fi";
 
 const getApiUrl = () =>
@@ -63,6 +64,7 @@ const NAV_ITEMS = [
   { key: "applications", label: "Applications", icon: FiFileText },
   { key: "puppies", label: "Puppies", icon: FiHeart },
   { key: "testimonials", label: "Testimonials", icon: FiStar },
+  { key: "blog", label: "Blog Management", icon: FiBook },
   { key: "seo", label: "SEO Management", icon: FiGlobe },
   { key: "analytics", label: "Analytics", icon: FiBarChart2 },
 ];
@@ -1612,6 +1614,7 @@ export default function AdminDashboard() {
             {tab === "applications" && <ApplicationsPanel token={token} />}
             {tab === "puppies" && <PuppiesManager token={token} />}
             {tab === "testimonials" && <TestimonialsManager token={token} />}
+            {tab === "blog" && <AdminBlog />}
             {tab === "seo" && <SeoManager />}
             {tab === "analytics" && <MarketingAnalyticsPanel token={token} />}
           </section>
