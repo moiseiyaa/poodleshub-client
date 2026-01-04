@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
 import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiFeather, FiType, FiAlignLeft } from "react-icons/fi";
+import { addLocalBlogPost } from "../../data/blog";
 
 interface BlogPost {
   id?: string;
@@ -78,6 +79,36 @@ export default function AdminBlog() {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || 'Save failed');
       }
+      // get server response and also persist a local copy so the public blog listing (which reads from localStorage/static data)
+      // immediately reflects the change without waiting for any content pipeline.
+      const body = await res.json().catch(() => ({}));
+      const saved = body.data || body;
+      try {
+        const estimateReadTime = (text?: string) => {
+          if (!text) return 1;
+          const words = text.split(/\s+/).filter(Boolean).length;
+          return Math.max(1, Math.ceil(words / 200));
+        };
+
+        const localPost: any = {
+          id: saved.id || `local_${Date.now()}`,
+          slug: saved.slug || (saved.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+          title: saved.title || form.title,
+          excerpt: saved.excerpt || form.excerpt || '',
+          content: saved.content || form.content || '',
+          author: { name: 'Admin', role: 'Admin', avatar: '/images/about-hero.jpg' },
+          publishedAt: saved.publishedAt || new Date().toISOString(),
+          readTime: estimateReadTime(saved.content || form.content),
+          category: saved.category || 'Blog',
+          tags: saved.tags || form.tags || [],
+          featuredImage: saved.featuredImage || '/images/puppy-training.jpg',
+          images: saved.images || []
+        };
+        addLocalBlogPost(localPost);
+      } catch (e) {
+        console.warn('Failed to write local blog copy', e);
+      }
+
       toast.success('Saved');
       setEditing(null);
       await fetchPosts();
