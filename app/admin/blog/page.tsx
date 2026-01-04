@@ -7,7 +7,7 @@ import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiFeather, FiType, FiAlignL
 import { addLocalBlogPost } from "../../data/blog";
 
 interface BlogPost {
-  id?: string;
+  id: string;
   title: string;
   slug: string;
   excerpt?: string;
