@@ -1213,6 +1213,17 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
     return num.toString();
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B344FF] mx-auto"></div>
+          <p className="mt-4 text-[#8B9CC8]">Loading analytics data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header with Date Range */}
@@ -1409,21 +1420,25 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
             </button>
           </div>
           <div className="space-y-4">
-            {analytics.devices.map((device, idx) => (
-              <div key={idx}>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-white">{device.device}</span>
-                  <span className="text-sm text-[#8B9CC8]">{device.percentage}%</span>
+            {analytics.devices && analytics.devices.length > 0 ? (
+              analytics.devices.map((device, idx) => (
+                <div key={idx}>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-medium text-white">{device?.device || 'Unknown'}</span>
+                    <span className="text-sm text-[#8B9CC8]">{device?.percentage ?? 0}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-[#1A2A3F]">
+                    {(() => {
+                      const pct = Math.round(device?.percentage || 0);
+                      const bg = idx === 0 ? "bg-[#00D9FF]" : idx === 1 ? "bg-[#B344FF]" : "bg-[#FF44EC]";
+                      return <div className={`h-2 rounded-full ${bg} w-[${pct}%]`} />;
+                    })()}
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-[#1A2A3F]">
-                  {(() => {
-                    const pct = Math.round(device.percentage || 0);
-                    const bg = idx === 0 ? "bg-[#00D9FF]" : idx === 1 ? "bg-[#B344FF]" : "bg-[#FF44EC]";
-                    return <div className={`h-2 rounded-full ${bg} w-[${pct}%]`} />;
-                  })()}
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-[#8B9CC8]">No device data available</p>
+            )}
           </div>
         </div>
       </div>
@@ -1438,15 +1453,19 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
             </button>
           </div>
           <div className="space-y-3">
-            {analytics.countries.slice(0, 5).map((country, idx) => (
-              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
-                <div>
-                  <p className="text-sm font-medium text-white">{country.country}</p>
-                  <p className="text-xs text-[#8B9CC8]">{formatNumber(country.visitors)} visitors</p>
+            {analytics.countries && analytics.countries.length > 0 ? (
+              analytics.countries.slice(0, 5).map((country, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                  <div>
+                    <p className="text-sm font-medium text-white">{country?.country || 'Unknown'}</p>
+                    <p className="text-xs text-[#8B9CC8]">{formatNumber(country?.visitors ?? 0)} visitors</p>
+                  </div>
+                  <span className="text-sm font-semibold text-[#8B9CC8]">{country?.percentage ?? 0}%</span>
                 </div>
-                <span className="text-sm font-semibold text-[#8B9CC8]">{country.percentage}%</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-[#8B9CC8]">No country data available</p>
+            )}
           </div>
         </div>
 
@@ -1458,15 +1477,19 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
             </button>
           </div>
           <div className="space-y-3">
-            {analytics.referrers.map((referrer, idx) => (
-              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
-                <div>
-                  <p className="text-sm font-medium text-white">{referrer.domain}</p>
-                  <p className="text-xs text-[#8B9CC8]">{formatNumber(referrer.visits)} visits</p>
+            {analytics.referrers && analytics.referrers.length > 0 ? (
+              analytics.referrers.map((referrer, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                  <div>
+                    <p className="text-sm font-medium text-white">{referrer?.domain || 'Unknown'}</p>
+                    <p className="text-xs text-[#8B9CC8]">{formatNumber(referrer?.visits ?? 0)} visits</p>
+                  </div>
+                  <span className="text-sm font-semibold text-[#8B9CC8]">{referrer?.percentage ?? 0}%</span>
                 </div>
-                <span className="text-sm font-semibold text-[#8B9CC8]">{referrer.percentage}%</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-[#8B9CC8]">No referrer data available</p>
+            )}
           </div>
         </div>
       </div>
