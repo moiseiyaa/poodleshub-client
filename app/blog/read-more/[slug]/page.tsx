@@ -1,28 +1,43 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../../components/organisms/Container';
 import { getBlogPostBySlug, getRelatedBlogPosts, BlogPost, parseMarkdownToHtml } from '../../../data/blog';
-
-interface ReadMorePageProps {
-  params: {
-    slug: string;
-  };
-}
+import { useEffect, useState } from 'react';
 
 /**
  * Read More page component
  * Displays expanded blog post content with enhanced reading experience
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default async function ReadMorePage({ params }: ReadMorePageProps) {
-  const resolvedParams = await params;
-  const post = getBlogPostBySlug(resolvedParams.slug);
-  const relatedPosts = getRelatedBlogPosts(post?.id || '', 4);
+export default function ReadMorePage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!post) {
-    notFound();
+  useEffect(() => {
+    const fetchPost = () => {
+      const foundPost = getBlogPostBySlug(slug);
+      if (!foundPost) {
+        notFound();
+        return;
+      }
+      setPost(foundPost);
+      const related = getRelatedBlogPosts(foundPost.id, 4);
+      setRelatedPosts(related);
+      setLoading(false);
+    };
+    
+    fetchPost();
+  }, [slug]);
+
+  if (loading || !post) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   return (

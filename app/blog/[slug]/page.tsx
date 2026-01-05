@@ -1,14 +1,26 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../components/organisms/Container';
 import { getBlogPostBySlug, getRelatedBlogPosts, parseMarkdownToHtml } from '../../data/blog';
+import { useEffect, useState } from 'react';
 
-interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: { name: string; role: string; avatar: string };
+  publishedAt: string;
+  readTime: number;
+  category: string;
+  tags: string[];
+  featuredImage: string;
+  images?: string[];
 }
 
 /**
@@ -16,13 +28,31 @@ interface BlogPostPageProps {
  * Displays full blog post content with related articles and sharing options
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const resolvedParams = await params;
-  const post = getBlogPostBySlug(resolvedParams.slug);
-  const relatedPosts = getRelatedBlogPosts(post?.id || '', 3);
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!post) {
-    notFound();
+  useEffect(() => {
+    const fetchPost = () => {
+      const foundPost = getBlogPostBySlug(slug);
+      if (!foundPost) {
+        notFound();
+        return;
+      }
+      setPost(foundPost);
+      const related = getRelatedBlogPosts(foundPost.id, 3);
+      setRelatedPosts(related);
+      setLoading(false);
+    };
+    
+    fetchPost();
+  }, [slug]);
+
+  if (loading || !post) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   return (
@@ -307,50 +337,4 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
     </div>
   );
-}
-
-// Generate static params for all blog posts
-export async function generateStaticParams() {
-  const posts = [
-    'bringing-home-your-first-poodle-essential-guide',
-    'maltese-care-essential-tips-for-new-owners',
-    'puppy-training-basics-essential-commands-every-owner-should-teach',
-    'complete-puppy-nutrition-guide-what-to-feed-your-growing-dog',
-    'house-training-secrets-proven-methods-for-puppy-success'
-  ];
-
-  return posts.map((slug) => ({
-    slug,
-  }));
-}
-
-// Generate metadata for each blog post
-export async function generateMetadata({ params }: BlogPostPageProps) {
-  const resolvedParams = await params;
-  const post = getBlogPostBySlug(resolvedParams.slug);
-
-  if (!post) {
-    return {
-      title: 'Blog Post Not Found',
-    };
-  }
-
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: [post.featuredImage],
-      type: 'article',
-      publishedTime: post.publishedAt,
-      authors: [post.author.name],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
-      images: [post.featuredImage],
-    },
-  };
 }
