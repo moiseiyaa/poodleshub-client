@@ -14,6 +14,8 @@ import { generateJsonLd } from './lib/schema-generator';
 import CrispWrapper from './components/providers/CrispWrapper';
 import GoogleTagManager from './components/providers/GoogleTagManager';
 import GoogleAnalytics from './components/providers/GoogleAnalytics';
+import ConsentMode from './components/providers/ConsentMode';
+import AxeptioCMP from './components/providers/AxeptioCMP';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -78,10 +80,25 @@ export default function RootLayout({
   // Get GTM and GA IDs from environment variables
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
+  
+  // Get Axeptio CMP script code from environment variable
+  const axeptioScriptCode = process.env.NEXT_PUBLIC_AXEPTIO_SCRIPT_CODE || '';
+  
+  // Get consent mode regions from environment variable (comma-separated ISO 3166-2 codes)
+  // Example: "US-CA,US-NY,GB" for California, New York, and Great Britain
+  const consentRegions = process.env.NEXT_PUBLIC_CONSENT_MODE_REGIONS
+    ? process.env.NEXT_PUBLIC_CONSENT_MODE_REGIONS.split(',').map(r => r.trim()).filter(Boolean)
+    : [];
 
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Consent Mode - MUST be before GTM and any tracking scripts */}
+        <ConsentMode regions={consentRegions} />
+        
+        {/* Axeptio CMP Script - Should be after consent mode, before GTM */}
+        {axeptioScriptCode && <AxeptioCMP scriptCode={axeptioScriptCode} />}
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

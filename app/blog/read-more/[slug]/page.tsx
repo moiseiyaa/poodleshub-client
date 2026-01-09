@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
-import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
+import { FaCalendarAlt, FaClock, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../../components/organisms/Container';
 import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type BlogPost } from '../../../data/blog';
 import { useEffect, useState } from 'react';
@@ -204,7 +204,7 @@ export default function ReadMorePage() {
                     Ready to Apply These Insights?
                   </h3>
                   <p className="text-gray-700 mb-6">
-                    Now that you've learned about {post.title.toLowerCase()}, take the next step in your puppy journey.
+                    Now that you&apos;ve learned about {post.title.toLowerCase()}, take the next step in your puppy journey.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link 
