@@ -8,7 +8,7 @@ import Container from '../../components/organisms/Container';
 import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type BlogPost } from '../../data/blog';
 import { useEffect, useState } from 'react';
 
-interface BlogPost {
+// interface BlogPost {
   id: string;
   title: string;
   slug: string;
@@ -21,7 +21,7 @@ interface BlogPost {
   tags: string[];
   featuredImage: string;
   images?: string[];
-}
+// } 
 
 /**
  * Individual blog post page component
