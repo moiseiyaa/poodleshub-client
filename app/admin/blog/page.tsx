@@ -74,8 +74,10 @@ export default function AdminBlog() {
   const handleSave = async (form: BlogPost) => {
     setSaving(true);
     try {
-      const method = form.id ? 'PUT' : 'POST';
-      const url = form.id ? `${getApiUrl()}/api/blog/${form.id}` : `${getApiUrl()}/api/blog`;
+      // Only use PUT for existing posts in the DB (non-temp id that doesn't start with 'new_')
+      const isExisting = form.id && !form.id.startsWith('new_');
+      const method = isExisting ? 'PUT' : 'POST';
+      const url = isExisting ? `${getApiUrl()}/api/blog/${form.id}` : `${getApiUrl()}/api/blog`;
       const res = await fetch(url, {
         method,
         headers: {
