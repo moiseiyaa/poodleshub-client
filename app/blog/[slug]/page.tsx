@@ -9,19 +9,6 @@ import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type
 import { useEffect, useState } from 'react';
 
 // interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  author: { name: string; role: string; avatar: string };
-  publishedAt: string;
-  readTime: number;
-  category: string;
-  tags: string[];
-  featuredImage: string;
-  images?: string[];
-// } 
 
 /**
  * Individual blog post page component
