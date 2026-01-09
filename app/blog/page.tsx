@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowRight, FaSearch, FaFilter } from 'react-icons/fa';
 import Container from '../components/organisms/Container';
-import { getAllBlogPosts, getBlogCategories, getLatestBlogPosts, blogPosts } from '../data/blog';
+import { getAllBlogPostsAsync, blogPosts, getAllBlogPosts } from '../data/blog';
 import { useState, useMemo, useEffect } from 'react';
+import type { BlogPost } from '../data/blog';
 
 /**
  * Blog main page component
@@ -17,14 +18,37 @@ export default function BlogPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const categories = getBlogCategories();
-  const allPosts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  const [allPosts, setAllPosts] = useState<BlogPost[]>(typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts);
+  const [loading, setLoading] = useState(true);
+  const categories = useMemo(() => {
+    const catSet = new Set(allPosts.map(post => post.category));
+    return Array.from(catSet);
+  }, [allPosts]);
   
   // Initialize state from URL search params
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   
+  // Fetch blogs from API on mount
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const posts = await getAllBlogPostsAsync();
+        setAllPosts(posts);
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+        // Fallback to static data if API fails
+        setAllPosts(typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBlogs();
+  }, []);
+
   // Sync state with URL params on mount and when params change
   useEffect(() => {
     const category = searchParams.get('category') || '';
@@ -102,10 +126,21 @@ export default function BlogPage() {
     return posts;
   }, [searchTerm, selectedCategory, selectedTag]);
 
-  const displayPosts = filteredPosts.length > 0 ? filteredPosts : getLatestBlogPosts(6);
+  const displayPosts = filteredPosts.length > 0 ? filteredPosts : allPosts.slice(0, 6);
   const currentCategory = selectedCategory 
     ? categories.find(cat => cat.toLowerCase().replace(' & ', '-').replace(' ', '-') === selectedCategory)
     : null;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading blog posts...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

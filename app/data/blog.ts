@@ -1137,9 +1137,92 @@ With the right approach and persistence, you'll have a fully house-trained puppy
 // Local (client-side) persistence key for admin-created posts
 const LOCAL_BLOG_KEY = 'puppyhub_local_blog_posts';
 
-// Return merged list: local posts (newest first) + packaged `blogPosts`
+// API Blog interface (what comes from the server)
+interface ApiBlog {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  content?: string | null;
+  tags?: string[];
+  published: boolean;
+  publishedAt?: string | Date | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
+// Transform API blog to BlogPost format
+const transformApiBlog = (apiBlog: ApiBlog): BlogPost => {
+  const estimateReadTime = (text?: string | null) => {
+    if (!text) return 1;
+    const words = text.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  };
+
+  const publishedAt = apiBlog.publishedAt 
+    ? (typeof apiBlog.publishedAt === 'string' ? apiBlog.publishedAt : apiBlog.publishedAt.toISOString())
+    : (apiBlog.createdAt ? (typeof apiBlog.createdAt === 'string' ? apiBlog.createdAt : apiBlog.createdAt.toISOString()) : new Date().toISOString());
+
+  return {
+    id: apiBlog.id,
+    slug: apiBlog.slug,
+    title: apiBlog.title,
+    excerpt: apiBlog.excerpt || '',
+    content: apiBlog.content || '',
+    author: { name: 'Admin', role: 'Admin', avatar: '/images/about-hero.jpg' },
+    publishedAt: publishedAt,
+    readTime: estimateReadTime(apiBlog.content),
+    category: 'Blog', // Default category for API blogs
+    tags: apiBlog.tags || [],
+    featuredImage: '/images/puppy-training.jpg', // Default featured image
+    images: []
+  };
+};
+
+// Cache for API blogs to avoid repeated fetches
+let apiBlogsCache: BlogPost[] | null = null;
+let apiBlogsCacheTime: number = 0;
+const CACHE_DURATION = 60000; // 1 minute cache
+
+// Fetch blogs from API
+const fetchApiBlogs = async (): Promise<BlogPost[]> => {
+  // Return cached data if still valid
+  if (apiBlogsCache && Date.now() - apiBlogsCacheTime < CACHE_DURATION) {
+    return apiBlogsCache;
+  }
+
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
+      (process.env.NODE_ENV === 'production' ? 'https://api.puppyhubusa.com' : 'http://localhost:4000');
+    
+    const response = await fetch(`${apiUrl}/api/blog`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      console.warn('Failed to fetch blogs from API:', response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    const apiBlogs: ApiBlog[] = data.data || [];
+    
+    // Transform and cache
+    apiBlogsCache = apiBlogs.map(transformApiBlog);
+    apiBlogsCacheTime = Date.now();
+    return apiBlogsCache;
+  } catch (error) {
+    console.warn('Error fetching blogs from API:', error);
+    return [];
+  }
+};
+
+// Return merged list: API posts + local posts (newest first) + packaged `blogPosts`
 export const getAllBlogPosts = (): BlogPost[] => {
   if (typeof window === 'undefined') return blogPosts;
+  
+  // For client-side, we'll return static + localStorage initially
+  // The component will fetch API blogs separately via useEffect
   try {
     const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
     const local: BlogPost[] = raw ? JSON.parse(raw) : [];
@@ -1147,6 +1230,41 @@ export const getAllBlogPosts = (): BlogPost[] => {
   } catch (e) {
     return blogPosts;
   }
+};
+
+// Fetch all blogs including from API (async version for components)
+export const getAllBlogPostsAsync = async (): Promise<BlogPost[]> => {
+  const apiBlogs = typeof window !== 'undefined' ? await fetchApiBlogs() : [];
+  
+  // Get local and hardcoded posts
+  let local: BlogPost[] = [];
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
+      local = raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      // Ignore localStorage errors
+    }
+  }
+  
+  // Merge: API blogs (newest), then local, then hardcoded
+  // Remove duplicates by slug, keeping the first occurrence (prefer API > local > hardcoded)
+  const allPosts = [...apiBlogs, ...local, ...blogPosts];
+  const seen = new Set<string>();
+  const uniquePosts: BlogPost[] = [];
+  
+  for (const post of allPosts) {
+    if (!seen.has(post.slug)) {
+      seen.add(post.slug);
+      uniquePosts.push(post);
+    }
+  }
+  
+  return uniquePosts.sort((a, b) => {
+    const dateA = new Date(a.publishedAt).getTime();
+    const dateB = new Date(b.publishedAt).getTime();
+    return dateB - dateA; // Newest first
+  });
 };
 
 export const addLocalBlogPost = (post: BlogPost) => {
@@ -1190,9 +1308,15 @@ export const getLatestBlogPosts = (limit: number = 10) => {
     .slice(0, limit);
 };
 
-// Helper function to get blog post by slug
-export const getBlogPostBySlug = (slug: string) => {
+// Helper function to get blog post by slug (sync version - uses cached/static data)
+export const getBlogPostBySlug = (slug: string): BlogPost | undefined => {
   const posts = typeof window !== 'undefined' ? getAllBlogPosts() : blogPosts;
+  return posts.find(post => post.slug === slug);
+};
+
+// Async version that includes API blogs
+export const getBlogPostBySlugAsync = async (slug: string): Promise<BlogPost | undefined> => {
+  const posts = await getAllBlogPostsAsync();
   return posts.find(post => post.slug === slug);
 };
 

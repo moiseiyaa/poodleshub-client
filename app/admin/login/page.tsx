@@ -32,6 +32,7 @@ export default function AdminLogin() {
         setLoading(false);
         return;
       }
+      
       // Save token to context + localStorage
       login(data.token);
       router.push("/admin/dashboard");

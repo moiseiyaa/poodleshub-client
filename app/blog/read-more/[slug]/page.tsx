@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../../components/organisms/Container';
-import { getBlogPostBySlug, getRelatedBlogPosts, BlogPost, parseMarkdownToHtml } from '../../../data/blog';
+import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type BlogPost } from '../../../data/blog';
 import { useEffect, useState } from 'react';
 
 /**
@@ -21,16 +21,32 @@ export default function ReadMorePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPost = () => {
-      const foundPost = getBlogPostBySlug(slug);
-      if (!foundPost) {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const foundPost = await getBlogPostBySlugAsync(slug);
+        if (!foundPost) {
+          notFound();
+          return;
+        }
+        setPost(foundPost);
+        
+        // Get related posts from all available posts
+        const allPosts = await getAllBlogPostsAsync();
+        const related = allPosts
+          .filter(post => post.id !== foundPost.id)
+          .filter(post => 
+            post.category === foundPost.category || 
+            post.tags.some(tag => foundPost.tags.includes(tag))
+          )
+          .slice(0, 4);
+        setRelatedPosts(related);
+      } catch (error) {
+        console.error('Error fetching blog post:', error);
         notFound();
-        return;
+      } finally {
+        setLoading(false);
       }
-      setPost(foundPost);
-      const related = getRelatedBlogPosts(foundPost.id, 4);
-      setRelatedPosts(related);
-      setLoading(false);
     };
     
     fetchPost();
