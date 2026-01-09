@@ -12,6 +12,8 @@ import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { Analytics } from "@vercel/analytics/next"
 import { generateJsonLd } from './lib/schema-generator';
 import CrispWrapper from './components/providers/CrispWrapper';
+import GoogleTagManager from './components/providers/GoogleTagManager';
+import GoogleAnalytics from './components/providers/GoogleAnalytics';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -73,6 +75,10 @@ export default function RootLayout({
     }
   });
 
+  // Get GTM and GA IDs from environment variables
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -80,14 +86,22 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
+        {/* Google Tag Manager Script (in head) */}
+        {gtmId && <GoogleTagManager gtmId={gtmId} />}
       </head>
       <body className="antialiased min-h-screen flex flex-col">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
-          Skip to main content
-        </a>
+        {/* GTM Noscript - must be immediately after opening body tag */}
+        {gtmId && <GoogleTagManager gtmId={gtmId} renderNoscript={true} />}
         <AdminAuthProvider>
           <CrispWrapper>
             <CartProvider>
+              {/* Google Analytics */}
+              {(gtmId || gaMeasurementId) && (
+                <GoogleAnalytics measurementId={gaMeasurementId} gtmId={gtmId} />
+              )}
+              <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
+                Skip to main content
+              </a>
               <Navbars />
               <main id="main-content" className="grow pt-20 md:pt-20">
                 <ScrollToTopOnMount />
