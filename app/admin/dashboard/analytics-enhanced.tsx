@@ -381,9 +381,10 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
           <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
             <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
             <AnalyticsLineChart
-              data={data.topPages.map((tp,i)=>(
-                {name:tp.title || tp.path, views:tp.views})
-              )}
+              data={data.topPages.map(tp => ({
+                name: tp.title || tp.path,
+                views: tp.views
+              }))}
               xKey="name"
               yKey="views"
               label="Page Views"
