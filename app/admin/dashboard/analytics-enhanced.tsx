@@ -242,7 +242,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       <div className="space-y-6">
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-8">
           <div className="flex items-start gap-4">
-            <FiAlertCircle className="h-6 w-6 text-amber-400 flex-shrink-0 mt-1" />
+            <FiAlertCircle className="h-6 w-6 text-amber-400 shrink-0 mt-1" />
             <div>
               <h3 className="text-lg font-semibold text-white mb-2">Google Analytics 4 Not Configured</h3>
               <p className="text-[#8B9CC8] mb-4">
@@ -319,15 +319,15 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       </div>
 
       {/* Real-time Active Users */}
-      <div className="rounded-xl border border-[#1A2A3F] bg-gradient-to-br from-[#B344FF]/10 to-[#FF44EC]/10 p-6 shadow-lg">
+      <div className="rounded-xl border border-gray-900 bg-linear-to-br from-cyan-400/10 to-pink-400/10 p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-gradient-to-br from-[#B344FF] to-[#FF44EC] p-2.5">
+            <div className="rounded-lg bg-linear-to-br from-cyan-400 to-pink-400 p-2.5">
               <FiActivity className="h-6 w-6 text-white" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white">Active Users Right Now</h3>
-              <p className="text-sm text-[#8B9CC8]">Real-time data from last 30 minutes</p>
+              <p className="text-sm text-gray-400">Real-time data from last 30 minutes</p>
             </div>
           </div>
           <div className="text-right">
@@ -492,7 +492,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
                 </div>
                 <div className="h-2 rounded-full bg-[#1A2A3F]">
                   <div
-                    className="h-2 rounded-full bg-gradient-to-r from-[#B344FF] to-[#FF44EC]"
+                    className="h-2 rounded-full bg-linear-to-r from-[#B344FF] to-[#FF44EC]"
                     style={{ width: `${source.percentage}%` }}
                   />
                 </div>
