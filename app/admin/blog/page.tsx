@@ -78,6 +78,8 @@ export default function AdminBlog() {
       const isExisting = form.id && !form.id.startsWith('new_');
       const method = isExisting ? 'PUT' : 'POST';
       const url = isExisting ? `${getApiUrl()}/api/blog/${form.id}` : `${getApiUrl()}/api/blog`;
+      // Always force publish new blogs on save
+      const toSave = { ...form, published: true };
       const res = await fetch(url, {
         method,
         headers: {
@@ -85,7 +87,7 @@ export default function AdminBlog() {
           admin_token: token || '',
           Authorization: token ? `Bearer ${token}` : ''
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(toSave)
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
