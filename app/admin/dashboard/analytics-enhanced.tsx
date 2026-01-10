@@ -140,7 +140,7 @@ function MetricCard({
     <div className="relative rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className={`rounded-lg bg-gradient-to-br ${colorClasses[color]} p-2.5`}>
+          <div className={`rounded-lg bg-linear-to-br ${colorClasses[color]} p-2.5`}>
             <Icon className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -319,7 +319,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       </div>
 
       {/* Real-time Active Users */}
-      <div className="rounded-xl border border-gray-900 bg-linear-to-br from-cyan-400/10 to-pink-400/10 p-6 shadow-lg">
+      <div className="rounded-xl border border-[#1A2A3F] bg-linear-to-br from-[#B344FF]/10 to-[#FF44EC]/10 p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-linear-to-br from-cyan-400 to-pink-400 p-2.5">
@@ -667,7 +667,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
           <h3 className="text-lg font-semibold text-white mb-4">Conversion Tracking</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data.conversions.map((conversion, idx) => (
-              <div key={idx} className="rounded-lg border border-[#1A2A3F] bg-gradient-to-br from-[#10B981]/10 to-[#059669]/10 p-4">
+              <div key={idx} className="rounded-lg border border-[#1A2A3F] bg-linear-to-br from-[#10B981]/10 to-[#059669]/10 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <FiAward className="h-5 w-5 text-[#10B981]" />
                   <span className="text-sm font-medium text-white">{conversion.conversionName}</span>
