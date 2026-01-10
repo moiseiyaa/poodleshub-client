@@ -264,7 +264,16 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B344FF] mx-auto"></div>
+          <p className="mt-4 text-[#8B9CC8]">Loading analytics data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -342,56 +351,62 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       </div>
 
       {/* Key Metrics */}
+      <div className="space-y-6">
       {data.traffic && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            label="Total Users"
-            value={formatNumber(data.traffic.totalUsers)}
-            change="+8.7%"
-            icon={FiUsers}
-            trend="up"
-            color="cyan"
-          />
-          <MetricCard
-            label="Sessions"
-            value={formatNumber(data.traffic.sessions)}
-            change="+12.4%"
-            icon={FiMousePointer}
-            trend="up"
-            color="purple"
-          />
-          <MetricCard
-            label="Page Views"
-            value={formatNumber(data.traffic.pageViews)}
-            change="+15.2%"
-            icon={FiEye}
-            trend="up"
-            color="pink"
-          />
-          <MetricCard
-            label="Conversions"
-            value={data.traffic.conversions}
-            change="+2.3%"
-            icon={FiTarget}
-            trend="up"
-            color="green"
-          />
-        </div>
-        {data.topPages.length > 0 && (
-          <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
-            <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
-            <AnalyticsLineChart
-              data={data.topPages.map(tp => ({
-                name: tp.title || tp.path,
-                views: tp.views
-              }))}
-              xKey="name"
-              yKey="views"
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <MetricCard
+              label="Total Users"
+              value={formatNumber(data.traffic.totalUsers)}
+              change="+8.7%"
+              icon={FiUsers}
+              trend="up"
+              color="cyan"
+            />
+            <MetricCard
+              label="Sessions"
+              value={formatNumber(data.traffic.sessions)}
+              change="+12.4%"
+              icon={FiMousePointer}
+              trend="up"
+              color="purple"
+            />
+            <MetricCard
               label="Page Views"
-              color="#B344FF"
+              value={formatNumber(data.traffic.pageViews)}
+              change="+15.2%"
+              icon={FiEye}
+              trend="up"
+              color="pink"
+            />
+            <MetricCard
+              label="Conversions"
+              value={data.traffic.conversions}
+              change="+2.3%"
+              icon={FiTarget}
+              trend="up"
+              color="green"
             />
           </div>
-        )}
+          
+          {data.topPages.length > 0 && (
+            <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+              <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
+              <AnalyticsLineChart
+                data={data.topPages.map(tp => ({
+                  name: tp.title || tp.path,
+                  views: tp.views
+                }))}
+                xKey="name"
+                yKey="views"
+                label="Page Views"
+                color="#B344FF"
+              />
+            </div>
+          )}
+        </>
+      )}
+      </div>
 
       {/* Engagement Metrics */}
       {(data.traffic || data.engagement) && (
