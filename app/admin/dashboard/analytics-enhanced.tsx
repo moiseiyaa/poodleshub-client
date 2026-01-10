@@ -392,7 +392,6 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
             />
           </div>
         )}
-      )}
 
       {/* Engagement Metrics */}
       {(data.traffic || data.engagement) && (
