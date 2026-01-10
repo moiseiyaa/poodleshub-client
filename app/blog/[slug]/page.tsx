@@ -1,4 +1,4 @@
-'use client';
+import BlogPostClient from './BlogPostClient';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,8 +15,10 @@ import { useEffect, useState } from 'react';
  * Displays full blog post content with related articles and sharing options
  * Maintains consistent design with the rest of the PuppyHub USA website
  */
-export default function BlogPostPage() {
-  const params = useParams();
+export default function Page() {
+  return <BlogPostClient />;
+}
+ = useParams();
   const router = useRouter();
   const slug = params.slug as string;
   const [post, setPost] = useState<BlogPost | null>(null);
