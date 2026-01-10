@@ -95,6 +95,19 @@ export default function RootLayout({
         {/* Consent Mode - MUST be before GTM and any tracking scripts */}
         <ConsentMode regions={consentRegions} />
         
+        {/* Google tag (gtag.js) - Google Ads Conversion Tracking */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17863915750"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17863915750');
+            `
+          }}
+        />
+        
         {/* Axeptio CMP Script - Should be after consent mode, before GTM */}
         {axeptioScriptCode && <AxeptioCMP scriptCode={axeptioScriptCode} />}
         
