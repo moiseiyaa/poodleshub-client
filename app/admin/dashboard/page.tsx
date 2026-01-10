@@ -6,6 +6,7 @@ import SeoManager from "../seo/page";
 import AdminBlog from "../blog/page";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
+import EnhancedAnalytics from "./analytics-enhanced";
 import { 
   FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
@@ -1705,7 +1706,7 @@ export default function AdminDashboard() {
             {tab === "testimonials" && <TestimonialsManager token={token} />}
             {tab === "blog" && <AdminBlog />}
             {tab === "seo" && <SeoManager />}
-            {tab === "analytics" && <MarketingAnalyticsPanel token={token} />}
+            {tab === "analytics" && <EnhancedAnalytics token={token} />}
           </section>
         </main>
       </div>

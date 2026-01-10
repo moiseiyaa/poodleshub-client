@@ -15,6 +15,7 @@ import CrispWrapper from './components/providers/CrispWrapper';
 import GoogleAnalytics from './components/providers/GoogleAnalytics';
 import ConsentMode from './components/providers/ConsentMode';
 import AxeptioCMP from './components/providers/AxeptioCMP';
+import AnalyticsTracker from './components/providers/AnalyticsTracker';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -138,6 +139,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {(gtmId || gaMeasurementId) && (
                 <GoogleAnalytics measurementId={gaMeasurementId} gtmId={gtmId} />
               )}
+              
+              {/* Analytics Tracker - Automatic page view and event tracking */}
+              <AnalyticsTracker />
+              
               <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
                 Skip to main content
               </a>
