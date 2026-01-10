@@ -1,81 +1,8 @@
 import BlogPostClient from './BlogPostClient';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
-import Container from '../../components/organisms/Container';
-import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type BlogPost } from '../../data/blog';
-import { useEffect, useState } from 'react';
-
-// interface BlogPost {
-
-/**
- * Individual blog post page component
- * Displays full blog post content with related articles and sharing options
- * Maintains consistent design with the rest of the PuppyHub USA website
- */
 export default function Page() {
   return <BlogPostClient />;
 }
- = useParams();
-  const router = useRouter();
-  const slug = params.slug as string;
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        setLoading(true);
-        const foundPost = await getBlogPostBySlugAsync(slug);
-        if (!foundPost) {
-          router.replace('/404');
-          return;
-        }
-        setPost(foundPost);
-        
-        // Get related posts from all available posts
-        const allPosts = await getAllBlogPostsAsync();
-        const related = allPosts
-          .filter(post => post.id !== foundPost.id)
-          .filter(post => 
-            post.category === foundPost.category || 
-            post.tags.some(tag => foundPost.tags.includes(tag))
-          )
-          .slice(0, 3);
-        setRelatedPosts(related);
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
-        router.replace('/404');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchPost();
-  }, [slug]);
-
-  if (loading || !post) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  }
-
-  return (
-    <div>
-      {/* Hero Section */}
-      <section className="bg-blue-50 py-12 md:py-16">
-        <Container>
-          <div className="max-w-4xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="mb-8">
-              <ol className="flex items-center space-x-2 text-sm text-gray-600">
-                <li>
-                  <Link href="/" className="hover:text-primary">Home</Link>
-                </li>
-                <li>/</li>
-                <li>
-                  <Link href="/blog" className="hover:text-primary">Blog</Link>
                 </li>
                 <li>/</li>
                 <li className="text-gray-900">{post.title}</li>
