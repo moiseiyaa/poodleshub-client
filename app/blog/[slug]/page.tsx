@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { FaCalendarAlt, FaUser, FaClock, FaTag, FaArrowLeft, FaShare, FaBookmark, FaArrowRight } from 'react-icons/fa';
 import Container from '../../components/organisms/Container';
 import { getBlogPostBySlugAsync, getAllBlogPostsAsync, parseMarkdownToHtml, type BlogPost } from '../../data/blog';
@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
  */
 export default function BlogPostPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
   const [post, setPost] = useState<BlogPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
@@ -28,7 +29,7 @@ export default function BlogPostPage() {
         setLoading(true);
         const foundPost = await getBlogPostBySlugAsync(slug);
         if (!foundPost) {
-          notFound();
+          router.replace('/404');
           return;
         }
         setPost(foundPost);
@@ -45,7 +46,7 @@ export default function BlogPostPage() {
         setRelatedPosts(related);
       } catch (error) {
         console.error('Error fetching blog post:', error);
-        notFound();
+        router.replace('/404');
       } finally {
         setLoading(false);
       }
