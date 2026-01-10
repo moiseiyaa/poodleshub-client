@@ -377,7 +377,6 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
             color="green"
           />
         </div>
-        {/* Trend Line Chart for Page Views */}
         {data.topPages.length > 0 && (
           <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
             <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
