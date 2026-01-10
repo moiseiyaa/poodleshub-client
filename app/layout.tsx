@@ -12,7 +12,6 @@ import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { Analytics } from "@vercel/analytics/next"
 import { generateJsonLd } from './lib/schema-generator';
 import CrispWrapper from './components/providers/CrispWrapper';
-import GoogleTagManager from './components/providers/GoogleTagManager';
 import GoogleAnalytics from './components/providers/GoogleAnalytics';
 import ConsentMode from './components/providers/ConsentMode';
 import AxeptioCMP from './components/providers/AxeptioCMP';
@@ -93,27 +92,27 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Google Tag Manager Hardcoded Script - as high as possible */}
-        <script dangerouslySetInnerHTML={{ __html:
-          `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-TXCV2ZLK');`
-        }} />
-
         {/* Consent Mode - MUST be before GTM and any tracking scripts */}
         <ConsentMode regions={consentRegions} />
         
         {/* Axeptio CMP Script - Should be after consent mode, before GTM */}
         {axeptioScriptCode && <AxeptioCMP scriptCode={axeptioScriptCode} />}
         
+        {/* Google Tag Manager - as high as possible after consent mode */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TXCV2ZLK');`
+          }}
+        />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
-        {/* Google Tag Manager Script (in head) */}
-        {gtmId && <GoogleTagManager gtmId={gtmId} />}
       </head>
       <body className="antialiased min-h-screen flex flex-col">
         {/* Google Tag Manager (noscript) injected manually */}
