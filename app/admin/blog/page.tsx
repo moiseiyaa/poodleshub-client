@@ -1,17 +1,12 @@
 import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
+// BlogContent is a client component
+import BlogContent from './BlogContent';
 
-// Client component that handles all blog admin interactions
-const BlogContent = dynamic(() => import('./BlogContent'), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center text-white">Loading…</div>
-  ),
-});
 
 export default function AdminBlogPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading…</div>}>
+      {/* @ts-expect-error Async Client Component */}
       <BlogContent />
     </Suspense>
   );
