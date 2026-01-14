@@ -1500,7 +1500,7 @@ function MarketingAnalyticsPanel({ token }: { token: string | null }) {
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const { isAuthenticated, logout, token } = useAdminAuth();
+  const { isAuthenticated, isLoading, logout, token } = useAdminAuth();
   const [tab, setTab] = useState<string>("overview");
   const [isExporting, setIsExporting] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -1526,10 +1526,18 @@ export default function AdminDashboard() {
   } = useLiveCollection<Testimonial>("/api/testimonials", { token, intervalMs: 20000 });
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
       router.replace("/admin/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) return null;
 

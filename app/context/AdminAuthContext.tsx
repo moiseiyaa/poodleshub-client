@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 interface AdminAuthContextType {
   token: string | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -13,12 +14,13 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Try reading token from localStorage
-    const t = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+    const t = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
     if (t) setToken(t);
+    setIsLoading(false);
   }, []);
 
   function login(token: string) {
@@ -39,6 +41,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const value = {
     token,
     isAuthenticated: !!token,
+    isLoading,
     login,
     logout
   };
