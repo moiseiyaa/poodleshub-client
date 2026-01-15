@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SeoManager from "../seo/page";
@@ -433,6 +433,45 @@ function PuppiesManager({ token }: { token: string | null }) {
   const [actionError, setActionError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [imageUploading, setImageUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const removeImage = (idx: number) => {
+    const parts = form.imagesText.split(',').map((s) => s.trim()).filter(Boolean);
+    parts.splice(idx, 1);
+    setForm({ ...form, imagesText: parts.join(', ') });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    setImageUploading(true);
+    try {
+      const urls = form.imagesText ? form.imagesText.split(',').map((s) => s.trim()).filter(Boolean) : [];
+      for (const file of Array.from(e.target.files)) {
+        const fd = new FormData();
+        fd.append('image', file);
+        const res = await fetch(`${getApiUrl()}/api/upload`, {
+          method: 'POST',
+          headers: {
+            admin_token: token || '',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: fd,
+        });
+        if (!res.ok) throw new Error('Upload failed');
+        const { url } = await res.json();
+        urls.push(url);
+      }
+      setForm({ ...form, imagesText: urls.join(', ') });
+    } catch (err) {
+      console.error(err);
+      toast.error('Image upload failed');
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setImageUploading(false);
+    }
+  };
+
   const filteredPuppies = useMemo(() => {
     if (!searchTerm) return puppies;
     const term = searchTerm.toLowerCase();
@@ -745,13 +784,37 @@ function PuppiesManager({ token }: { token: string | null }) {
               className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               rows={2}
             />
-            <textarea
-              value={form.imagesText}
-              onChange={(e) => setForm({ ...form, imagesText: e.target.value })}
-              placeholder="Image URLs (comma separated)"
-              className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
-              rows={2}
-            />
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={imageUploading}
+                  className="rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
+                >
+                  {imageUploading ? 'Uploading…' : 'Upload Images'}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
+              {/* Thumbnails */}
+              <div className="flex flex-wrap gap-2">
+                {form.imagesText.split(',').map((u,idx) => u.trim()).filter(Boolean).map((url, idx) => (
+                  <div key={idx} className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="uploaded" className="h-16 w-16 object-cover rounded" />
+                    <button type="button" onClick={() => removeImage(idx)} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">×</button>
+                  </div>
+                ))}
+              </div>
+            </div>
             <input
               value={form.damImage ?? ""}
               onChange={(e) => setForm({ ...form, damImage: e.target.value })}

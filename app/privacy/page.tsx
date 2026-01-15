@@ -241,7 +241,7 @@ const PrivacyPage = () => {
                   Email: <a href="mailto:puppyhubusa@gmail.com" className="text-primary hover:text-primary/80">puppyhubusa@gmail.com</a>
                 </p>
                 <p className="text-gray-700">
-                  Phone: <a href="tel:+14107258531" className="text-primary hover:text-primary/80">+1 410 725 8531</a>
+                  Phone: <a href="tel:+19092654575" className="text-primary hover:text-primary/80">+1 410 725 8531</a>
                 </p>
               </div>
             </section>

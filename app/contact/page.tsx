@@ -60,7 +60,7 @@ const ContactPage = () => {
       icon: <FaPhone className="h-6 w-6 text-primary" />,
       title: 'Phone',
       content: '+1 410 725 8531',
-      link: 'tel:+14107258531'
+      link: 'tel:+19092654575'
     },
     {
       icon: <FaEnvelope className="h-6 w-6 text-primary" />,
