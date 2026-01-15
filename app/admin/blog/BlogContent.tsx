@@ -148,7 +148,12 @@ export default function BlogContent() {
         toast.error('Failed to fetch posts');
         return;
       }
-      setPosts(Array.isArray(data) ? data : []);
+      const postsList = Array.isArray(data)
+        ? data
+        : Array.isArray(data.data)
+        ? data.data
+        : [];
+      setPosts(postsList);
     } catch (err) {
       console.error('Fetch error:', err);
       toast.error('Failed to load posts');
