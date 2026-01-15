@@ -96,13 +96,34 @@ function useLiveCollection<T>(
     try {
       setError(null);
       const headers: Record<string, string> | undefined = token
-        ? { admin_token: token, Authorization: `Bearer ${token}` }
-        : undefined;
+        ? { 
+            'admin_token': token, 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        : { 'Content-Type': 'application/json' };
 
-      const res = await fetch(`${getApiUrl()}${path}`, { headers });
-      if (!res.ok) throw new Error("Failed to load data");
-      setData(await res.json());
+      console.log(`Fetching data from: ${getApiUrl()}${path}`);
+      console.log('Using headers:', headers);
+      
+      const res = await fetch(`${getApiUrl()}${path}`, { 
+        headers,
+        credentials: 'include' // Ensure cookies are sent with the request
+      });
+      
+      console.log(`Response status: ${res.status} ${res.statusText}`);
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to load data: ${res.status} ${res.statusText}`);
+      }
+      
+      const data = await res.json();
+      console.log('Received data:', data);
+      setData(Array.isArray(data) ? data : []);
     } catch (err: any) {
+      console.error('Error in fetchData:', err);
       setError(err.message || "Failed to load data");
     } finally {
       setLoading(false);
