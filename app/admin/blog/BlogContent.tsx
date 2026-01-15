@@ -305,6 +305,8 @@ function BlogForm({
   const [form, setForm] = useState<BlogPost>(post);
   const [preview, setPreview] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+  const [featuredUploading, setFeaturedUploading] = useState(false);
+  const featuredInputRef = useRef<HTMLInputElement>(null);
   const { token } = useAdminAuth();
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -446,6 +448,63 @@ function BlogForm({
             placeholder="A short description of your blog post"
             rows={2}
             className="p-3 bg-[#0A1628] text-white rounded border border-[#1A2A3F] focus:border-[#B344FF] outline-none w-full"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="featuredImage" className="block text-sm font-medium text-white mb-2">
+            Featured Image
+          </label>
+          {form.featuredImage ? (
+            <div className="relative w-48">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.featuredImage} alt="featured" className="h-32 w-48 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, featuredImage: '' })}
+                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs"
+              >×</button>
+            </div>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => featuredInputRef.current?.click()}
+            disabled={featuredUploading}
+            className="rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
+          >
+            {featuredUploading ? 'Uploading…' : (form.featuredImage ? 'Replace Image' : 'Upload Image')}
+          </button>
+          <input
+            ref={featuredInputRef}
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              if (!e.target.files?.length) return;
+              const file = e.target.files[0];
+              setFeaturedUploading(true);
+              try {
+                const fd = new FormData();
+                fd.append('image', file);
+                const res = await fetch(`${getApiUrl()}/api/upload`, {
+                  method: 'POST',
+                  headers: {
+                    admin_token: token || '',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                  },
+                  body: fd,
+                });
+                if (!res.ok) throw new Error('Upload failed');
+                const { url } = await res.json();
+                setForm({ ...form, featuredImage: url });
+              } catch (err) {
+                console.error(err);
+                toast.error('Image upload failed');
+              } finally {
+                if (featuredInputRef.current) featuredInputRef.current.value = '';
+                setFeaturedUploading(false);
+              }
+            }}
+            className="hidden"
           />
         </div>
 
