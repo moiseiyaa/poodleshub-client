@@ -455,25 +455,27 @@ function BlogForm({
           <label htmlFor="featuredImage" className="block text-sm font-medium text-white mb-2">
             Featured Image
           </label>
-          {form.featuredImage ? (
-            <div className="relative w-48">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={form.featuredImage} alt="featured" className="h-32 w-48 object-cover rounded" />
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, featuredImage: '' })}
-                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs"
-              >×</button>
-            </div>
-          ) : null}
-          <button
-            type="button"
-            onClick={() => featuredInputRef.current?.click()}
-            disabled={featuredUploading}
-            className="rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
-          >
-            {featuredUploading ? 'Uploading…' : (form.featuredImage ? 'Replace Image' : 'Upload Image')}
-          </button>
+          <div className="flex items-start gap-4">
+            <button
+              type="button"
+              onClick={() => featuredInputRef.current?.click()}
+              disabled={featuredUploading}
+              className="rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
+            >
+              {featuredUploading ? 'Uploading…' : (form.featuredImage ? 'Replace Image' : 'Upload Image')}
+            </button>
+            {form.featuredImage ? (
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={form.featuredImage} alt="featured" className="h-32 w-48 object-cover rounded" />
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, featuredImage: '' })}
+                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs"
+                >×</button>
+              </div>
+            ) : null}
+          </div>
           <input
             ref={featuredInputRef}
             type="file"
