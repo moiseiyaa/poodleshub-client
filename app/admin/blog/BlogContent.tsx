@@ -300,6 +300,7 @@ function BlogForm({
   const [form, setForm] = useState<BlogPost>(post);
   const [preview, setPreview] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+  const { token } = useAdminAuth();
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -342,27 +343,20 @@ function BlogForm({
     setImageUploading(true);
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("image", file);
       const uploadRes = await fetch(`${getApiUrl()}/api/upload`, {
         method: "POST",
+        headers: {
+          'admin_token': token || '',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
         body: formData,
       });
 
-      let imageUrl: string | undefined;
-      if (uploadRes.ok) {
-        const data = await uploadRes.json();
-        imageUrl = data.url;
-      } else {
-        const fallback = await fetch(`${getApiUrl()}/api/blog/upload`, {
-          method: "POST",
-          body: formData,
-        });
-        if (!fallback.ok) throw new Error("Upload failed");
-        const data = await fallback.json();
-        imageUrl = data.url;
-      }
+      if (!uploadRes.ok) throw new Error('Upload failed');
+      const { url: imageUrl } = await uploadRes.json();
 
-      insertMarkdown(`![${file.name}](${imageUrl || `/uploads/${file.name}`})`);
+      insertMarkdown(`![${file.name}](${imageUrl})`);
       toast.success("Image inserted");
     } catch (err) {
       console.error(err);
