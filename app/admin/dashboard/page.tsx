@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SeoManager from "../seo/page";
-import AdminBlog from "../blog/page";
+import BlogContent from "../blog/BlogContent";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
 import EnhancedAnalytics from "./analytics-enhanced";
@@ -1775,7 +1775,7 @@ export default function AdminDashboard() {
             {tab === "applications" && <ApplicationsPanel token={token} />}
             {tab === "puppies" && <PuppiesManager token={token} />}
             {tab === "testimonials" && <TestimonialsManager token={token} />}
-            {tab === "blog" && <AdminBlog />}
+            {tab === "blog" && <BlogContent />}
             {tab === "seo" && <SeoManager />}
             {tab === "analytics" && <EnhancedAnalytics token={token} />}
           </section>
