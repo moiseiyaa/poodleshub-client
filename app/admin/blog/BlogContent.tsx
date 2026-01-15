@@ -74,33 +74,12 @@ export default function BlogContent() {
 
       if (!res.ok) throw new Error('Failed to save');
       
-      // Handle local storage for development
-      try {
-        const saved = await res.json();
-        const estimateReadTime = (text?: string) => {
-          if (!text) return 1;
-          const words = text.split(/\s+/).filter(Boolean).length;
-          return Math.max(1, Math.ceil(words / 200));
-        };
+      // Parse response to ensure server data is up-to-date
+      const saved = await res.json();
 
-        const localPost: BlogPost = {
-          id: saved.id || `local_${Date.now()}`,
-          slug: saved.slug || (saved.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-          title: saved.title || form.title,
-          excerpt: saved.excerpt || form.excerpt || '',
-          content: saved.content || form.content || '',
-          author: { name: 'Admin', role: 'Admin', avatar: '/images/about-hero.jpg' },
-          publishedAt: saved.publishedAt || new Date().toISOString(),
-          readTime: estimateReadTime(saved.content || form.content),
-          category: saved.category || 'Blog',
-          tags: saved.tags || form.tags || [],
-          featuredImage: saved.featuredImage || '/images/puppy-training.jpg',
-          images: saved.images || []
-        };
-        addLocalBlogPost(localPost);
-      } catch (e) {
-        console.warn('Failed to write local blog copy', e);
-      }
+      // In production we rely solely on the API response; do **not** write a local copy
+      // because that duplicates the same post in the UI. The API already returns the
+      // persisted record, so simply refresh the list below.
 
       toast.success('Saved');
       setEditing(null);
