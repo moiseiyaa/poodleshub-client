@@ -14,6 +14,7 @@ import { generateJsonLd } from './lib/schema-generator';
 import CrispWrapper from './components/providers/CrispWrapper';
 import GoogleAnalytics from './components/providers/GoogleAnalytics';
 import ConsentMode from './components/providers/ConsentMode';
+import { Suspense } from 'react';
 import AxeptioCMP from './components/providers/AxeptioCMP';
 import AnalyticsTracker from './components/providers/AnalyticsTracker';
 
@@ -135,13 +136,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <AdminAuthProvider>
           <CrispWrapper>
             <CartProvider>
-              {/* Google Analytics */}
+              {/* Google Analytics 4 component */}
               {(gtmId || gaMeasurementId) && (
+                <Suspense fallback={null}>
                 <GoogleAnalytics measurementId={gaMeasurementId} gtmId={gtmId} />
+              </Suspense>
               )}
               
               {/* Analytics Tracker - Automatic page view and event tracking */}
-              <AnalyticsTracker />
+              <Suspense fallback={null}>
+                <AnalyticsTracker />
+              </Suspense>
               
               <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary focus:z-50">
                 Skip to main content
