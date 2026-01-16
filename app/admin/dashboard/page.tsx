@@ -456,6 +456,36 @@ function PuppiesManager({ token }: { token: string | null }) {
 
   const [imageUploading, setImageUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Drag-and-drop refs for reordering
+  const dragItemRef = useRef<number | null>(null);
+  const dragOverItemRef = useRef<number | null>(null);
+
+  const setCoverImage = (idx: number) => {
+    if (idx === 0) return;
+    const parts = form.imagesText.split(',').map((s) => s.trim()).filter(Boolean);
+    const [img] = parts.splice(idx, 1);
+    parts.unshift(img);
+    setForm({ ...form, imagesText: parts.join(', ') });
+  };
+
+  const onDragStart = (idx: number) => {
+    dragItemRef.current = idx;
+  };
+
+  const onDragEnter = (idx: number) => {
+    dragOverItemRef.current = idx;
+  };
+
+  const onDragEnd = () => {
+    const from = dragItemRef.current;
+    const to = dragOverItemRef.current;
+    dragItemRef.current = dragOverItemRef.current = null;
+    if (from === null || to === null || from === to) return;
+    const parts = form.imagesText.split(',').map((s) => s.trim()).filter(Boolean);
+    const [moved] = parts.splice(from, 1);
+    parts.splice(to, 0, moved);
+    setForm({ ...form, imagesText: parts.join(', ') });
+  };
 
   const removeImage = (idx: number) => {
     const parts = form.imagesText.split(',').map((s) => s.trim()).filter(Boolean);
@@ -805,7 +835,7 @@ function PuppiesManager({ token }: { token: string | null }) {
               className="w-full rounded-lg border border-[#1A2A3F] bg-[#0A1628] px-3 py-2 text-sm text-white placeholder-[#8B9CC8] focus:border-[#B344FF] focus:outline-none"
               rows={2}
             />
-            {/* Image Upload */}
+            {/* Image Gallery */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <button
@@ -814,7 +844,7 @@ function PuppiesManager({ token }: { token: string | null }) {
                   disabled={imageUploading}
                   className="rounded-lg bg-linear-to-r from-[#B344FF] to-[#FF44EC] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 disabled:opacity-60"
                 >
-                  {imageUploading ? 'Uploading…' : 'Upload Images'}
+                  {imageUploading ? 'Uploading…' : 'Add Images'}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -825,13 +855,44 @@ function PuppiesManager({ token }: { token: string | null }) {
                   className="hidden"
                 />
               </div>
-              {/* Thumbnails */}
-              <div className="flex flex-wrap gap-2">
-                {form.imagesText.split(',').map((u,idx) => u.trim()).filter(Boolean).map((url, idx) => (
-                  <div key={idx} className="relative">
+
+              <div
+                className="grid grid-cols-3 sm:grid-cols-4 gap-2"
+                onDragEnd={onDragEnd}
+              >
+                {form.imagesText.split(',').map((u) => u.trim()).filter(Boolean).map((url, idx) => (
+                  <div
+                    key={idx}
+                    className="relative group"
+                    draggable
+                    onDragStart={() => onDragStart(idx)}
+                    onDragEnter={() => onDragEnter(idx)}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt="uploaded" className="h-16 w-16 object-cover rounded" />
-                    <button type="button" onClick={() => removeImage(idx)} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full h-5 w-5 text-xs">×</button>
+                    <img
+                      src={url}
+                      alt={`puppy-${idx}`}
+                      loading="lazy"
+                      className="h-20 w-20 object-cover rounded"
+                    />
+
+                    {idx !== 0 && (
+                      <button
+                        type="button"
+                        title="Set as cover"
+                        onClick={() => setCoverImage(idx)}
+                        className="absolute top-1 left-1 bg-black/60 text-yellow-400 p-0.5 rounded opacity-0 group-hover:opacity-100 transition"
+                      >
+                        <FiStar className="h-4 w-4" />
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      title="Remove"
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-1 right-1 bg-red-600 text-white rounded-full h-5 w-5 text-xs opacity-0 group-hover:opacity-100 transition"
+                    >×</button>
                   </div>
                 ))}
               </div>
