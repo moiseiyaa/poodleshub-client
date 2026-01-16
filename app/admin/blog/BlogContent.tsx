@@ -82,6 +82,12 @@ export default function BlogContent() {
       // persisted record, so simply refresh the list below.
 
       toast.success('Saved');
+      // Revalidate list & detail
+      await fetch(`${getApiUrl()}/api/revalidate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths: ['/blog', `/blog/${saved.slug || form.slug}`] }),
+      });
       setEditing(null);
       await fetchPosts();
     } catch (err: unknown) {
@@ -104,6 +110,12 @@ export default function BlogContent() {
       });
       if (!res.ok) throw new Error('Delete failed');
       toast.success('Deleted');
+      // Trigger Next.js ISR revalidation for blog list & detail pages
+      await fetch(`${getApiUrl()}/api/revalidate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths: ['/blog', `/blog/${id}`] }),
+      });
       await fetchPosts();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to delete');
