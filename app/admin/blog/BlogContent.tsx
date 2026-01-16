@@ -83,7 +83,7 @@ export default function BlogContent() {
 
       toast.success('Saved');
       // Revalidate list & detail
-      await fetch(`${getApiUrl()}/api/revalidate`, {
+      await fetch(`/api/revalidate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paths: ['/blog', `/blog/${saved.slug || form.slug}`] }),
@@ -111,7 +111,7 @@ export default function BlogContent() {
       if (!res.ok) throw new Error('Delete failed');
       toast.success('Deleted');
       // Trigger Next.js ISR revalidation for blog list & detail pages
-      await fetch(`${getApiUrl()}/api/revalidate`, {
+      await fetch(`/api/revalidate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paths: ['/blog', `/blog/${id}`] }),
