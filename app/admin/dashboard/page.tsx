@@ -1761,10 +1761,10 @@ export default function AdminDashboard() {
                       setTab(key);
                       setIsSidebarOpen(false);
                     }}
-                    className={`grid grid-cols-[20px,1fr] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    className={`grid grid-cols-[20px,1fr] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors border-l-4 ${
                       tab === key
-                        ? 'border-l-4 border-[#B344FF] bg-[#0A1628] text-white'
-                        : 'text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white'
+                        ? 'border-[#B344FF] bg-[#0A1628] text-white'
+                        : 'border-transparent text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white'
                     }`}
                   >
                     <Icon className={`h-5 w-5 justify-self-center ${tab === key ? 'text-[#B344FF]' : ''}`} />
