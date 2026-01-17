@@ -42,7 +42,7 @@ export default function SeoDataTable<T>({ data, columns, pagination, onPageChang
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="hover:bg-[#1A2A3F]/50 transition-colors">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-4 py-3">
+                <td key={cell.id} className="px-4 py-3 text-white">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
