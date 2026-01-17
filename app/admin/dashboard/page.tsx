@@ -1789,16 +1789,6 @@ export default function AdminDashboard() {
 
             {/* User Profile */}
             <div className="mt-6 border-t border-[#1A2A3F] pt-4">
-              <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#0A1628] cursor-pointer">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-[#B344FF] to-[#FF44EC] text-sm font-semibold text-white">
-                  A
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-white">Admin User</p>
-                  <p className="text-xs text-[#8B9CC8]">Account settings</p>
-                </div>
-                <FiChevronDown className="h-4 w-4 text-[#8B9CC8]" />
-              </div>
           <button
             onClick={logout}
                 className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-[#8B9CC8] transition-colors hover:bg-[#0A1628] hover:text-white"
