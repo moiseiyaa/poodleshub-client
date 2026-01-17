@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
+import SeoDataTable from "./SeoDataTable";
+import type { ColumnDef } from "@tanstack/react-table";
 import { 
   FiSearch, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiEye, FiGlobe,
   FiTag, FiFileText, FiPackage, FiBook, FiGrid, FiCheck, FiX,
@@ -433,6 +435,8 @@ export default function SeoManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [entityFilter, setEntityFilter] = useState<string>("");
   const [editingSeo, setEditingSeo] = useState<Partial<SeoMeta> | null>(null);
+  const [page, setPage] = useState(1);
+  const limit = 20;
   const [saving, setSaving] = useState(false);
 
   const fetchData = async () => {
@@ -482,6 +486,38 @@ export default function SeoManager() {
         seo.entityType.toLowerCase().includes(term)
     );
   }, [data, searchTerm]);
+
+  const paginated = useMemo(() => {
+    const start = (page - 1) * limit;
+    return filteredData.slice(start, start + limit);
+  }, [filteredData, page]);
+
+  const columns = useMemo<ColumnDef<SeoMeta, any>[]>(() => [
+    {
+      header: 'Entity',
+      accessorFn: row => row.entityType,
+      cell: info => info.getValue(),
+    },
+    { header: 'Title', accessorKey: 'metaTitle' },
+    { header: 'Description', accessorKey: 'metaDescription' },
+    {
+      header: 'Keywords',
+      accessorFn: row => row.focusKeywords.join(', '),
+    },
+    {
+      header: 'Actions',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <button onClick={() => setEditingSeo(row.original)} className="p-1 text-[#8B9CC8] hover:text-[#B344FF]">
+            <FiEdit2 className="h-4 w-4" />
+          </button>
+          <button onClick={() => handleDelete(row.original.id)} className="p-1 text-[#8B9CC8] hover:text-red-400">
+            <FiTrash2 className="h-4 w-4" />
+          </button>
+        </div>
+      ),
+    },
+  ], [filteredData]);
 
   const handleSave = async (seoData: Partial<SeoMeta>) => {
     setSaving(true);

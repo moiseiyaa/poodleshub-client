@@ -1,5 +1,7 @@
 'use client';
 
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+
 import { useEffect, useState } from 'react';
 import { AnalyticsLineChart, AnalyticsPieChart, AnalyticsBarChart } from './analytics-charts';
 import { toast } from 'react-hot-toast';
@@ -16,6 +18,8 @@ const getApiUrl = () =>
     : 'http://localhost:4000');
 
 type DateRange = '7daysAgo' | '30daysAgo' | '90daysAgo' | '365daysAgo';
+
+type WebVital = { fetchedAt: string; lcp: number; cls: number; inp: number };
 
 interface GA4Data {
   realtime: {
@@ -166,6 +170,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
   const [loading, setLoading] = useState(true);
   const [isGA4Configured, setIsGA4Configured] = useState<boolean | null>(null);
   const [data, setData] = useState<GA4Data | null>(null);
+  const [webVitals, setWebVitals] = useState<WebVital[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(false);
 
   const fetchGA4Data = async () => {
@@ -193,6 +198,13 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       
       const ga4Data = await res.json();
       setData(ga4Data);
+
+      // Fetch latest web vitals (30 points)
+      const vitalsRes = await fetch(`${getApiUrl()}/api/seo/web-vitals?take=30`);
+      if (vitalsRes.ok) {
+        const vitals = await vitalsRes.json();
+        setWebVitals(vitals);
+      }
     } catch (error: any) {
       console.error('Error fetching GA4 data:', error);
       toast.error('Failed to load analytics data');
@@ -407,6 +419,31 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
         </>
       )}
       </div>
+
+      {/* Core Web Vitals Trend */}
+      {webVitals.length > 1 && (
+        <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
+          <h3 className="text-lg font-semibold text-white mb-4">Core Web Vitals Trend (last 30 fetches)</h3>
+          <ResponsiveContainer width="100%" height={280}>
+            <LineChart
+              data={webVitals.map(v => ({
+                date: new Date(v.fetchedAt).toLocaleDateString(),
+                lcp: v.lcp,
+                cls: v.cls,
+              }))}
+              margin={{ top: 16, right: 24, left: 0, bottom: 8 }}
+            >
+              <XAxis dataKey="date" tick={{ fill: '#B344FF', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis yAxisId="lcp" tick={{ fill: '#8B9CC8', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis yAxisId="cls" orientation="right" tick={{ fill: '#FF44EC', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ background: '#181a2a', border: 'none', color: '#fff' }} />
+              <Legend />
+              <Line yAxisId="lcp" type="monotone" dataKey="lcp" stroke="#B344FF" strokeWidth={2} dot={false} name="LCP (ms)" />
+              <Line yAxisId="cls" type="monotone" dataKey="cls" stroke="#FF44EC" strokeWidth={2} dot={false} name="CLS" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
 
       {/* Engagement Metrics */}
       {(data.traffic || data.engagement) && (
