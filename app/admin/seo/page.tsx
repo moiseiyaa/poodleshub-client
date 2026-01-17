@@ -158,7 +158,6 @@ function SeoForm({
               <option value="">Select type...</option>
               {ENTITY_TYPES.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
-              ))}
             </select>
           </div>
 
@@ -176,8 +175,7 @@ function SeoForm({
                 <option value="">Select page...</option>
                 {STATIC_PAGES.map(page => (
                   <option key={page.value} value={page.value}>{page.label}</option>
-                ))}
-              </select>
+                </select>
             </div>
           )}
 
@@ -231,7 +229,6 @@ function SeoForm({
             >
               {ROBOTS_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
             </select>
             {form.entityType === "PAGE" && form.entityId === "home" && form.robots === "NOINDEX" && (
               <div className="mt-2 flex items-center gap-2 text-amber-400">
@@ -253,7 +250,6 @@ function SeoForm({
             >
               {SCHEMA_TYPES.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
-              ))}
             </select>
           </div>
         </div>
@@ -309,7 +305,6 @@ function SeoForm({
                     <FiX className="h-4 w-4" />
                   </button>
                 </div>
-              ))}
               <button
                 type="button"
                 onClick={addKeyword}
@@ -649,8 +644,7 @@ export default function SeoManager() {
                   <option value="">All Types</option>
                   {ENTITY_TYPES.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
-                </select>
+                    </select>
               </div>
               <div className="flex gap-2">
                 <button
@@ -688,7 +682,13 @@ export default function SeoManager() {
                 </button>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] shadow-lg">
+              <SeoDataTable
+                data={paginated}
+                columns={columns}
+                pagination={{ page, pages: Math.ceil(filteredData.length / limit), total: filteredData.length, limit }}
+                onPageChange={(p) => setPage(Math.max(1, Math.min(p, Math.ceil(filteredData.length / limit))))}
+              />
+ border-[#1A2A3F] bg-[#0F1F3A] shadow-lg">
                 <table className="min-w-full text-sm">
                   <thead className="border-b border-[#1A2A3F]">
                     <tr>
@@ -731,8 +731,7 @@ export default function SeoManager() {
                                 <span key={idx} className="rounded bg-[#B344FF]/20 px-2 py-0.5 text-xs text-[#B344FF]">
                                   {keyword}
                                 </span>
-                              ))}
-                              {seo.focusKeywords?.length > 2 && (
+                                              {seo.focusKeywords?.length > 2 && (
                                 <span className="text-xs text-[#8B9CC8]">+{seo.focusKeywords.length - 2}</span>
                               )}
                             </div>
