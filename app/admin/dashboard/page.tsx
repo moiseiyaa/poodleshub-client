@@ -75,14 +75,26 @@ type Testimonial = {
   createdAt?: string;
 };
 
-const NAV_ITEMS = [
-  { key: "overview", label: "Dashboard", icon: FiHome },
-  { key: "applications", label: "Applications", icon: FiFileText },
-  { key: "puppies", label: "Puppies", icon: FiHeart },
-  { key: "testimonials", label: "Testimonials", icon: FiStar },
-  { key: "blog", label: "Blog Management", icon: FiBook },
-  { key: "seo", label: "SEO Management", icon: FiGlobe },
-  { key: "analytics", label: "Analytics", icon: FiBarChart2 },
+type NavSection = { type: 'section'; label: string };
+interface NavItem {
+  type: 'item';
+  key: string;
+  label: string;
+  icon: any;
+  keywords?: string[];
+}
+
+const NAV_ITEMS: Array<NavSection | NavItem> = [
+  { type: 'section', label: 'General' },
+  { type: 'item', key: 'overview', label: 'Dashboard', icon: FiHome, keywords: ['home'] },
+  { type: 'section', label: 'Content' },
+  { type: 'item', key: 'applications', label: 'Applications', icon: FiFileText },
+  { type: 'item', key: 'puppies', label: 'Puppies', icon: FiHeart },
+  { type: 'item', key: 'testimonials', label: 'Testimonials', icon: FiStar, keywords: ['reviews'] },
+  { type: 'item', key: 'blog', label: 'Blog Management', icon: FiBook, keywords: ['posts'] },
+  { type: 'section', label: 'Marketing' },
+  { type: 'item', key: 'seo', label: 'SEO Management', icon: FiGlobe, keywords: ['meta','search'] },
+  { type: 'item', key: 'analytics', label: 'Analytics', icon: FiBarChart2, keywords: ['ga','metrics'] },
 ];
 
 function useLiveCollection<T>(
@@ -1722,25 +1734,44 @@ export default function AdminDashboard() {
               />
           </div>
 
-            {/* Navigation */}
+            {/* Navigation with sections & search filter */}
           <nav className="flex-1 space-y-1">
-              {NAV_ITEMS.map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                  onClick={() => {
-                    setTab(key);
-                    setIsSidebarOpen(false);
-                  }}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                  tab === key
-                      ? "border-l-4 border-[#B344FF] bg-[#0A1628] text-white"
-                      : "text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white"
-                }`}
-              >
-                  <Icon className={`h-5 w-5 ${tab === key ? "text-[#B344FF]" : ""}`} />
-                <span>{label}</span>
-              </button>
-            ))}
+              {NAV_ITEMS.filter((item) => {
+                if (item.type === 'section') return true;
+                const query = sidebarSearch.trim().toLocaleLowerCase('en');
+                if (!query) return true;
+                const toSearch = (
+                  item.label + ' ' + (item.keywords?.join(' ') || '')
+                ).toLocaleLowerCase('en');
+                const cleanQuery = query.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+                return toSearch.includes(cleanQuery);
+              }).map((nav) => {
+                if (nav.type === 'section') {
+                  return (
+                    <div key={nav.label} className="mt-4 mb-1 px-3 text-xs font-semibold uppercase text-[#4C5D7A]">
+                      {nav.label}
+                    </div>
+                  );
+                }
+                const { key, label, icon: Icon } = nav;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setTab(key);
+                      setIsSidebarOpen(false);
+                    }}
+                    className={`grid grid-cols-[20px,1fr] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                      tab === key
+                        ? 'border-l-4 border-[#B344FF] bg-[#0A1628] text-white'
+                        : 'text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 justify-self-center ${tab === key ? 'text-[#B344FF]' : ''}`} />
+                    <span className="truncate text-left">{label}</span>
+                  </button>
+                );
+              })}
           </nav>
 
             {/* User Profile */}
