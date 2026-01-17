@@ -1664,6 +1664,18 @@ export default function AdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sidebarSearch, setSidebarSearch] = useState("");
 
+  // Helper to determine if a navigation item matches the current sidebar search query
+  const matchesSearch = (item: NavSection | NavItem) => {
+    if (item.type === 'section') return false; // We only filter actual items
+    if (!sidebarSearch.trim()) return true; // No query means everything matches
+    const query = sidebarSearch.trim().toLowerCase();
+    return (
+      item.label.toLowerCase().includes(query) ||
+      item.keywords?.some((kw) => kw.toLowerCase().includes(query)) ||
+      false
+    );
+  };
+
   const {
     data: apps,
     loading: appsLoading,
@@ -1768,7 +1780,7 @@ export default function AdminDashboard() {
                         : 'border-transparent text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white'
                     }`}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${tab === key ? 'text-[#B344FF]' : ''}`} />
+                    <Icon className={`h-5 w-5 shrink-0 ${tab === key ? 'text-[#B344FF]' : ''}`} />
                     <span className="truncate">{label}</span>
                   </button>
                 );
