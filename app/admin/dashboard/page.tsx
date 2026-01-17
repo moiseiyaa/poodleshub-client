@@ -1736,24 +1736,25 @@ export default function AdminDashboard() {
 
             {/* Navigation with sections & search filter */}
           <nav className="flex-1 space-y-1">
-              {NAV_ITEMS.filter((item) => {
+              {NAV_ITEMS.filter(item => {
                 if (item.type === 'section') return true;
-                const query = sidebarSearch.trim().toLocaleLowerCase('en');
-                if (!query) return true;
-                const toSearch = (
-                  item.label + ' ' + (item.keywords?.join(' ') || '')
-                ).toLocaleLowerCase('en');
-                const cleanQuery = query.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
-                return toSearch.includes(cleanQuery);
-              }).map((nav) => {
-                if (nav.type === 'section') {
+                if (!sidebarSearch) return true;
+                return matchesSearch(item);
+              }).map((item, index) => {
+                if (item.type === 'section') {
                   return (
-                    <div key={nav.label} className="mt-4 mb-1 px-3 text-xs font-semibold uppercase text-[#4C5D7A]">
-                      {nav.label}
-                    </div>
+                    <h3 
+                      key={`section-${index}`}
+                      className="mt-4 mb-2 px-7 text-xs font-semibold uppercase tracking-wider text-[#8B9CC8]"
+                    >
+                      {item.label}
+                    </h3>
                   );
                 }
-                const { key, label, icon: Icon } = nav;
+
+                const { key, label, icon: Icon } = item;
+                const isActive = tab === key;
+
                 return (
                   <button
                     key={key}
@@ -1761,14 +1762,14 @@ export default function AdminDashboard() {
                       setTab(key);
                       setIsSidebarOpen(false);
                     }}
-                    className={`grid grid-cols-[20px,1fr] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors border-l-4 ${
+                    className={`flex items-center gap-3 rounded-r-lg px-7 py-2.5 text-sm font-medium transition-colors border-l-4 w-full text-left ${
                       tab === key
                         ? 'border-[#B344FF] bg-[#0A1628] text-white'
                         : 'border-transparent text-[#8B9CC8] hover:bg-[#0A1628] hover:text-white'
                     }`}
                   >
-                    <Icon className={`h-5 w-5 justify-self-center ${tab === key ? 'text-[#B344FF]' : ''}`} />
-                    <span className="truncate text-left">{label}</span>
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${tab === key ? 'text-[#B344FF]' : ''}`} />
+                    <span className="truncate">{label}</span>
                   </button>
                 );
               })}
