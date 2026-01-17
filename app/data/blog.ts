@@ -1219,66 +1219,25 @@ const fetchApiBlogs = async (): Promise<BlogPost[]> => {
 
 // Return merged list: API posts + local posts (newest first) + packaged `blogPosts`
 export const getAllBlogPosts = (): BlogPost[] => {
-  if (typeof window === 'undefined') return blogPosts;
-  
-  // For client-side, we'll return static + localStorage initially
-  // The component will fetch API blogs separately via useEffect
-  try {
-    const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
-    const local: BlogPost[] = raw ? JSON.parse(raw) : [];
-    return [...local, ...blogPosts];
-  } catch (e) {
-    return blogPosts;
-  }
+  // In production always start with an empty list; the component will fetch from API.
+  if (process.env.NODE_ENV === 'production') return [];
+  // During development keep the hard-coded demo posts for convenience.
+  return blogPosts;
 };
 
 // Fetch all blogs including from API (async version for components)
 export const getAllBlogPostsAsync = async (): Promise<BlogPost[]> => {
-  const apiBlogs = typeof window !== 'undefined' ? await fetchApiBlogs() : [];
-  
-  // Get local and hardcoded posts
-  let local: BlogPost[] = [];
-  if (typeof window !== 'undefined') {
-    try {
-      const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
-      local = raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      // Ignore localStorage errors
-    }
+  const apiBlogs = await fetchApiBlogs();
+  if (apiBlogs.length > 0) {
+    return apiBlogs.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   }
-  
-  // Merge: API blogs (newest), then local, then hardcoded
-  // Remove duplicates by slug, keeping the first occurrence (prefer API > local > hardcoded)
-  const allPosts = [...apiBlogs, ...local, ...blogPosts];
-  const seen = new Set<string>();
-  const uniquePosts: BlogPost[] = [];
-  
-  for (const post of allPosts) {
-    if (!seen.has(post.slug)) {
-      seen.add(post.slug);
-      uniquePosts.push(post);
-    }
+  // Fallback only in non-production mode
+  if (process.env.NODE_ENV !== 'production') {
+    return blogPosts.slice().sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   }
-  
-  return uniquePosts.sort((a, b) => {
-    const dateA = new Date(a.publishedAt).getTime();
-    const dateB = new Date(b.publishedAt).getTime();
-    return dateB - dateA; // Newest first
-  });
+  return [];
 };
 
-export const addLocalBlogPost = (post: BlogPost) => {
-  if (typeof window === 'undefined') return;
-  try {
-    const raw = window.localStorage.getItem(LOCAL_BLOG_KEY);
-    const local: BlogPost[] = raw ? JSON.parse(raw) : [];
-    const updated = [post, ...local];
-    window.localStorage.setItem(LOCAL_BLOG_KEY, JSON.stringify(updated));
-    return updated;
-  } catch (e) {
-    console.error('Failed to save local blog post', e);
-  }
-};
 
 // Helper function to get blog posts by category
 export const getBlogPostsByCategory = (category: string) => {
