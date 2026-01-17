@@ -158,6 +158,7 @@ function SeoForm({
               <option value="">Select type...</option>
               {ENTITY_TYPES.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
             </select>
           </div>
 
@@ -175,6 +176,7 @@ function SeoForm({
                 <option value="">Select page...</option>
                 {STATIC_PAGES.map(page => (
                   <option key={page.value} value={page.value}>{page.label}</option>
+                ))}
                 </select>
             </div>
           )}
@@ -229,6 +231,7 @@ function SeoForm({
             >
               {ROBOTS_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
             </select>
             {form.entityType === "PAGE" && form.entityId === "home" && form.robots === "NOINDEX" && (
               <div className="mt-2 flex items-center gap-2 text-amber-400">
@@ -250,6 +253,7 @@ function SeoForm({
             >
               {SCHEMA_TYPES.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -644,6 +648,7 @@ export default function SeoManager() {
                   <option value="">All Types</option>
                   {ENTITY_TYPES.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
                     </select>
               </div>
               <div className="flex gap-2">
@@ -688,24 +693,21 @@ export default function SeoManager() {
                 pagination={{ page, pages: Math.ceil(filteredData.length / limit), total: filteredData.length, limit }}
                 onPageChange={(p) => setPage(Math.max(1, Math.min(p, Math.ceil(filteredData.length / limit))))}
               />
- border-[#1A2A3F] bg-[#0F1F3A] shadow-lg">
-                <table className="min-w-full text-sm">
                   <thead className="border-b border-[#1A2A3F]">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Entity</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Title</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Description</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Keywords</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Updated</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Actions</th>
-                    </tr>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Entity</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Title</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Description</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Keywords</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Status</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Updated</th>
+ className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Actions</th>
                   </thead>
-                  <tbody className="divide-y divide-[#1A2A3F]">
-                    {filteredData.map((seo) => {
+ className="divide-y divide-[#1A2A3F]">
+seo) => {
                       const Icon = getEntityIcon(seo.entityType);
                       return (
-                        <tr key={seo.id} className="hover:bg-[#1A2A3F]/50 transition-colors">
+ key={seo.id} className="hover:bg-[#1A2A3F]/50 transition-colors">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <Icon className="h-4 w-4 text-[#8B9CC8]" />
@@ -767,11 +769,8 @@ export default function SeoManager() {
                               </button>
                             </div>
                           </td>
-                        </tr>
-                      );
-                    })}
+                        })}
                   </tbody>
-                </table>
               </div>
             )}
           </div>

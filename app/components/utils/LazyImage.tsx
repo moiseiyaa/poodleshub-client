@@ -67,7 +67,7 @@ const LazyImage = ({
       id={`lazy-img-${alt?.replace(/\s+/g, '-').toLowerCase()}`}
       className={cn(
         'relative overflow-hidden',
-        aspectRatio || 'aspect-[4/3]',
+        aspectRatio || 'aspect-4/3',
         containerClassName
       )}
     >
