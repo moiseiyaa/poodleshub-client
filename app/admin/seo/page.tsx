@@ -309,6 +309,30 @@ function SeoForm({
                     <FiX className="h-4 w-4" />
                   </button>
                 </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addKeyword}
+                className="w-full rounded-lg border border-dashed border-[#1A2A3F] bg-[#0F1F3A]/50 px-3 py-2 text-sm text-[#8B9CC8] hover:border-[#B344FF] hover:text-[#B344FF] transition-colors"
+              >
+                <FiPlus className="inline mr-2 h-4 w-4" />
+                Add Keyword
+              </button>
+                <div key={index} className="flex items-center gap-2">
+                  <span className="flex-1 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-sm text-white">
+                    {keyword}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeKeyword(keyword)}
+                    className="rounded-lg p-2 text-red-400 hover:bg-red-500/10 transition-colors"
+                    aria-label="Remove keyword"
+                    title="Remove keyword"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                </div>
               <button
                 type="button"
                 onClick={addKeyword}
@@ -692,8 +716,7 @@ export default function SeoManager() {
                 columns={columns}
                 pagination={{ page, pages: Math.ceil(filteredData.length / limit), total: filteredData.length, limit }}
                 onPageChange={(p) => setPage(Math.max(1, Math.min(p, Math.ceil(filteredData.length / limit))))}
-              />
-                  <thead className="border-b border-[#1A2A3F]">
+              /> className="border-b border-[#1A2A3F]">
                     <tr>
  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Entity</th>
  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Title</th>
@@ -770,7 +793,6 @@ seo) => {
                             </div>
                           </td>
                         })}
-                  </tbody>
               </div>
             )}
           </div>
