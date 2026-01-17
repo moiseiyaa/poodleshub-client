@@ -7,6 +7,7 @@ import BlogContent from "../blog/BlogContent";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
 import EnhancedAnalytics from "./analytics-enhanced";
+import WebVitalsWidget from "./WebVitalsWidget";
 import { 
   FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
   FiSearch, FiMenu, FiX, FiEdit2, FiTrash2, FiPlus, FiRefreshCw, FiDownload,
