@@ -319,28 +319,6 @@ function SeoForm({
                 <FiPlus className="inline mr-2 h-4 w-4" />
                 Add Keyword
               </button>
-                <div key={index} className="flex items-center gap-2">
-                  <span className="flex-1 rounded-lg border border-[#1A2A3F] bg-[#0F1F3A] px-3 py-2 text-sm text-white">
-                    {keyword}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeKeyword(keyword)}
-                    className="rounded-lg p-2 text-red-400 hover:bg-red-500/10 transition-colors"
-                    aria-label="Remove keyword"
-                    title="Remove keyword"
-                  >
-                    <FiX className="h-4 w-4" />
-                  </button>
-                </div>
-              <button
-                type="button"
-                onClick={addKeyword}
-                className="w-full rounded-lg border border-dashed border-[#1A2A3F] bg-[#0F1F3A]/50 px-3 py-2 text-sm text-[#8B9CC8] hover:border-[#B344FF] hover:text-[#B344FF] transition-colors"
-              >
-                <FiPlus className="inline mr-2 h-4 w-4" />
-                Add Keyword
-              </button>
             </div>
           </div>
         </div>
@@ -716,84 +694,7 @@ export default function SeoManager() {
                 columns={columns}
                 pagination={{ page, pages: Math.ceil(filteredData.length / limit), total: filteredData.length, limit }}
                 onPageChange={(p) => setPage(Math.max(1, Math.min(p, Math.ceil(filteredData.length / limit))))}
-              /> className="border-b border-[#1A2A3F]">
-                    <tr>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Entity</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Title</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Description</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Keywords</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Status</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Updated</th>
- className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#8B9CC8]">Actions</th>
-                  </thead>
- className="divide-y divide-[#1A2A3F]">
-seo) => {
-                      const Icon = getEntityIcon(seo.entityType);
-                      return (
- key={seo.id} className="hover:bg-[#1A2A3F]/50 transition-colors">
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <Icon className="h-4 w-4 text-[#8B9CC8]" />
-                              <div>
-                                <div className="font-medium text-white">{getEntityName(seo)}</div>
-                                <div className="text-xs text-[#8B9CC8]">{seo.entityType}</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="max-w-xs truncate font-medium text-white">
-                              {seo.metaTitle || <span className="text-[#8B9CC8]">No title</span>}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="max-w-xs truncate text-[#8B9CC8]">
-                              {seo.metaDescription || <span className="text-[#8B9CC8]">No description</span>}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex flex-wrap gap-1">
-                              {seo.focusKeywords?.slice(0, 2).map((keyword, idx) => (
-                                <span key={idx} className="rounded bg-[#B344FF]/20 px-2 py-0.5 text-xs text-[#B344FF]">
-                                  {keyword}
-                                </span>
-                                              {seo.focusKeywords?.length > 2 && (
-                                <span className="text-xs text-[#8B9CC8]">+{seo.focusKeywords.length - 2}</span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold ${
-                              seo.robots === "INDEX"
-                                ? "bg-green-500/20 text-green-400"
-                                : "bg-red-500/20 text-red-400"
-                            }`}>
-                              {seo.robots === "INDEX" ? <FiCheck className="h-3 w-3" /> : <FiX className="h-3 w-3" />}
-                              {seo.robots}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-xs text-[#8B9CC8]">
-                            {new Date(seo.updatedAt).toLocaleDateString()}
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => setEditingSeo(seo)}
-                                className="rounded-lg p-1.5 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-[#B344FF] transition-colors"
-                                title="Edit"
-                              >
-                                <FiEdit2 className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(seo.id)}
-                                className="rounded-lg p-1.5 text-[#8B9CC8] hover:bg-[#1A2A3F] hover:text-red-400 transition-colors"
-                                title="Delete"
-                              >
-                                <FiTrash2 className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        })}
-              </div>
+              />
             )}
           </div>
         )}
