@@ -175,31 +175,6 @@ export default function BlogPage() {
         </Container>
       </section>
 
-     
-
-      {/* Categories Section */}
-      <section className="py-12 bg-white border-b">
-        <Container>
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Browse by Category</h2>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => {
-              const categoryPosts = allPosts.filter(post => post.category === category);
-              return (
-                <Link
-                  key={category}
-                  href={`/blog?category=${category.toLowerCase().replace(' & ', '-').replace(' ', '-')}`}
-                  className="bg-gray-100 hover:bg-primary hover:text-white px-6 py-3 rounded-full transition-colors text-center"
-                >
-                  {category} ({categoryPosts.length})
-                </Link>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
-
       {/* Featured Posts */}
       <section className="py-16 bg-gray-50">
         <Container>
