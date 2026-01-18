@@ -363,7 +363,6 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       </div>
 
       {/* Key Metrics */}
-      <div className="space-y-6">
       {data.traffic && (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -414,7 +413,6 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
           )}
           </>
         )}
-        </div>
 
         {/* Geographic Data */}
         <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">

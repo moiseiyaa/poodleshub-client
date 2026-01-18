@@ -500,7 +500,11 @@ export default function SeoManager() {
       cell: info => info.getValue(),
     },
     { header: 'Title', accessorKey: 'metaTitle' },
-    { header: 'Description', accessorKey: 'metaDescription' },
+    {
+      header: 'Description',
+      accessorKey: 'metaDescription',
+      cell: info => <span className="text-white whitespace-pre-wrap">{info.getValue()}</span>,
+    },
     {
       header: 'Keywords',
       accessorFn: row => row.focusKeywords.join(', '),
