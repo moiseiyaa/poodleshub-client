@@ -169,7 +169,9 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
   const [dateRange, setDateRange] = useState<DateRange>('30daysAgo');
   const [loading, setLoading] = useState(true);
   const [isGA4Configured, setIsGA4Configured] = useState<boolean | null>(null);
-  const [data, setData] = useState<GA4Data | null>(null);
+  const [data, setData] = useState<any>(null);
+  const [lighthouse, setLighthouse] = useState<any[]>([]);
+  const [brokenLinks, setBrokenLinks] = useState<{url:string; status:number}[]>([]);
   const [webVitals, setWebVitals] = useState<WebVital[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(false);
 
@@ -178,8 +180,8 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       setLoading(true);
       
       // Check if GA4 is configured
-      const statusRes = await fetch(`${getApiUrl()}/api/analytics/ga4/status`);
-      const statusData = await statusRes.json();
+      const gaRes = await fetch(`${getApiUrl()}/api/analytics/ga4?range=${dateRange}`);
+      const statusData = await gaRes.json();
       setIsGA4Configured(statusData.configured);
       
       if (!statusData.configured) {
@@ -225,6 +227,24 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       return () => clearInterval(interval);
     }
   }, [autoRefresh, dateRange]);
+
+  // Load Lighthouse & broken-link audits once
+  useEffect(() => {
+    const loadAudits = async () => {
+      try {
+        const apiUrl = getApiUrl();
+        const [lhRes, blRes] = await Promise.all([
+          fetch(`${apiUrl}/api/seo/lighthouse?limit=20`),
+          fetch(`${apiUrl}/api/seo/broken-links?limit=50`),
+        ]);
+        if (lhRes.ok) setLighthouse(await lhRes.json());
+        if (blRes.ok) setBrokenLinks(await blRes.json());
+      } catch (err) {
+        console.warn('Failed to load audits', err);
+      }
+    };
+    loadAudits();
+  }, []);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -351,7 +371,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
           <div className="mt-4 pt-4 border-t border-[#1A2A3F]">
             <p className="text-sm font-medium text-[#8B9CC8] mb-3">Active on pages:</p>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {data.realtime.byPage.slice(0, 6).map((page, idx) => (
+              {data.realtime.byPage.slice(0, 6).map((page: any, idx: number) => (
                 <div key={idx} className="flex items-center justify-between rounded-lg bg-[#0F1F3A] p-3">
                   <span className="text-sm text-white truncate flex-1">{page.page}</span>
                   <span className="text-sm font-semibold text-[#B344FF] ml-2">{page.activeUsers}</span>
@@ -404,7 +424,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
             <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
               <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
               <AnalyticsLineChart
-                data={data?.topPages?.map(tp => ({
+                data={data.topPages.map((tp: any) => ({
                   name: tp.title ?? tp.path,
                   views: tp.views,
                 }))}
@@ -420,7 +440,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
 
           <div className="space-y-3">
             {data.geographic?.countries && data.geographic.countries.length > 0 ? (
-              data.geographic.countries.slice(0, 5).map((country, idx) => (
+              data.geographic.countries.slice(0, 5).map((country: any, idx: number) => (
                 <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
                   <div className="flex items-center gap-3">
                     <FiMapPin className="h-5 w-5 text-[#B344FF]" />
@@ -440,7 +460,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
         <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4">Top Events</h3>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {data?.events?.slice(0, 9).map((event, idx) => (
+            {data?.events?.slice(0, 9).map((event: any, idx: number) => (
               <div key={idx} className="rounded-lg border border-[#1A2A3F] p-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-white">{event.eventName}</span>
@@ -461,7 +481,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
         <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4">Conversion Tracking</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {data.conversions.map((conversion, idx) => (
+            {data.conversions.map((conversion: any, idx: number) => (
               <div key={idx} className="rounded-lg border border-[#1A2A3F] bg-linear-to-br from-[#10B981]/10 to-[#059669]/10 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <FiAward className="h-5 w-5 text-[#10B981]" />
