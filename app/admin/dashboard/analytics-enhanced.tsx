@@ -409,9 +409,10 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
                   name: tp.title ?? tp.path,
                   views: tp.views,
                 }))}
-                dataKey="views"
-                height={300}
-              />
+                xKey="name" yKey="views" label="Views"
+                              />
+            </div>
+          )}
 
 
         {/* Geographic Data */}
@@ -434,7 +435,6 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
             )}
           </div>
         </div>
-      </div>
 
       {/* Events Tracking */}
       {data?.devices?.length > 0 && (
@@ -443,7 +443,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {data?.events?.slice(0, 9).map((event, idx) => (
               <div key={idx} className="rounded-lg border border-[#1A2A3F] p-3">
-{{ ... }
+                <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-white">{event.eventName}</span>
                   <span className="text-sm font-semibold text-[#B344FF]">{formatNumber(event.count)}</span>
                 </div>
