@@ -1174,7 +1174,7 @@ const transformApiBlog = (apiBlog: ApiBlog): BlogPost => {
     readTime: estimateReadTime(apiBlog.content),
     category: 'Blog', // Default category for API blogs
     tags: apiBlog.tags || [],
-    featuredImage: '/images/puppy-training.jpg', // Default featured image
+    featuredImage: (apiBlog as any).featuredImage || '/images/puppy-training.jpg',
     images: []
   };
 };
