@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { toast } from 'react-hot-toast';
 import { FiBold, FiItalic, FiList, FiLink2, FiImage, FiFeather, FiType, FiAlignLeft, FiAward } from 'react-icons/fi';
-import { addLocalBlogPost } from '../../data/blog';
 
 interface BlogPost {
   id: string;
