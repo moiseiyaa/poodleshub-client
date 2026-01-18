@@ -401,30 +401,39 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
             />
           </div>
           
-          {data?.sources?.length > 0 && (
+          {data?.topPages?.length > 0 && (
             <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
               <h4 className="text-lg font-semibold text-white mb-2">Page Views Trend</h4>
               <AnalyticsLineChart
                 data={data?.topPages?.map(tp => ({
-                  name: tp?.title || tp?.path,
-{{ ... }
+                  name: tp.title ?? tp.path,
+                  views: tp.views,
+                }))}
+                dataKey="views"
+                height={300}
+              />
 
 
         {/* Geographic Data */}
         <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4">Top Countries</h3>
+
           <div className="space-y-3">
-            {(data?.geographic?.countries?.length || []).slice(0, 5).map((country, idx) => (
-              <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
-                <div className="flex items-center gap-3">
-                  <FiMapPin className="h-5 w-5 text-[#B344FF]" />
-                  <div>
-                    <p className="text-sm font-medium text-white">{country?.country}</p>
-{{ ... }
+            {data.geographic?.countries && data.geographic.countries.length > 0 ? (
+              data.geographic.countries.slice(0, 5).map((country, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg border border-[#1A2A3F] p-3">
+                  <div className="flex items-center gap-3">
+                    <FiMapPin className="h-5 w-5 text-[#B344FF]" />
+                    <span className="text-sm font-medium text-white">{country.country}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-[#B344FF]">{formatNumber(country.users)}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-[#8B9CC8]">No geographic data available</p>
+            )}
           </div>
-        )} else if (data?.geographic?.countries?.length === 0) {
-          <p>No geographic data available</p>
-        }
+        </div>
       </div>
 
       {/* Events Tracking */}
