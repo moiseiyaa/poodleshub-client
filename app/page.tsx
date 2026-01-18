@@ -11,8 +11,8 @@ const LazyTestimonialsSection = dynamic(() => import('./components/organisms/Tes
 const LazyHealthGuaranteeSection = dynamic(() => import('./components/organisms/HealthGuaranteeSection'), {
   loading: () => <div className="py-16 text-center">Loading health guarantee...</div>,
 });
-const LazyBlackFridayInteractiveSection = dynamic(() => import('./components/organisms/BlackFridayInteractiveSection'), {
-  loading: () => <div className="py-16 text-center">Loading special offers...</div>,
+const LazyFeaturedBlogsPreview = dynamic(() => import('./components/organisms/FeaturedBlogsPreview'), {
+  loading: () => <div className="py-16 text-center">Loading blog posts...</div>,
 });
 const LazyTrainingSection = dynamic(() => import('./components/organisms/TrainingSection'), {
   loading: () => <div className="py-16 text-center">Loading training info...</div>,
@@ -35,7 +35,7 @@ export default function Home() {
       <HowItWorksSection />
       <LazyTestimonialsSection />
       <LazyHealthGuaranteeSection />
-      <LazyBlackFridayInteractiveSection />
+      <LazyFeaturedBlogsPreview />
       <LazyTrainingSection />
       <LazyFAQPreviewSection />
     </>
