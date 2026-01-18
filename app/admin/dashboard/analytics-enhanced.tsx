@@ -409,11 +409,12 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
                   name: tp.title ?? tp.path,
                   views: tp.views,
                 }))}
-                xKey="name" yKey="views" label="Views"
-                              />
+                xKey="name" yKey="views" label="Views" />
             </div>
           )}
-
+          </>
+        )}
+        </div>
 
         {/* Geographic Data */}
         <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-6 shadow-lg">
