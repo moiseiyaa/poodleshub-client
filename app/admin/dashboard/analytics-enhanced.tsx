@@ -180,7 +180,7 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       setLoading(true);
       
       // Check if GA4 is configured
-      const gaRes = await fetch(`${getApiUrl()}/api/analytics/ga4?range=${dateRange}`);
+      const gaRes = await fetch(`${getApiUrl()}/api/analytics/ga4/status`);
       const statusData = await gaRes.json();
       setIsGA4Configured(statusData.configured);
       
