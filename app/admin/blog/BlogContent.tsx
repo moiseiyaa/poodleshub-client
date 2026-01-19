@@ -224,7 +224,7 @@ export default function BlogContent() {
             saving={saving} 
           />
         ) : (
-          <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-4">
+          <div className="rounded-xl border border-[#1A2A3F] bg-[#0F1F3A] p-4 overflow-x-auto">
             {loading ? (
               <div className="text-[#8B9CC8]">Loading...</div>
             ) : posts.length === 0 ? (
@@ -235,7 +235,8 @@ export default function BlogContent() {
                   <tr className="text-left text-xs text-[#8B9CC8]">
                     <th className="px-3 py-2">Title</th>
                     <th className="px-3 py-2">Slug</th>
-                    <th className="px-3 py-2">Published</th>
+                    <th className="px-3 py-2 whitespace-nowrap">Created</th>
+                    <th className="px-3 py-2 whitespace-nowrap">Published</th>
                     <th className="px-3 py-2">Actions</th>
                   </tr>
                 </thead>
@@ -249,8 +250,11 @@ export default function BlogContent() {
                     .map((post) => (
                       <tr key={post.id} className="border-t border-[#1A2A3F]">
                         <td className="px-3 py-2 text-white">{post.title}</td>
-                        <td className="px-3 py-2 text-[#8B9CC8]">{post.slug}</td>
-                        <td className="px-3 py-2 text-[#8B9CC8]">{post.published ? 'Yes' : 'No'}</td>
+                        <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">{post.slug}</td>
+                        <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">
+                            {post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-'}
+                          </td>
+                        <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">{post.published ? 'Yes' : 'No'}</td>
                         <td className="px-3 py-2">
                           <div className="flex gap-2">
                             <button 
