@@ -87,19 +87,20 @@ export default function AnalyticsLocalDashboard() {
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
-        const [summaryRes, pagesRes, trendRes, eventsRes] = await Promise.all([
+        const results = await Promise.allSettled([
           fetch(`${API_BASE}/api/analytics/summary?days=${range}`),
           fetch(`${API_BASE}/api/analytics/popular-pages?limit=10&days=${range}`),
           fetch(`${API_BASE}/api/analytics/page-views-by-day?days=${range}`),
           fetch(`${API_BASE}/api/analytics/events?limit=50`),
         ]);
-        if (!summaryRes.ok || !pagesRes.ok || !trendRes.ok || !eventsRes.ok) {
-          throw new Error("Failed to fetch analytics");
-        }
-        const summary = await summaryRes.json();
-        const pages = await pagesRes.json();
-        const trend = await trendRes.json();
-        const events = await eventsRes.json();
+        const [summaryRes, pagesRes, trendRes, eventsRes] = results.map((r) =>
+          r.status === 'fulfilled' ? r.value : null,
+        );
+        const summary = summaryRes && summaryRes.ok ? await summaryRes.json() : {};
+        const pages = pagesRes && pagesRes.ok ? await pagesRes.json() : [];
+        const trend = trendRes && trendRes.ok ? await trendRes.json() : [];
+        const events = eventsRes && eventsRes.ok ? await eventsRes.json() : [];
+        if (!summaryRes?.ok) console.warn('Summary API unavailable');
         setData({
           pageViews: summary.total || 0,
           uniqueVisitors: summary.uniqueVisitors || 0,
