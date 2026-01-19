@@ -51,9 +51,11 @@ const API_BASE =
 interface AnalyticsData {
   pageViews: number;
   uniqueVisitors: number;
+  bounceRate: number; // percentage
+  avgSessionDuration: number | null; // seconds
   topPages: Array<{ path: string; views: number; title: string }>;
   pageViewsByDay: Array<{ date: string; count: number }>;
-  // events reserved for later extension
+  events: Array<{ id: string; eventType: string; pathname: string; timestamp: string; metadata: any }>;
 }
 
 function MetricCard({
@@ -90,20 +92,25 @@ export default function AnalyticsLocalDashboard() {
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
-        const [summaryRes, pagesRes, trendRes] = await Promise.all([
+        const [summaryRes, pagesRes, trendRes, eventsRes] = await Promise.all([
           fetch(`${API_BASE}/api/analytics/summary?days=${range}`),
           fetch(`${API_BASE}/api/analytics/popular-pages?limit=10&days=${range}`),
           fetch(`${API_BASE}/api/analytics/page-views-by-day?days=${range}`),
+          fetch(`${API_BASE}/api/analytics/events?limit=50`),
         ]);
-        if (!summaryRes.ok || !pagesRes.ok || !trendRes.ok) {
+        if (!summaryRes.ok || !pagesRes.ok || !trendRes.ok || !eventsRes.ok) {
           throw new Error("Failed to fetch analytics");
         }
         const summary = await summaryRes.json();
         const pages = await pagesRes.json();
         const trend = await trendRes.json();
+        const events = await eventsRes.json();
         setData({
           pageViews: summary.total || 0,
           uniqueVisitors: summary.uniqueVisitors || 0,
+          bounceRate: summary.bounceRate || 0,
+          avgSessionDuration: summary.avgSessionDuration,
+
           topPages: pages.map((p: any) => ({
             path: p.path,
             views: Number(p.views),
@@ -111,6 +118,7 @@ export default function AnalyticsLocalDashboard() {
               p.path.split("/").pop()?.replace(/-/g, " ") || p.path,
           })),
           pageViewsByDay: trend,
+          events,
         });
       } catch (err) {
         console.error(err);
@@ -146,6 +154,7 @@ export default function AnalyticsLocalDashboard() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="pages">Pages</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
         </TabsList>
 
         {/* Overview */}
@@ -165,14 +174,14 @@ export default function AnalyticsLocalDashboard() {
             />
             <MetricCard
               title="Avg. Time on Page"
-              value="--"
-              description="Coming soon"
+              value={data.avgSessionDuration ? `${Math.round(data.avgSessionDuration/60)}m` : '--'}
+              description="avg per session"
               icon={<ClockIcon className="h-4 w-4 text-muted-foreground" />}
             />
             <MetricCard
               title="Bounce Rate"
-              value="--"
-              description="Coming soon"
+              value={`${data.bounceRate.toFixed(1)}%`}
+              description="single-page sessions"
               icon={<ActivityIcon className="h-4 w-4 text-muted-foreground" />}
             />
           </div>
@@ -234,6 +243,44 @@ export default function AnalyticsLocalDashboard() {
                   ))}
                 </TableBody>
               </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Events */}
+        <TabsContent value="events" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Events</CardTitle>
+              <CardDescription>Latest tracked interactions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {data.events.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No events yet.</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Event</TableHead>
+                      <TableHead>Path</TableHead>
+                      <TableHead className="text-right">Time</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.events.map((ev) => (
+                      <TableRow key={ev.id}>
+                        <TableCell className="font-medium">{ev.eventType}</TableCell>
+                        <TableCell className="max-w-xs truncate text-muted-foreground">
+                          {ev.pathname}
+                        </TableCell>
+                        <TableCell className="text-right text-sm">
+                          {format(new Date(ev.timestamp), "MMM d, HH:mm")}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
