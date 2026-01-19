@@ -2,7 +2,7 @@
 // Utility functions for local analytics tracking via backend API (AnalyticsEvent)
 // This complements the GA-based analytics.ts utilities. We avoid naming conflicts.
 
-import { isBrowser } from '@/lib/utils';
+const isBrowser = (): boolean => typeof window !== 'undefined';
 
 interface TrackPayload {
   event: string;
