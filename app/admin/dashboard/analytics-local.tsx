@@ -118,6 +118,16 @@ export default function AnalyticsLocalDashboard() {
       } catch (err) {
         console.error(err);
         toast.error("Unable to load analytics data");
+        // fallback to empty dataset so UI still renders
+        setData({
+          pageViews: 0,
+          uniqueVisitors: 0,
+          bounceRate: 0,
+          avgSessionDuration: null,
+          topPages: [],
+          pageViewsByDay: [],
+          events: [],
+        });
       } finally {
         setLoading(false);
       }
