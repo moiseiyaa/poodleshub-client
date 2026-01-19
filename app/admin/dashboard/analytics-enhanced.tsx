@@ -185,29 +185,8 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
       setIsGA4Configured(statusData.configured);
       
       if (!statusData.configured) {
-        // fallback to local tracking endpoints
-        try {
-          const summaryRes = await fetch(`${getApiUrl()}/api/analytics/traffic?days=30`);
-          const popularRes = await fetch(`${getApiUrl()}/api/analytics/popular-pages?limit=10&days=30`);
-          const summaryJson = summaryRes.ok ? await summaryRes.json() : null;
-          const popularJson = popularRes.ok ? await popularRes.json() : [];
-          setData({
-            traffic: {
-              pageViews: summaryJson?.summary.pageViews || 0,
-              totalUsers: summaryJson?.summary.uniqueVisitors || 0,
-              conversions: summaryJson?.summary.eventBreakdown?.inquiry || 0,
-              sessions: summaryJson?.summary.pageViews || 0,
-            },
-            topPages: popularJson?.map((p: any) => ({ path: p.pathname || p.path, title: p.pathname || p.path, views: p.viewCount || p.views })) || [],
-            realtime: { activeUsers: 0, byPage: [] },
-            geographic: { countries: [] },
-            devices: [],
-            events: [],
-            conversions: [],
-          });
-        } catch (e) {
-          console.error('Failed to load local analytics', e);
-        }
+        // GA-4 disabled – skip GA metrics, rely only on SEO audit panels
+        setData(null);
         setLoading(false);
         return;
       }
