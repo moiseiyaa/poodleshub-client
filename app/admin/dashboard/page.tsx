@@ -6,7 +6,7 @@ import SeoManager from "../seo/page";
 import BlogContent from "../blog/BlogContent";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { toast } from "react-hot-toast";
-import EnhancedAnalytics from "./analytics-enhanced";
+import AnalyticsLocalDashboard from "./analytics-local";
 import WebVitalsWidget from "./WebVitalsWidget";
 import { 
   FiHome, FiUsers, FiDollarSign, FiSettings, FiChevronDown, FiChevronRight,
@@ -1894,7 +1894,7 @@ export default function AdminDashboard() {
             {tab === "testimonials" && <TestimonialsManager token={token} />}
             {tab === "blog" && <BlogContent />}
             {tab === "seo" && <SeoManager />}
-            {tab === "analytics" && <EnhancedAnalytics token={token} />}
+            {tab === "analytics" && <AnalyticsLocalDashboard />}
           </section>
         </main>
       </div>
