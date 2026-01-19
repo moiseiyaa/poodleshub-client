@@ -24,12 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  EyeIcon,
-  UsersIcon,
-  ClockIcon,
-  ActivityIcon,
-} from "lucide-react";
+import { FiEye as EyeIcon, FiUsers as UsersIcon, FiClock as ClockIcon, FiActivity as ActivityIcon } from "react-icons/fi";
 import {
   BarChart as ReBarChart,
   Bar,
