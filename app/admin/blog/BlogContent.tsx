@@ -252,7 +252,7 @@ export default function BlogContent() {
                         <td className="px-3 py-2 text-white">{post.title}</td>
                         <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">{post.slug}</td>
                         <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">
-                            {post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-'}
+                            {post.createdAt ? new Date(post.createdAt).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'}
                           </td>
                         <td className="px-3 py-2 text-[#8B9CC8] whitespace-nowrap">{post.published ? 'Yes' : 'No'}</td>
                         <td className="px-3 py-2">

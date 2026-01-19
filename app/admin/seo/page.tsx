@@ -506,6 +506,10 @@ export default function SeoManager() {
       cell: info => <span className="text-white whitespace-pre-wrap">{info.getValue()}</span>,
     },
     {
+      header: 'Created',
+      accessorFn: row => new Date(row.createdAt).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+    },
+    {
       header: 'Keywords',
       accessorFn: row => row.focusKeywords.join(', '),
     },
