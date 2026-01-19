@@ -271,7 +271,8 @@ export default function EnhancedAnalytics({ token }: { token: string | null }) {
     );
   }
 
-  if (isGA4Configured === false) {
+  /* Disabled GA4 banner removed */
+  if (false) {
     return (
       <div className="space-y-6">
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-8">
