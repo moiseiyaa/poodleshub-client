@@ -59,7 +59,7 @@ const ContactPage = () => {
     {
       icon: <FaPhone className="h-6 w-6 text-primary" />,
       title: 'Phone',
-      content: '+1 410 725 8531',
+      content: '+1 909 265 4575',
       link: 'tel:+19092654575'
     },
     {

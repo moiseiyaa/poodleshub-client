@@ -127,7 +127,7 @@ const Footer = () => {
               <p className="mb-2">United States</p>
               <p className="mb-2">
                 <a href="tel:+19092654575" className="hover:text-white transition-colors">
-                  +1 410 725 8531
+                  +1 909 265 4575
                 </a>
               </p>
               <p>
